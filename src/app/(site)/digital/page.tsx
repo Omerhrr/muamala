@@ -23,7 +23,7 @@ export async function generateMetadata() {
   const general = await getSettingsGroup("general");
   return {
     title: `Digital banking & mobile app | ${general.bankName}`,
-    description: `Muamala Mobile app, USSD banking, secure transfers and payments, and digital support from ${general.shortName} — bank from your phone, any phone.`,
+    description: `Muamala Mobile app, USSD banking, secure transfers and payments, and digital support from ${general.shortName}. Bank from your phone, any phone.`,
   };
 }
 
@@ -42,7 +42,7 @@ export default async function DigitalPage() {
   return (
     <>
       <PageHeader
-        eyebrow="Digital banking & mobile app"
+        eyebrow={s.pageEyebrow || "Digital banking & mobile app"}
         title={s.title}
         subtitle={s.subtitle}
       >
@@ -66,21 +66,16 @@ export default async function DigitalPage() {
         <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:gap-16">
           <Reveal>
             <p className="text-xs font-bold uppercase tracking-[0.28em] text-gold-600">
-              Internet banking
+              {s.internetBankingEyebrow}
             </p>
             <h2 className="mt-3 font-serif text-3xl font-bold tracking-tight text-brand-900 sm:text-4xl">
-              One secure sign-on for web and mobile
+              {s.internetBankingTitle}
             </h2>
             <p className="mt-5 leading-relaxed text-muted-foreground">
               {a.internetBankingNote}
             </p>
             <ul className="mt-6 space-y-3">
-              {[
-                "Same login as the Muamala Mobile app",
-                "View balances, statements and loan details",
-                "Initiate transfers to any Nigerian bank",
-                "Protected by encryption and device checks",
-              ].map((item) => (
+              {(s.internetBankingPoints ?? []).map((item) => (
                 <li key={item} className="flex items-start gap-3">
                   <LockKeyhole className="mt-0.5 size-5 shrink-0 text-brand-600" aria-hidden="true" />
                   <span className="text-sm font-medium text-foreground">{item}</span>
@@ -91,14 +86,14 @@ export default async function DigitalPage() {
           <Reveal delay={0.12}>
             <div className="relative rounded-3xl border border-border bg-card p-8 shadow-xl sm:p-10">
               <span className="absolute -top-3.5 right-8 rounded-full bg-gold-500 px-4 py-1.5 text-xs font-bold text-brand-950 shadow">
-                Launching soon
+                {s.loginBadge}
               </span>
               <div className="flex items-center gap-3">
                 <span className="flex size-11 items-center justify-center rounded-xl bg-brand-800">
                   <KeyRound className="size-5 text-gold-300" aria-hidden="true" />
                 </span>
                 <h3 className="font-serif text-xl font-bold text-brand-900">
-                  Internet banking sign-in
+                  {s.loginCardTitle}
                 </h3>
               </div>
               <div className="mt-7 space-y-4">
@@ -112,8 +107,7 @@ export default async function DigitalPage() {
                   Sign in
                 </div>
                 <p className="text-center text-xs leading-relaxed text-muted-foreground">
-                  Online sign-in opens together with the Muamala Mobile app. Until then, bank with
-                  USSD, at the branch or through any Muamala agent.
+                  {s.loginNote}
                 </p>
               </div>
               <div className="mt-6 grid gap-3 sm:grid-cols-2">
@@ -151,8 +145,8 @@ export default async function DigitalPage() {
               {s.ussdStepsTitle}
             </h2>
             <p className="mt-5 leading-relaxed text-muted-foreground">
-              {a.ussdNote} Works on MTN, Airtel, Glo and 9mobile — no smartphone and no data bundle
-              required.
+              {a.ussdNote} Works on MTN, Airtel, Glo and 9mobile, with no smartphone and no data
+              bundle required.
             </p>
             <div className="mt-8 inline-flex items-center gap-4 rounded-2xl border border-border bg-background px-6 py-4">
               <span className="rounded-lg bg-brand-800 px-3.5 py-2 font-mono text-lg font-bold tracking-widest text-gold-300">
@@ -213,7 +207,7 @@ export default async function DigitalPage() {
                 <ArrowLeftRight className="mt-0.5 size-6 shrink-0 text-gold-400" aria-hidden="true" />
                 <p className="text-sm leading-relaxed text-brand-200">
                   Every transfer and payment is processed over Interswitch infrastructure with
-                  bank-grade encryption, PIN and device verification — and you get an instant SMS
+                  bank-grade encryption, PIN and device verification, and you get an instant SMS
                   or email alert for every transaction.
                 </p>
               </div>

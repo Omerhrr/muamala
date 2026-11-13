@@ -230,7 +230,7 @@ export function ThemeManager() {
             </h1>
             <p className="mt-2 text-sm text-muted-foreground">
               Pick a brand colour, an accent colour and a background tone. The whole website
-              adapts automatically — buttons, headings, cards and charts.
+              adapts automatically: buttons, headings, cards and charts.
             </p>
           </div>
           <Button
@@ -303,7 +303,7 @@ export function ThemeManager() {
           <h1 className="font-serif text-3xl font-bold text-brand-900">Theme & colours</h1>
           <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
             One click switches the entire public website to a new colour scheme. Edit the presets
-            or create your own combination — the preview shows exactly what customers will see.
+            or create your own combination. The preview shows exactly what customers will see.
           </p>
         </div>
         <Button

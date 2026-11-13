@@ -217,7 +217,7 @@ export default async function ProductsPage() {
                         </td>
                         <td className="px-5 py-4 font-bold text-gold-700">{loan.ratePct}%</td>
                         <td className="hidden px-5 py-4 sm:table-cell">
-                          {naira(loan.minAmount)} – {naira(loan.maxAmount)}
+                          {naira(loan.minAmount)} - {naira(loan.maxAmount)}
                         </td>
                         <td className="hidden px-5 py-4 sm:table-cell">{loan.maxTerm} months</td>
                         <td className="hidden max-w-[220px] px-5 py-4 text-muted-foreground md:table-cell">
@@ -239,7 +239,7 @@ export default async function ProductsPage() {
               </div>
               <p className="mt-4 text-xs leading-relaxed text-muted-foreground">
                 Rates are flat monthly rates on the principal and are indicative. Final pricing
-                depends on product terms, credit assessment and applicable charges — see our{" "}
+                depends on product terms, credit assessment and applicable charges. See our{" "}
                 <a href="/pages/deposit-lending-rates" className="font-semibold text-brand-700 hover:text-gold-600">
                   current lending &amp; deposit rates
                 </a>{" "}
@@ -262,7 +262,7 @@ export default async function ProductsPage() {
               Not sure which product fits you?
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-brand-200">
-              Talk to our team — we will listen to your goals and match you with the savings or
+              Talk to our team. We will listen to your goals and match you with the savings or
               credit product that fits your cash-flow. No jargon, no pressure.
             </p>
           </div>

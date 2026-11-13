@@ -18,10 +18,10 @@ Our Data Protection contact can be reached at **privacy@muamalamfb.com.ng** or b
 
 ## Information we collect
 
-- **Identification data** — name, address, date of birth, Bank Verification Number (BVN), National Identification Number (NIN), passport photograph and valid means of identification, collected when you open an account or apply for a product.
-- **Contact data** — phone number, email address and residential/business address.
-- **Financial data** — account balances, transactions, loan applications and repayment history.
-- **Website data** — details you submit through enquiry or application forms on this website.
+- **Identification data**: name, address, date of birth, Bank Verification Number (BVN), National Identification Number (NIN), passport photograph and valid means of identification, collected when you open an account or apply for a product.
+- **Contact data**: phone number, email address and residential/business address.
+- **Financial data**: account balances, transactions, loan applications and repayment history.
+- **Website data**: details you submit through enquiry or application forms on this website.
 
 ## How we use your information
 
@@ -39,7 +39,7 @@ Under the NDPA you have the right to access your data, request correction, objec
 
 ## Retention and security
 
-We keep personal data only as long as required by law and our records-retention policy. We apply bank-grade technical and organisational safeguards — access controls, encryption of digital channels and staff confidentiality obligations — to protect your data.`,
+We keep personal data only as long as required by law and our records-retention policy. We apply bank-grade technical and organisational safeguards, including access controls, encryption of digital channels and staff confidentiality obligations, to protect your data.`,
   },
   {
     slug: "terms-and-conditions",
@@ -89,7 +89,7 @@ Questions? Contact us at **hello@muamalamfb.com.ng** or call the numbers listed 
 | --- | --- |
 | Account opening (all savings products) | Free |
 | Account maintenance fee (savings) | Free |
-| Account maintenance fee (current) | Per current schedule — ask at branch |
+| Account maintenance fee (current) | Per current schedule, ask at branch |
 | Minimum savings balance | ₦1,000 |
 
 ## Electronic transactions
@@ -97,19 +97,19 @@ Questions? Contact us at **hello@muamalamfb.com.ng** or call the numbers listed 
 | Item | Charge |
 | --- | --- |
 | NIP transfer ≤ ₦5,000 | Max ₦10 |
-| NIP transfer ₦5,001 – ₦50,000 | Max ₦25 |
+| NIP transfer ₦5,001 - ₦50,000 | Max ₦25 |
 | NIP transfer above ₦50,000 | Max ₦50 |
 | USSD session | Per telco network charge |
 | SMS transaction alerts | Max ₦4 per alert (as approved by regulators) |
-| Naira debit card issuance | Per current schedule — ask at branch |
+| Naira debit card issuance | Per current schedule, ask at branch |
 
 ## Loan-related charges
 
 | Item | Charge |
 | --- | --- |
-| Loan management fee | 1% – 2% of approved amount (flat, one-off) |
+| Loan management fee | 1-2% of approved amount (flat, one-off) |
 | Loan insurance/documentation | As disclosed in your offer letter |
-| Early loan liquidation | No hidden penalty — terms disclosed upfront |
+| Early loan liquidation | No hidden penalty, terms disclosed upfront |
 
 ## Bills & other services
 
@@ -129,7 +129,7 @@ Charges are reviewed periodically and any revision is communicated to customers 
 | --- | --- | --- |
 | Micro business loan | 3.0% | Up to 12 months |
 | Asset & equipment finance | 3.5% | Up to 24 months |
-| Salary advance | 2.5% | 3 – 12 months |
+| Salary advance | 2.5% | 3-12 months |
 
 Interest is computed on a flat monthly basis on the approved principal. Loan management fees and any applicable insurance/documentation charges are disclosed separately in the offer letter, and the loan calculator on our website shows an indicative repayment schedule.
 
@@ -155,10 +155,10 @@ Please contact the branch or call us for the definitive rates applicable on the 
 
 ## How to complain
 
-- **At the branch or agent** — tell any officer; you will be given a complaint reference.
-- **By phone** — call the numbers published on our contact section.
-- **By email** — write to **complaints@muamalamfb.com.ng**.
-- **In writing** — drop a letter at the head office, Murada Shopping Complex, Suleja.
+- **At the branch or agent**: tell any officer; you will be given a complaint reference.
+- **By phone**: call the numbers published on our contact section.
+- **By email**: write to **complaints@muamalamfb.com.ng**.
+- **In writing**: drop a letter at the head office, Murada Shopping Complex, Suleja.
 
 Please include your name, account number (if any), a description of the issue, dates and any supporting documents.
 
@@ -172,7 +172,7 @@ Please include your name, account number (if any), a description of the issue, d
 
 If you are not satisfied with our final response, or if we have not responded within the stated time, you may escalate to:
 
-**Consumer Protection Department, Central Bank of Nigeria** — via the CBN complaint portal at consumercbn.org, or any CBN branch office. Quote your complaint reference and our final response.
+**Consumer Protection Department, Central Bank of Nigeria**: via the CBN complaint portal at consumercbn.org, or any CBN branch office. Quote your complaint reference and our final response.
 
 We keep complaint records securely and report complaint statistics to the CBN as required.`,
   },
@@ -180,7 +180,7 @@ We keep complaint records securely and report complaint statistics to the CBN as
     slug: "whistleblowing",
     title: "Whistleblowing Policy",
     category: "regulatory",
-    body: `Muamala MFB is committed to the highest standards of integrity. This policy enables staff, customers, agents and other stakeholders to report suspected misconduct, fraud, corruption, money laundering, staff abuse or breach of law or regulation — without fear of retaliation.
+    body: `Muamala MFB is committed to the highest standards of integrity. This policy enables staff, customers, agents and other stakeholders to report suspected misconduct, fraud, corruption, money laundering, staff abuse or breach of law or regulation, without fear of retaliation.
 
 ## What you can report
 
@@ -193,16 +193,16 @@ We keep complaint records securely and report complaint statistics to the CBN as
 
 ## How to report
 
-- **Email** — **whistleblow@muamalamfb.com.ng** (monitored by the Audit Committee Chair);
-- **In writing** — sealed envelope marked "Confidential — Whistleblowing", addressed to the Chairman, Board Audit Committee, Muamala MFB, Murada Shopping Complex, Suleja.
+- **Email**: **whistleblow@muamalamfb.com.ng** (monitored by the Audit Committee Chair);
+- **In writing**: sealed envelope marked "Confidential - Whistleblowing", addressed to the Chairman, Board Audit Committee, Muamala MFB, Murada Shopping Complex, Suleja.
 
 Reports may be made anonymously. Provide as much detail as possible (who, what, when, where) to enable investigation.
 
 ## Our commitments
 
-- **Confidentiality** — the identity of reporters is protected to the fullest extent possible.
-- **Non-retaliation** — no one who reports in good faith will suffer dismissal, harassment or any adverse consequence. Retaliation is itself a disciplinary offence.
-- **Fair process** — every report is acknowledged, investigated independently, and acted upon; deliberate false reports made maliciously may attract consequences.
+- **Confidentiality**: the identity of reporters is protected to the fullest extent possible.
+- **Non-retaliation**: no one who reports in good faith will suffer dismissal, harassment or any adverse consequence. Retaliation is itself a disciplinary offence.
+- **Fair process**: every report is acknowledged, investigated independently, and acted upon; deliberate false reports made maliciously may attract consequences.
 
 Reports may also be made directly to the CBN or the EFCC where the reporter prefers.`,
   },
@@ -214,7 +214,7 @@ Reports may also be made directly to the CBN or the EFCC where the reporter pref
 
 ## Customer due diligence
 
-- Every customer is identified with valid KYC documents — BVN, NIN, means of identification, proof of address and, for businesses, registration documents and mandates.
+- Every customer is identified with valid KYC documents: BVN, NIN, means of identification, proof of address and, for businesses, registration documents and mandates.
 - Accounts are tiered, with transaction limits and documentation requirements per the CBN tiered KYC framework.
 - Enhanced due diligence applies to politically exposed persons, high-value transactions and unusual activity.
 - We verify and screen customers against applicable sanctions lists.
@@ -241,11 +241,11 @@ The Bank does not accept anonymous accounts, and we may decline or terminate rel
 
 ## Our commitments
 
-- **Fair treatment** — every customer is treated fairly and equitably, regardless of account size, gender, age or background. Our products are designed with financial-inclusion customers in mind.
-- **Disclosure and transparency** — terms, conditions, interest rates, fees and charges are disclosed before you take a product, in plain language (English and Hausa at the branch where needed).
-- **Suitability** — we assess affordability before granting credit and will not lend beyond what a customer can reasonably repay.
-- **Privacy** — customer data is processed under our Privacy Policy and the Nigeria Data Protection Act 2023.
-- **Security** — our channels use bank-grade safeguards; we will never ask for your PIN, full card details or passwords by phone, SMS or email.
+- **Fair treatment**: every customer is treated fairly and equitably, regardless of account size, gender, age or background. Our products are designed with financial-inclusion customers in mind.
+- **Disclosure and transparency**: terms, conditions, interest rates, fees and charges are disclosed before you take a product, in plain language (English and Hausa at the branch where needed).
+- **Suitability**: we assess affordability before granting credit and will not lend beyond what a customer can reasonably repay.
+- **Privacy**: customer data is processed under our Privacy Policy and the Nigeria Data Protection Act 2023.
+- **Security**: our channels use bank-grade safeguards; we will never ask for your PIN, full card details or passwords by phone, SMS or email.
 
 ## Fees and charges
 
@@ -257,6 +257,6 @@ You have the right to clear information, to complain and receive a timely respon
 
 ## Responsible lending and debt collection
 
-Our recovery practices are lawful and respectful: no harassment, no threats, no unauthorised contact with third parties. Customers in difficulty should contact us early — we will work out a fair repayment plan where possible.`,
+Our recovery practices are lawful and respectful: no harassment, no threats, no unauthorised contact with third parties. Customers in difficulty should contact us early and we will work out a fair repayment plan where possible.`,
   },
 ];

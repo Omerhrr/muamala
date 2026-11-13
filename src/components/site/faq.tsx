@@ -22,7 +22,7 @@ export function Faq({
       <div className="mx-auto max-w-3xl px-4 sm:px-6">
         <Reveal className="text-center">
           <p className="text-xs font-bold uppercase tracking-[0.28em] text-gold-600">
-            Frequently asked questions
+            {settings.eyebrow || "Frequently asked questions"}
           </p>
           <h2 className="mt-3 font-serif text-3xl font-bold tracking-tight text-brand-900 sm:text-4xl">
             {settings.title}
@@ -51,7 +51,7 @@ export function Faq({
             <a href={`tel:${general.phones[0].replace(/[^0-9+]/g, "")}`} className="font-bold text-brand-800 hover:text-gold-600">
               {general.phones[0]}
             </a>{" "}
-            — a real person will respond.
+            and a real person will respond.
           </Reveal>
         )}
       </div>

@@ -51,11 +51,11 @@ function labelFor(def: ResourceDef, column: string): string {
 }
 
 function displayValue(column: string, value: unknown): string {
-  if (value === null || value === undefined || value === "") return "—";
+  if (value === null || value === undefined || value === "") return "-";
   if (column === "amount") return naira.format(Number(value));
   if (column === "createdAt" || column === "date") {
     const d = new Date(String(value));
-    return Number.isNaN(d.getTime()) ? "—" : dateFmt.format(d);
+    return Number.isNaN(d.getTime()) ? "-" : dateFmt.format(d);
   }
   if (typeof value === "boolean") return value ? "Yes" : "No";
   const s = String(value);
@@ -375,7 +375,7 @@ export function ResourceManager({ resourceKey }: { resourceKey: string }) {
         <div>
           <h1 className="font-serif text-3xl font-bold text-brand-900">{def.title}</h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            {editingId ? "Edit an entry below." : `${rows.length} ${rows.length === 1 ? "entry" : "entries"} — changes go live immediately.`}
+            {editingId ? "Edit an entry below." : `${rows.length} ${rows.length === 1 ? "entry" : "entries"}. Changes go live immediately.`}
           </p>
         </div>
         {def.canCreate && (

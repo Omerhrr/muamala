@@ -69,7 +69,7 @@ export function AccountForm({ user }: { user: string }) {
         <h1 className="font-serif text-3xl font-bold text-brand-900">Account & password</h1>
         <p className="mt-2 text-sm text-muted-foreground">
           You are signed in as <span className="font-bold text-brand-900">{user}</span>. Keep your
-          password strong — this panel controls everything published on the website.
+          password strong. This panel controls everything published on the website.
         </p>
       </header>
 
@@ -145,7 +145,7 @@ export function AccountForm({ user }: { user: string }) {
             </li>
             <li className="flex gap-2.5">
               <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-gold-500" />
-              Do not share the admin password over WhatsApp or email — share access in person.
+              Do not share the admin password over WhatsApp or email; share access in person.
             </li>
             <li className="flex gap-2.5">
               <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-gold-500" />

@@ -3,7 +3,7 @@ import { ArrowRight, Banknote, Eye, Landmark, ShieldCheck, Target } from "lucide
 import { PageHeader } from "@/components/site/page-header";
 import { Reveal } from "@/components/site/reveal";
 import { getSettingsGroup, getPages, getTeam } from "@/lib/content";
-import type { AboutPageSettings, GeneralSettings } from "@/lib/site-settings";
+import type { AboutPageSettings } from "@/lib/site-settings";
 
 export const dynamic = "force-dynamic";
 
@@ -11,7 +11,7 @@ export async function generateMetadata() {
   const general = await getSettingsGroup("general");
   return {
     title: `About us | ${general.bankName}`,
-    description: `Learn about ${general.shortName} — our story, vision, mission, board and management team, corporate governance and community work in Suleja, Niger State.`,
+    description: `Learn about ${general.shortName}: our story, vision, mission, board and management team, corporate governance and community work in Suleja, Niger State.`,
   };
 }
 
@@ -48,37 +48,38 @@ function TeamCard({
 }
 
 export default async function AboutPage() {
-  const [general, aboutPage, team, pages] = await Promise.all([
+  const [general, aboutPage, aboutHome, team, pages] = await Promise.all([
     getSettingsGroup("general"),
     getSettingsGroup("aboutPage"),
+    getSettingsGroup("about"),
     getTeam(),
     getPages(),
   ]);
   const a = aboutPage as AboutPageSettings;
-  const g = general as GeneralSettings;
-
-  const VALUE_CHIPS = ["Integrity", "Community first", "Customer focus", "Transparency"];
+  const valueChips = ((aboutHome as { values?: { label: string }[] }).values ?? [])
+    .map((v) => v.label)
+    .filter(Boolean);
 
   return (
     <>
       <PageHeader
-        eyebrow="About us"
-        title={`The community bank behind ${g.shortName}`}
-        subtitle={`${g.bankName} (${g.rcNumber}) — licensed by the Central Bank of Nigeria and headquartered in Suleja, Niger State. Get to know our story, our people and the principles that guide how we serve you.`}
+        eyebrow={a.pageEyebrow}
+        title={a.pageTitle}
+        subtitle={a.pageSubtitle}
       >
         <div className="mt-8 flex flex-wrap gap-3">
           <a
             href="/apply"
             className="inline-flex items-center gap-2 rounded-full bg-gold-500 px-6 py-3 text-sm font-bold text-brand-950 shadow-lg shadow-gold-500/20 transition-all hover:-translate-y-0.5 hover:bg-gold-400"
           >
-            Open an Account
+            {a.ctaPrimary}
             <ArrowRight className="size-4" aria-hidden="true" />
           </a>
           <a
             href="/#contact"
             className="inline-flex items-center gap-2 rounded-full border border-white/25 px-6 py-3 text-sm font-bold text-white transition-colors hover:border-gold-300 hover:text-gold-300"
           >
-            Contact our team
+            {a.ctaSecondary}
           </a>
         </div>
       </PageHeader>
@@ -103,7 +104,7 @@ export default async function AboutPage() {
           </Reveal>
           <Reveal delay={0.1}>
             <p className="text-xs font-bold uppercase tracking-[0.28em] text-gold-600">
-              Our history
+              {a.historyEyebrow}
             </p>
             <h2 className="mt-3 font-serif text-3xl font-bold tracking-tight text-brand-900 sm:text-4xl">
               {a.historyTitle}
@@ -167,7 +168,7 @@ export default async function AboutPage() {
                 Our core values
               </h3>
               <div className="mt-5 flex flex-wrap gap-3">
-                {VALUE_CHIPS.map((value) => (
+                {valueChips.map((value) => (
                   <span
                     key={value}
                     className="rounded-full bg-secondary px-5 py-2.5 text-sm font-bold text-brand-900"
@@ -187,14 +188,13 @@ export default async function AboutPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
           <Reveal className="max-w-2xl">
             <p className="text-xs font-bold uppercase tracking-[0.28em] text-gold-600">
-              Leadership
+              {a.boardEyebrow}
             </p>
             <h2 className="mt-3 font-serif text-3xl font-bold tracking-tight text-brand-900 sm:text-4xl">
-              Board of Directors
+              {a.boardTitle}
             </h2>
             <p className="mt-4 leading-relaxed text-muted-foreground">
-              The board provides oversight, sets strategy and safeguards the soundness of the bank
-              on behalf of our customers, regulators and community.
+              {a.boardIntro}
             </p>
           </Reveal>
           {team.board.length > 0 ? (
@@ -207,8 +207,7 @@ export default async function AboutPage() {
             </div>
           ) : (
             <Reveal className="mt-10 rounded-2xl border border-dashed border-border bg-card p-8 text-center text-sm text-muted-foreground">
-              Board profiles will be published here shortly. Please contact the bank for current
-              directorship information.
+              {a.boardEmpty}
             </Reveal>
           )}
         </div>
@@ -219,14 +218,13 @@ export default async function AboutPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
           <Reveal className="max-w-2xl">
             <p className="text-xs font-bold uppercase tracking-[0.28em] text-gold-600">
-              Leadership
+              {a.managementEyebrow}
             </p>
             <h2 className="mt-3 font-serif text-3xl font-bold tracking-tight text-brand-900 sm:text-4xl">
-              Management Team
+              {a.managementTitle}
             </h2>
             <p className="mt-4 leading-relaxed text-muted-foreground">
-              Day-to-day, our management team runs the branch, the agent network and the digital
-              services you rely on.
+              {a.managementIntro}
             </p>
           </Reveal>
           {team.management.length > 0 ? (
@@ -239,7 +237,7 @@ export default async function AboutPage() {
             </div>
           ) : (
             <Reveal className="mt-10 rounded-2xl border border-dashed border-border bg-card p-8 text-center text-sm text-muted-foreground">
-              Management profiles will be published here shortly.
+              {a.managementEmpty}
             </Reveal>
           )}
         </div>
@@ -269,15 +267,13 @@ export default async function AboutPage() {
           <div className="flex flex-col items-start justify-between gap-8 lg:flex-row lg:items-center">
             <div className="max-w-2xl">
               <p className="text-xs font-bold uppercase tracking-[0.28em] text-gold-400">
-                Regulation & policies
+                {a.regEyebrow}
               </p>
               <h2 className="mt-3 font-serif text-2xl font-bold text-white sm:text-3xl">
-                Licensed, supervised and transparent
+                {a.regTitle}
               </h2>
               <p className="mt-4 text-sm leading-relaxed text-brand-200">
-                {g.bankName} operates under the supervision of the Central Bank of Nigeria. Our
-                deposits are insured by the NDIC, and our customer protection, privacy and terms
-                documents are always available for you to read.
+                {a.regBody}
               </p>
             </div>
             {pages.length > 0 && (

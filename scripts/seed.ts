@@ -64,7 +64,7 @@ async function main() {
       {
         category: "savings", icon: "Users",
         title: "Group & Ajo Savings",
-        desc: "Save towards a goal — alone or with your group.",
+        desc: "Save towards a goal, alone or with your group.",
         features: JSON.stringify([
           "Perfect for ajo, esusu & cooperative groups",
           "Lock funds until maturity to build discipline",
@@ -93,7 +93,7 @@ async function main() {
         features: JSON.stringify([
           "Salary advances for civil servants & employees",
           "Clear rates from 2.5% per month",
-          "Tenors of 3 – 12 months",
+          "Tenors of 3-12 months",
           "Decision within 48 hours of complete KYC",
         ]),
         order: 1,
@@ -126,7 +126,7 @@ async function main() {
       {
         category: "digital", icon: "Smartphone",
         title: "Mobile Banking",
-        desc: "The Muamala Mobile app — your branch in your pocket.",
+        desc: "The Muamala Mobile app: your branch in your pocket.",
         features: JSON.stringify([
           "Transfers, airtime & bill payments",
           "Target savings goals on the go",
@@ -138,7 +138,7 @@ async function main() {
       {
         category: "digital", icon: "Send",
         title: "Transfers & Payments",
-        desc: "Pay, transfer and get paid — anywhere, anytime.",
+        desc: "Pay, transfer and get paid, anywhere, anytime.",
         features: JSON.stringify([
           "Instant transfers to all Nigerian banks",
           "Interswitch-secured processing",
@@ -152,7 +152,7 @@ async function main() {
         title: "Balance & USSD Banking",
         desc: "Check balances and bank without a smartphone.",
         features: JSON.stringify([
-          "Dial *777# on any phone — no data needed",
+          "Dial *777# on any phone, no data needed",
           "Balance enquiry, transfers & airtime",
           "Works on MTN, Airtel, Glo & 9mobile",
           "Mini statements on request",
@@ -216,7 +216,7 @@ async function main() {
       },
       {
         name: "Asset & Equipment Finance",
-        desc: "Acquire tricycles, generators, POS terminals or machinery — the asset itself backs the facility.",
+        desc: "Acquire tricycles, generators, POS terminals or machinery, with the asset itself backing the facility.",
         ratePct: 3.5, minAmount: 100000, maxAmount: 2000000, maxTerm: 24,
         security: "Asset + equity contribution",
         icon: "Bike", order: 2,
@@ -254,7 +254,7 @@ async function main() {
       {
         question: "What do I need to qualify for a loan?",
         answer:
-          "For most loans you need: a BVN, valid ID, a passport photograph and proof of address, plus either 3 months of savings history with Muamala or a credit-worthy guarantor who banks with us. Micro business loans also consider your daily sales and cash-flow — no land documents required.",
+          "For most loans you need: a BVN, valid ID, a passport photograph and proof of address, plus either 3 months of savings history with Muamala or a credit-worthy guarantor who banks with us. Micro business loans also consider your daily sales and cash-flow. No land documents required.",
         order: 3,
       },
       {
@@ -266,7 +266,7 @@ async function main() {
       {
         question: "Can I bank without a smartphone?",
         answer:
-          "Absolutely. Dial *777# on any mobile phone — no smartphone and no data bundle needed — to check your balance, transfer funds and buy airtime. You can also bank at our branch or through Muamala agents across Niger State.",
+          "Absolutely. Dial *777# on any mobile phone (no smartphone and no data bundle needed) to check your balance, transfer funds and buy airtime. You can also bank at our branch or through Muamala agents across Niger State.",
         order: 5,
       },
       {
@@ -303,16 +303,16 @@ async function main() {
         category: "Announcement",
         excerpt:
           "Our new website makes it easier to learn about our products, start an account opening or loan application online, and reach the bank instantly.",
-        body: `Muamala Micro-Finance Bank Limited is proud to launch its new corporate website — a modern, secure and customer-friendly home for everything Muamala.
+        body: `Muamala Micro-Finance Bank Limited is proud to launch its new corporate website: a modern, secure and customer-friendly home for everything Muamala.
 
 The website introduces:
 
-- **Online account opening requests** — start your application from your phone and finish at any branch or agent point;
-- **A loan application form and repayment calculator** — see what repayment looks like before you apply;
+- **Online account opening requests**: start your application from your phone and finish at any branch or agent point;
+- **A loan application form and repayment calculator**: see what repayment looks like before you apply;
 - **Product information** across savings, loans, digital banking, POS, bill payments and agency banking;
-- **Full regulatory and compliance information** — our CBN licence, NDIC deposit insurance, tariff guide, rates, complaints procedure and policies.
+- **Full regulatory and compliance information**: our CBN licence, NDIC deposit insurance, tariff guide, rates, complaints procedure and policies.
 
-"This platform reflects who we are — a community bank with modern standards," said the Managing Director. "Customers should be able to reach us, understand our products and start their banking journey with confidence, wherever they are."
+"This platform reflects who we are: a community bank with modern standards," said the Managing Director. "Customers should be able to reach us, understand our products and start their banking journey with confidence, wherever they are."
 
 Visit us at Murada Shopping Complex, Suleja, or explore the site to get started. Banking on any phone is also available today via *777#, with the Muamala Mobile app launching soon on Google Play and the App Store.`,
         date: new Date("2026-11-02T09:00:00Z"),
@@ -328,7 +328,7 @@ The sessions covered:
 
 1. why saving early matters and how compound growth works;
 2. separating needs from wants when budgeting;
-3. how a bank account works — and how to keep money safe from fraud;
+3. how a bank account works, and how to keep money safe from fraud;
 4. simple record-keeping for young traders and artisans.
 
 "Financial inclusion starts with financial knowledge," the team lead noted. "When a student opens their first savings account, a lifelong banking relationship begins."
@@ -343,9 +343,9 @@ The outreach forms part of the bank's corporate social responsibility programme 
           "Ten new agents have joined the Muamala network, bringing cash-in/cash-out, account opening and bill payments closer to more communities.",
         body: `Muamala MFB has onboarded ten new agents across Suleja and neighbouring communities, extending the reach of everyday banking services.
 
-Agents provide cash deposits and withdrawals, account opening support, airtime and data top-up, bill payments and balance enquiries — so customers no longer need to travel to the branch for routine transactions.
+Agents provide cash deposits and withdrawals, account opening support, airtime and data top-up, bill payments and balance enquiries, so customers no longer need to travel to the branch for routine transactions.
 
-"Becoming a Muamala agent changed my shop," one newly appointed agent said. "Customers come for banking and stay to buy — it grows my business while it serves the community."
+"Becoming a Muamala agent changed my shop," one newly appointed agent said. "Customers come for banking and stay to buy; it grows my business while it serves the community."
 
 Interested in becoming an agent? Requirements are simple: a registered shop or business, valid identification, BVN and commitment to service. Send us an 'Agent partnership' enquiry through the contact form or call the bank directly.`,
         date: new Date("2026-09-25T08:30:00Z"),
@@ -371,7 +371,7 @@ Interested in becoming an agent? Requirements are simple: a registered shop or b
       { name: "Maryam Lawal", role: "Head, Finance & Compliance", type: "management", order: 4, bio: null },
     ];
     for (const t of team) await db.teamMember.create({ data: t });
-    console.log("team: seeded", team.length, "(placeholder names — replace in admin)");
+    console.log("team: seeded", team.length, "(placeholder names, replace them in admin)");
   } else {
     console.log("team: already present, skipped");
   }

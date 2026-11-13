@@ -11,7 +11,7 @@ export async function generateMetadata() {
   const general = await getSettingsGroup("general");
   return {
     title: `Contact us | ${general.bankName}`,
-    description: `Visit ${general.shortName} at Murada Shopping Complex, Suleja — call, email or WhatsApp us, or send an enquiry and we will respond within one business day.`,
+    description: `Visit ${general.shortName} at Murada Shopping Complex, Suleja. Call, email or WhatsApp us, or send an enquiry and we will respond within one business day.`,
   };
 }
 
@@ -27,7 +27,7 @@ export default async function ContactPage() {
   return (
     <>
       <PageHeader
-        eyebrow="Contact us"
+        eyebrow={c.pageEyebrow || "Contact us"}
         title={c.title}
         subtitle={c.subtitle}
       >

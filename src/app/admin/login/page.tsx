@@ -33,7 +33,7 @@ export default async function AdminLoginPage() {
         </div>
         <LoginForm />
         <p className="mt-8 text-center text-xs text-brand-300/80">
-          Protected area — authorised bank staff only.
+          Protected area. Authorised bank staff only.
         </p>
       </div>
     </main>

@@ -98,7 +98,7 @@ function LoanCalculator({
             <SelectContent>
               {loans.map((loan) => (
                 <SelectItem key={loan.id} value={loan.id}>
-                  {loan.name} — {loan.ratePct.toFixed(1)}% / month
+                  {loan.name}, {loan.ratePct.toFixed(1)}% / month
                 </SelectItem>
               ))}
             </SelectContent>
@@ -227,7 +227,7 @@ export function Loans({
         <div className="mt-14 grid items-start gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12">
           {/* Loan products */}
           <div className="space-y-5">
-            {loans.map(({ icon, name, ratePct, minAmount, maxAmount, maxTerm, desc, security }, index) => {
+            {loans.map(({ id, icon, name, ratePct, minAmount, maxAmount, maxTerm, desc, security }, index) => {
               const Icon = getIcon(icon);
               return (
                 <Reveal key={name} delay={index * 0.08}>
@@ -247,7 +247,7 @@ export function Loans({
                       <div className="text-right text-xs font-semibold text-muted-foreground">
                         <p className="flex items-center gap-1.5 justify-end">
                           <Wallet className="size-3.5 text-brand-600" aria-hidden="true" />
-                          {naira(minAmount)} – {naira(maxAmount)}
+                          {naira(minAmount)} - {naira(maxAmount)}
                         </p>
                         <p className="mt-1 flex items-center gap-1.5 justify-end">
                           <BadgeCheck className="size-3.5 text-brand-600" aria-hidden="true" />
@@ -262,7 +262,7 @@ export function Loans({
                         Security: {security}
                       </span>
                       <a
-                        href={buildApplyHref(idOf(loans, name), minAmount, Math.min(12, maxTerm))}
+                        href={buildApplyHref(id, minAmount, Math.min(12, maxTerm))}
                         className="group ml-auto inline-flex items-center gap-1.5 text-sm font-bold text-brand-700 hover:text-gold-600"
                       >
                         Apply now
@@ -293,8 +293,4 @@ export function Loans({
       </div>
     </section>
   );
-}
-
-function idOf(loans: LoanProductRecord[], name: string): string {
-  return loans.find((l) => l.name === name)?.id ?? "";
 }

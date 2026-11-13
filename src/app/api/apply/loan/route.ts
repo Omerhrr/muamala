@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
     });
     return NextResponse.json({
       success: true,
-      message: "Thank you! Your loan application has been received — an officer will contact you within one business day.",
+      message: "Thank you! Your loan application has been received. An officer will contact you within one business day.",
     });
   } catch (error) {
     console.error("Loan application error:", error);

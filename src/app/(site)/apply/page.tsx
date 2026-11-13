@@ -8,7 +8,7 @@ export async function generateMetadata() {
   const general = await getSettingsGroup("general");
   return {
     title: `Open an account or apply for a loan | ${general.bankName}`,
-    description: `Start your ${general.shortName} account opening or loan application online — our team will call you back within one business day.`,
+    description: `Start your ${general.shortName} account opening or loan application online. Our team will call you back within one business day.`,
   };
 }
 
@@ -22,7 +22,7 @@ export default async function ApplyPage() {
   return (
     <>
       <PageHeader
-        eyebrow="Get started"
+        eyebrow={apply.eyebrow || "Get started"}
         title={apply.title}
         subtitle={apply.subtitle}
       />

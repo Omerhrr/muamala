@@ -9,7 +9,6 @@ import { Faq } from "@/components/site/faq";
 import { Contact } from "@/components/site/contact";
 import { getSiteSettings, getProducts, getLoanProducts, getFaqs, getNews } from "@/lib/content";
 import { MessageCircle } from "lucide-react";
-import { waLink } from "@/lib/content";
 
 export const dynamic = "force-dynamic";
 

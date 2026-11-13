@@ -89,7 +89,7 @@ export default async function AdminDashboard() {
         id: x.id,
         kind: "Loan",
         who: x.name,
-        detail: `${x.product} — ₦${x.amount.toLocaleString("en-NG")}`,
+        detail: `${x.product}: ₦${x.amount.toLocaleString("en-NG")}`,
         date: x.createdAt,
         href: "/admin/resources/loanapps",
       })),
@@ -147,7 +147,7 @@ export default async function AdminDashboard() {
       <header>
         <h1 className="font-serif text-3xl font-bold text-brand-900">Dashboard</h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Everything on the Muamala MFB website is editable from here — texts, products, loans,
+          Everything on the Muamala MFB website is editable from here: texts, products, loans,
           FAQs, news, team profiles, policies and the colour theme.
         </p>
       </header>
@@ -179,7 +179,7 @@ export default async function AdminDashboard() {
                   )}
                 </div>
                 <p className="mt-4 text-2xl font-bold text-brand-900">
-                  {card.total ?? "—"}
+                  {card.total ?? "-"}
                 </p>
                 <p className="mt-1 text-sm font-semibold text-muted-foreground">{card.label}</p>
               </Link>

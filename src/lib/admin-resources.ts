@@ -1,5 +1,5 @@
 /**
- * Registry of admin-managed collections — shared by the generic CRUD API
+ * Registry of admin-managed collections, shared by the generic CRUD API
  * and the admin resource manager UI.
  */
 
@@ -207,7 +207,12 @@ export const RESOURCES: Record<string, ResourceDef> = {
       { name: "email", label: "Email", type: "text" },
       { name: "address", label: "Address", type: "textarea" },
       {
-        name: "type", label: "Account type", type: "text",
+        name: "type", label: "Account type", type: "select",
+        options: [
+          { value: "individual", label: "Individual" },
+          { value: "group", label: "Group / cooperative" },
+          { value: "business", label: "Business" },
+        ],
       },
       { name: "bvn", label: "BVN", type: "text" },
       { name: "note", label: "Note", type: "textarea" },

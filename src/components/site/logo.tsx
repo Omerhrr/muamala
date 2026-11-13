@@ -13,7 +13,7 @@ export function Logo({ variant = "dark", className }: LogoProps) {
     <a
       href="/"
       className={cn("flex items-center gap-2.5 rounded-md", className)}
-      aria-label="Muamala Micro-Finance Bank — back to home"
+      aria-label="Muamala Micro-Finance Bank, back to home"
     >
       <Image
         src="/logo-mark.png"
@@ -45,7 +45,7 @@ export function Logo({ variant = "dark", className }: LogoProps) {
   );
 }
 
-/** The mark wrapped in a white chip — used on dark surfaces like the footer. */
+/** The mark wrapped in a white chip, used on dark surfaces like the footer. */
 export function LogoMarkChip({ className }: { className?: string }) {
   return (
     <span

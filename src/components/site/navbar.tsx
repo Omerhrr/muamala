@@ -89,10 +89,10 @@ export function Navbar({ general }: { general: GeneralSettings }) {
               </a>
             ))}
             <a
-              href="/apply"
+              href={general.navCtaHref || "/apply"}
               className="rounded-full bg-gold-500 px-5 py-2.5 text-sm font-bold text-brand-950 shadow-lg shadow-gold-500/25 transition-all hover:-translate-y-0.5 hover:bg-gold-400"
             >
-              Open an Account
+              {general.navCtaLabel || "Open an Account"}
             </a>
           </div>
 
@@ -134,11 +134,11 @@ export function Navbar({ general }: { general: GeneralSettings }) {
                   </a>
                 ))}
                 <a
-                  href="/apply"
+                  href={general.navCtaHref || "/apply"}
                   onClick={() => setOpen(false)}
                   className="mt-2 block rounded-full bg-gold-500 px-5 py-3 text-center text-sm font-bold text-brand-950"
                 >
-                  Open an Account
+                  {general.navCtaLabel || "Open an Account"}
                 </a>
               </div>
             </motion.div>

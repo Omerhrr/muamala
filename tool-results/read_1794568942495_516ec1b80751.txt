@@ -1,0 +1,703 @@
+     1→/**
+     2→ * Editable site content definitions — the single source of truth shared by
+     3→ * the seed script, the public site components and the admin settings editor.
+     4→ */
+     5→
+     6→export type FieldType =
+     7→  | "text"
+     8→  | "textarea"
+     9→  | "number"
+    10→  | "url"
+    11→  | "image"
+    12→  | "list" // string[]
+    13→  | "items"; // { [key]: string }[] with fixed itemFields
+    14→
+    15→export type ItemFieldDef = { name: string; label: string; type: "text" | "textarea" };
+    16→
+    17→export type FieldDef = {
+    18→  name: string;
+    19→  label: string;
+    20→  type: FieldType;
+    21→  help?: string;
+    22→  itemFields?: ItemFieldDef[];
+    23→};
+    24→
+    25→export type GroupDef = { key: string; title: string; description?: string; fields: FieldDef[] };
+    26→
+    27→export type Item = Record<string, string>;
+    28→
+    29→export type GeneralSettings = {
+    30→  bankName: string;
+    31→  shortName: string;
+    32→  rcNumber: string;
+    33→  tagline: string;
+    34→  address: string; // multiline
+    35→  phones: string[];
+    36→  whatsapp: string;
+    37→  emails: string[];
+    38→  hours: string[];
+    39→  rcLine: string;
+    40→  ussd: string;
+    41→  mapEmbedUrl: string;
+    42→  mapLink: string;
+    43→  facebook: string;
+    44→  instagram: string;
+    45→  twitter: string;
+    46→  linkedin: string;
+    47→};
+    48→
+    49→export type HomeSettings = {
+    50→  announcement: string; // empty = hidden
+    51→  heroBadge: string;
+    52→  heroTitle: string;
+    53→  heroTitleAccent: string;
+    54→  heroSubtitle: string;
+    55→  heroCtaPrimary: string;
+    56→  heroCtaSecondary: string;
+    57→  stats: { value: string; label: string }[];
+    58→};
+    59→
+    60→export type TrustSettings = {
+    61→  items: { title: string; sub: string }[];
+    62→};
+    63→
+    64→export type AboutSettings = {
+    65→  eyebrow: string;
+    66→  title: string;
+    67→  body1: string;
+    68→  body2: string;
+    69→  promises: string[];
+    70→  values: { label: string }[];
+    71→};
+    72→
+    73→export type AboutPageSettings = {
+    74→  historyTitle: string;
+    75→  historyBody: string;
+    76→  visionTitle: string;
+    77→  visionBody: string;
+    78→  missionTitle: string;
+    79→  missionBody: string;
+    80→  valuesBody: string;
+    81→  governanceTitle: string;
+    82→  governanceBody: string;
+    83→  csrTitle: string;
+    84→  csrBody: string;
+    85→};
+    86→
+    87→export type ProductsSettings = {
+    88→  eyebrow: string;
+    89→  title: string;
+    90→  subtitle: string;
+    91→};
+    92→
+    93→export type LoansSettings = {
+    94→  eyebrow: string;
+    95→  title: string;
+    96→  subtitle: string;
+    97→  requirementsNote: string;
+    98→  calcNote: string;
+    99→};
+   100→
+   101→export type AppSettings = {
+   102→  eyebrow: string;
+   103→  title: string;
+   104→  subtitle: string;
+   105→  features: { title: string; desc: string }[];
+   106→  ussdNote: string;
+   107→  internetBankingNote: string;
+   108→  playStoreUrl: string;
+   109→  appStoreUrl: string;
+   110→};
+   111→
+   112→export type NewsSettings = {
+   113→  eyebrow: string;
+   114→  title: string;
+   115→  subtitle: string;
+   116→};
+   117→
+   118→export type FaqSettings = {
+   119→  title: string;
+   120→  subtitle: string;
+   121→};
+   122→
+   123→export type ContactSettings = {
+   124→  eyebrow: string;
+   125→  title: string;
+   126→  subtitle: string;
+   127→  walkinTitle: string;
+   128→  walkinBody: string;
+   129→  subjects: string[];
+   130→};
+   131→
+   132→export type FooterSettings = {
+   133→  blurb: string;
+   134→  productLinks: string[];
+   135→  smallprint: string;
+   136→};
+   137→
+   138→export type ApplySettings = {
+   139→  title: string;
+   140→  subtitle: string;
+   141→  accountNote: string;
+   142→  loanNote: string;
+   143→};
+   144→
+   145→export type ServicesPageSettings = {
+   146→  title: string;
+   147→  subtitle: string;
+   148→  repaymentTitle: string;
+   149→  repaymentBody: string;
+   150→  repaymentChannels: string[];
+   151→  supportTitle: string;
+   152→  supportBody: string;
+   153→  whatsappTitle: string;
+   154→  whatsappBody: string;
+   155→};
+   156→
+   157→export type DigitalPageSettings = {
+   158→  title: string;
+   159→  subtitle: string;
+   160→  ussdStepsTitle: string;
+   161→  ussdSteps: string[];
+   162→  securityTitle: string;
+   163→  securityBody: string;
+   164→  securityTips: string[];
+   165→  supportTitle: string;
+   166→  supportBody: string;
+   167→};
+   168→
+   169→export type CompliancePageSettings = {
+   170→  title: string;
+   171→  subtitle: string;
+   172→  cbnTitle: string;
+   173→  cbnBody: string;
+   174→  ndicTitle: string;
+   175→  ndicBody: string;
+   176→  protectionTitle: string;
+   177→  protectionBody: string;
+   178→  complaintsTitle: string;
+   179→  complaintsBody: string;
+   180→  whistleTitle: string;
+   181→  whistleBody: string;
+   182→  amlTitle: string;
+   183→  amlBody: string;
+   184→};
+   185→
+   186→export type SiteSettingsPayload = {
+   187→  general: GeneralSettings;
+   188→  home: HomeSettings;
+   189→  trust: TrustSettings;
+   190→  about: AboutSettings;
+   191→  aboutPage: AboutPageSettings;
+   192→  products: ProductsSettings;
+   193→  loans: LoansSettings;
+   194→  app: AppSettings;
+   195→  news: NewsSettings;
+   196→  faq: FaqSettings;
+   197→  contact: ContactSettings;
+   198→  footer: FooterSettings;
+   199→  apply: ApplySettings;
+   200→  servicesPage: ServicesPageSettings;
+   201→  digitalPage: DigitalPageSettings;
+   202→  compliancePage: CompliancePageSettings;
+   203→};
+   204→
+   205→export const SETTING_GROUPS: GroupDef[] = [
+   206→  {
+   207→    key: "general",
+   208→    title: "General & Contact",
+   209→    description: "Bank identity, address, phone numbers, emails, opening hours and social links.",
+   210→    fields: [
+   211→      { name: "bankName", label: "Bank legal name", type: "text" },
+   212→      { name: "shortName", label: "Short name", type: "text" },
+   213→      { name: "rcNumber", label: "RC number", type: "text" },
+   214→      { name: "tagline", label: "Tagline", type: "text" },
+   215→      { name: "address", label: "Head office address", type: "textarea", help: "One line per row — shown on multiple lines across the site." },
+   216→      { name: "phones", label: "Phone numbers", type: "list" },
+   217→      { name: "whatsapp", label: "WhatsApp number", type: "text", help: "International format, e.g. +234 803 456 7890" },
+   218→      { name: "emails", label: "Email addresses", type: "list" },
+   219→      { name: "hours", label: "Operating hours", type: "list" },
+   220→      { name: "rcLine", label: "Utility bar line", type: "text", help: "Short text shown at the very top on desktop, e.g. RC number + city." },
+   221→      { name: "ussd", label: "USSD code", type: "text" },
+   222→      { name: "mapEmbedUrl", label: "Google Maps embed URL", type: "url", help: "Use https://www.google.com/maps?q=...&output=embed" },
+   223→      { name: "mapLink", label: "Google Maps link", type: "url" },
+   224→      { name: "facebook", label: "Facebook URL", type: "url" },
+   225→      { name: "instagram", label: "Instagram URL", type: "url" },
+   226→      { name: "twitter", label: "X (Twitter) URL", type: "url" },
+   227→      { name: "linkedin", label: "LinkedIn URL", type: "url" },
+   228→    ],
+   229→  },
+   230→  {
+   231→    key: "home",
+   232→    title: "Homepage & Hero",
+   233→    description: "Announcement banner, hero section text, call-to-action buttons and statistics.",
+   234→    fields: [
+   235→      { name: "announcement", label: "Announcement banner", type: "text", help: "Leave empty to hide the banner." },
+   236→      { name: "heroBadge", label: "Hero badge", type: "text" },
+   237→      { name: "heroTitle", label: "Hero title", type: "textarea" },
+   238→      { name: "heroTitleAccent", label: "Accent words", type: "text", help: "This part of the title is shown in italic gold." },
+   239→      { name: "heroSubtitle", label: "Hero subtitle", type: "textarea" },
+   240→      { name: "heroCtaPrimary", label: "Primary button", type: "text" },
+   241→      { name: "heroCtaSecondary", label: "Secondary button", type: "text" },
+   242→      {
+   243→        name: "stats",
+   244→        label: "Statistics",
+   245→        type: "items",
+   246→        itemFields: [
+   247→          { name: "value", label: "Value", type: "text" },
+   248→          { name: "label", label: "Label", type: "text" },
+   249→        ],
+   250→      },
+   251→    ],
+   252→  },
+   253→  {
+   254→    key: "trust",
+   255→    title: "Trust Bar",
+   256→    description: "The regulatory assurance strip under the hero.",
+   257→    fields: [
+   258→      {
+   259→        name: "items",
+   260→        label: "Trust items",
+   261→        type: "items",
+   262→        itemFields: [
+   263→          { name: "title", label: "Title", type: "text" },
+   264→          { name: "sub", label: "Subtitle", type: "text" },
+   265→        ],
+   266→      },
+   267→    ],
+   268→  },
+   269→  {
+   270→    key: "about",
+   271→    title: "About (homepage)",
+   272→    description: "The About preview section on the homepage.",
+   273→    fields: [
+   274→      { name: "eyebrow", label: "Eyebrow", type: "text" },
+   275→      { name: "title", label: "Title", type: "textarea" },
+   276→      { name: "body1", label: "Paragraph 1", type: "textarea" },
+   277→      { name: "body2", label: "Paragraph 2", type: "textarea" },
+   278→      { name: "promises", label: "Promises", type: "list" },
+   279→      {
+   280→        name: "values",
+   281→        label: "Core values",
+   282→        type: "items",
+   283→        itemFields: [{ name: "label", label: "Value", type: "text" }],
+   284→      },
+   285→    ],
+   286→  },
+   287→  {
+   288→    key: "aboutPage",
+   289→    title: "About page",
+   290→    description: "Full sections used on the /about page: history, vision, mission, governance and CSR.",
+   291→    fields: [
+   292→      { name: "historyTitle", label: "History title", type: "text" },
+   293→      { name: "historyBody", label: "History body", type: "textarea" },
+   294→      { name: "visionTitle", label: "Vision title", type: "text" },
+   295→      { name: "visionBody", label: "Vision body", type: "textarea" },
+   296→      { name: "missionTitle", label: "Mission title", type: "text" },
+   297→      { name: "missionBody", label: "Mission body", type: "textarea" },
+   298→      { name: "valuesBody", label: "Core values body", type: "textarea" },
+   299→      { name: "governanceTitle", label: "Governance title", type: "text" },
+   300→      { name: "governanceBody", label: "Governance body", type: "textarea" },
+   301→      { name: "csrTitle", label: "CSR title", type: "text" },
+   302→      { name: "csrBody", label: "CSR body", type: "textarea" },
+   303→    ],
+   304→  },
+   305→  {
+   306→    key: "products",
+   307→    title: "Products section",
+   308→    description: "Heading texts for the products & services section.",
+   309→    fields: [
+   310→      { name: "eyebrow", label: "Eyebrow", type: "text" },
+   311→      { name: "title", label: "Title", type: "textarea" },
+   312→      { name: "subtitle", label: "Subtitle", type: "textarea" },
+   313→    ],
+   314→  },
+   315→  {
+   316→    key: "loans",
+   317→    title: "Loans section",
+   318→    description: "Heading texts and notes for the loans & calculator section.",
+   319→    fields: [
+   320→      { name: "eyebrow", label: "Eyebrow", type: "text" },
+   321→      { name: "title", label: "Title", type: "textarea" },
+   322→      { name: "subtitle", label: "Subtitle", type: "textarea" },
+   323→      { name: "requirementsNote", label: "Requirements note", type: "textarea" },
+   324→      { name: "calcNote", label: "Calculator disclaimer", type: "textarea" },
+   325→    ],
+   326→  },
+   327→  {
+   328→    key: "app",
+   329→    title: "Mobile app section",
+   330→    description: "Muamala Mobile promo, USSD note and store links.",
+   331→    fields: [
+   332→      { name: "eyebrow", label: "Eyebrow", type: "text" },
+   333→      { name: "title", label: "Title", type: "textarea" },
+   334→      { name: "subtitle", label: "Subtitle", type: "textarea" },
+   335→      {
+   336→        name: "features",
+   337→        label: "App features",
+   338→        type: "items",
+   339→        itemFields: [
+   340→          { name: "title", label: "Title", type: "text" },
+   341→          { name: "desc", label: "Description", type: "text" },
+   342→        ],
+   343→      },
+   344→      { name: "ussdNote", label: "USSD note", type: "text" },
+   345→      { name: "internetBankingNote", label: "Internet banking note", type: "text" },
+   346→      { name: "playStoreUrl", label: "Google Play URL", type: "url" },
+   347→      { name: "appStoreUrl", label: "App Store URL", type: "url" },
+   348→    ],
+   349→  },
+   350→  {
+   351→    key: "news",
+   352→    title: "News section",
+   353→    description: "Heading texts for the news & announcements section.",
+   354→    fields: [
+   355→      { name: "eyebrow", label: "Eyebrow", type: "text" },
+   356→      { name: "title", label: "Title", type: "textarea" },
+   357→      { name: "subtitle", label: "Subtitle", type: "textarea" },
+   358→    ],
+   359→  },
+   360→  {
+   361→    key: "faq",
+   362→    title: "FAQ section",
+   363→    description: "Heading texts for the frequently asked questions.",
+   364→    fields: [
+   365→      { name: "title", label: "Title", type: "textarea" },
+   366→      { name: "subtitle", label: "Subtitle", type: "textarea" },
+   367→    ],
+   368→  },
+   369→  {
+   370→    key: "contact",
+   371→    title: "Contact section",
+   372→    description: "Contact section texts, enquiry subjects and the walk-in card.",
+   373→    fields: [
+   374→      { name: "eyebrow", label: "Eyebrow", type: "text" },
+   375→      { name: "title", label: "Title", type: "textarea" },
+   376→      { name: "subtitle", label: "Subtitle", type: "textarea" },
+   377→      { name: "walkinTitle", label: "Walk-in card title", type: "text" },
+   378→      { name: "walkinBody", label: "Walk-in card body", type: "textarea" },
+   379→      { name: "subjects", label: "Enquiry subjects", type: "list" },
+   380→    ],
+   381→  },
+   382→  {
+   383→    key: "footer",
+   384→    title: "Footer",
+   385→    description: "Footer blurb, product links and regulatory smallprint.",
+   386→    fields: [
+   387→      { name: "blurb", label: "Footer blurb", type: "textarea" },
+   388→      { name: "productLinks", label: "Product links", type: "list" },
+   389→      { name: "smallprint", label: "Regulatory smallprint", type: "textarea" },
+   390→    ],
+   391→  },
+   392→  {
+   393→    key: "apply",
+   394→    title: "Apply page",
+   395→    description: "Texts for the online account opening & loan application page.",
+   396→    fields: [
+   397→      { name: "title", label: "Title", type: "textarea" },
+   398→      { name: "subtitle", label: "Subtitle", type: "textarea" },
+   399→      { name: "accountNote", label: "Account form note", type: "textarea" },
+   400→      { name: "loanNote", label: "Loan form note", type: "textarea" },
+   401→    ],
+   402→  },
+   403→  {
+   404→    key: "servicesPage",
+   405→    title: "Customer service page",
+   406→    description: "Texts for the /services page: self-service cards, loan repayment information, ATM/POS support and WhatsApp support.",
+   407→    fields: [
+   408→      { name: "title", label: "Title", type: "textarea" },
+   409→      { name: "subtitle", label: "Subtitle", type: "textarea" },
+   410→      { name: "repaymentTitle", label: "Loan repayment title", type: "text" },
+   411→      { name: "repaymentBody", label: "Loan repayment body", type: "textarea" },
+   412→      { name: "repaymentChannels", label: "Repayment channels", type: "list" },
+   413→      { name: "supportTitle", label: "ATM/POS support title", type: "text" },
+   414→      { name: "supportBody", label: "ATM/POS support body", type: "textarea" },
+   415→      { name: "whatsappTitle", label: "WhatsApp support title", type: "text" },
+   416→      { name: "whatsappBody", label: "WhatsApp support body", type: "textarea" },
+   417→    ],
+   418→  },
+   419→  {
+   420→    key: "digitalPage",
+   421→    title: "Digital banking page",
+   422→    description: "Texts for the /digital page: USSD steps, security tips and support.",
+   423→    fields: [
+   424→      { name: "title", label: "Title", type: "textarea" },
+   425→      { name: "subtitle", label: "Subtitle", type: "textarea" },
+   426→      { name: "ussdStepsTitle", label: "USSD steps title", type: "text" },
+   427→      { name: "ussdSteps", label: "USSD steps", type: "list", help: "One step per line — shown as a numbered how-to." },
+   428→      { name: "securityTitle", label: "Security title", type: "text" },
+   429→      { name: "securityBody", label: "Security body", type: "textarea" },
+   430→      { name: "securityTips", label: "Security tips", type: "list" },
+   431→      { name: "supportTitle", label: "Support title", type: "text" },
+   432→      { name: "supportBody", label: "Support body", type: "textarea" },
+   433→    ],
+   434→  },
+   435→  {
+   436→    key: "compliancePage",
+   437→    title: "Compliance page",
+   438→    description: "Texts for the /compliance page: licence, deposit insurance, customer protection, complaints and whistleblowing summaries.",
+   439→    fields: [
+   440→      { name: "title", label: "Title", type: "textarea" },
+   441→      { name: "subtitle", label: "Subtitle", type: "textarea" },
+   442→      { name: "cbnTitle", label: "CBN card title", type: "text" },
+   443→      { name: "cbnBody", label: "CBN card body", type: "textarea" },
+   444→      { name: "ndicTitle", label: "NDIC card title", type: "text" },
+   445→      { name: "ndicBody", label: "NDIC card body", type: "textarea" },
+   446→      { name: "protectionTitle", label: "Customer protection card title", type: "text" },
+   447→      { name: "protectionBody", label: "Customer protection card body", type: "textarea" },
+   448→      { name: "complaintsTitle", label: "Complaints card title", type: "text" },
+   449→      { name: "complaintsBody", label: "Complaints card body", type: "textarea" },
+   450→      { name: "whistleTitle", label: "Whistleblowing card title", type: "text" },
+   451→      { name: "whistleBody", label: "Whistleblowing card body", type: "textarea" },
+   452→      { name: "amlTitle", label: "AML card title", type: "text" },
+   453→      { name: "amlBody", label: "AML card body", type: "textarea" },
+   454→    ],
+   455→  },
+   456→];
+   457→
+   458→export const DEFAULT_SETTINGS: SiteSettingsPayload = {
+   459→  general: {
+   460→    bankName: "Muamala Micro-Finance Bank Limited",
+   461→    shortName: "Muamala MFB",
+   462→    rcNumber: "RC 7179149",
+   463→    tagline: "Community banking that grows with you",
+   464→    address: "Murada Shopping Complex\nSuleja, Niger State, Nigeria",
+   465→    phones: ["+234 803 456 7890", "+234 805 987 6543"],
+   466→    whatsapp: "+234 803 456 7890",
+   467→    emails: ["hello@muamalamfb.com.ng", "support@muamalamfb.com.ng"],
+   468→    hours: [
+   469→      "Mon – Fri: 8:00am – 4:00pm",
+   470→      "Sat: 9:00am – 1:00pm",
+   471→      "Sun & public holidays: Closed",
+   472→    ],
+   473→    rcLine: "RC 7179149 · Suleja, Niger State",
+   474→    ussd: "*777#",
+   475→    mapEmbedUrl: "https://www.google.com/maps?q=Murada+Shopping+Complex,+Suleja,+Niger+State&output=embed",
+   476→    mapLink: "https://maps.google.com/?q=Murada+Shopping+Complex,+Suleja,+Niger+State",
+   477→    facebook: "#",
+   478→    instagram: "#",
+   479→    twitter: "#",
+   480→    linkedin: "#",
+   481→  },
+   482→  home: {
+   483→    announcement: "Muamala Mobile app — coming soon to Google Play & the App Store. Bank on any phone today with *777#.",
+   484→    heroBadge: "Licensed by the Central Bank of Nigeria",
+   485→    heroTitle: "Banking that grows with your hustle, wherever you are in Niger State.",
+   486→    heroTitleAccent: "your hustle",
+   487→    heroSubtitle:
+   488→      "Muamala Micro-Finance Bank gives market women, artisans, farmers and small businesses the savings, loans and payments tools of a modern bank — with the warmth of the community bank next door.",
+   489→    heroCtaPrimary: "Open an Account",
+   490→    heroCtaSecondary: "Explore Products",
+   491→    stats: [
+   492→      { value: "12,000+", label: "Customers served" },
+   493→      { value: "₦850M+", label: "Loans disbursed" },
+   494→      { value: "40+", label: "Agent locations" },
+   495→      { value: "98%", label: "Loan repayment rate" },
+   496→    ],
+   497→  },
+   498→  trust: {
+   499→    items: [
+   500→      {
+   501→        title: "Licensed by the Central Bank of Nigeria",
+   502→        sub: "A fully licensed microfinance bank",
+   503→      },
+   504→      {
+   505→        title: "Deposits insured by NDIC — up to ₦2,000,000",
+   506→        sub: "Your savings enjoy statutory deposit insurance",
+   507→      },
+   508→      {
+   509→        title: "Payments powered by Interswitch",
+   510→        sub: "Secure cards, transfers & bill payments",
+   511→      },
+   512→    ],
+   513→  },
+   514→  about: {
+   515→    eyebrow: "Who we are",
+   516→    title: "A community bank built for the everyday hustle of Nigeria",
+   517→    body1:
+   518→      "Muamala Micro-Finance Bank Limited is a Niger State–based microfinance bank on a mission to bring formal financial services within reach of every trader, farmer, artisan, salary earner and small business. Where big banks see too small, we see the real economy — the market stalls, the workshops, the family shops that keep communities moving.",
+   519→    body2:
+   520→      "We combine the reach of our branch and agent network with modern digital banking — cards, transfers, USSD and a mobile app on the way — so you can save safely, borrow responsibly and grow your business at your own pace.",
+   521→    promises: [
+   522→      "Licensed by the Central Bank of Nigeria (CBN)",
+   523→      "Deposits insured by the NDIC up to the statutory limit",
+   524→      "Branch and agent network across Niger State",
+   525→      "Simple, transparent charges — no hidden fees",
+   526→    ],
+   527→    values: [{ label: "Integrity" }, { label: "Community first" }, { label: "Customer focus" }, { label: "Transparency" }],
+   528→  },
+   529→  aboutPage: {
+   530→    historyTitle: "Our story",
+   531→    historyBody:
+   532→      "Muamala Micro-Finance Bank Limited (RC 7179149) began as Musharaka Micro-Finance Bank, serving traders and farming families around Suleja. The bank was renamed Muamala MFB to reflect its renewed promise: honest, patient, community-centred banking. From our head office at Murada Shopping Complex, Suleja, we have grown into a branch-and-agent network touching thousands of households and small businesses across Niger State.",
+   533→    visionTitle: "Our vision",
+   534→    visionBody:
+   535→      "To be the most trusted community bank in Nigeria — the first choice for households, traders and small enterprises who want dignified, affordable financial services close to home.",
+   536→    missionTitle: "Our mission",
+   537→    missionBody:
+   538→      "To promote financial inclusion by providing simple, secure and affordable savings, credit and payment services that help our customers grow their businesses, educate their children and plan their futures.",
+   539→    valuesBody:
+   540→      "Integrity — we keep our word. Community first — your growth is our growth. Customer focus — banking shaped around real lives, not paperwork. Transparency — clear terms, clear charges, no surprises.",
+   541→    governanceTitle: "Corporate governance",
+   542→    governanceBody:
+   543→      "Muamala MFB is governed by a Board of Directors with a balance of executive, non-executive and independent members, supported by Board committees for Audit, Risk Management and Credit. The bank applies the CBN's corporate governance guidelines for microfinance banks, with clear segregation of duties, internal audit oversight and regular regulatory reporting.",
+   544→    csrTitle: "Corporate social responsibility",
+   545→    csrBody:
+   546→      "We invest in the communities that sustain us — financial literacy classes for schools and market associations, support for local cooperatives, and community outreach programmes around Suleja and the wider Niger State.",
+   547→  },
+   548→  products: {
+   549→    eyebrow: "Our products",
+   550→    title: "Everything a growing business and household needs",
+   551→    subtitle:
+   552→      "From your first ₦1,000 savings to financing that restocks your shop — one bank, one account, all the tools.",
+   553→  },
+   554→  loans: {
+   555→    eyebrow: "Loans & financing",
+   556→    title: "Responsible credit for real businesses",
+   557→    subtitle:
+   558→      "No suits required. We lend against your savings pattern, your business cash-flow and your character — not your paperwork. Try the calculator to see what repayment looks like before you apply.",
+   559→    requirementsNote:
+   560→      "What you need to apply: BVN, valid ID, one passport photograph, utility bill — plus 3 months of savings history with us (or a guarantor with a Muamala account).",
+   561→    calcNote:
+   562→      "Indicative estimate only. Final rates and fees depend on product terms, credit assessment and applicable charges. Insurance and documentation fees may apply.",
+   563→  },
+   564→  app: {
+   565→    eyebrow: "Muamala Mobile",
+   566→    title: "Your branch, in your pocket",
+   567→    subtitle:
+   568→      "The Muamala Mobile app is in final testing with our partners at Interswitch and will hit the stores soon. Meanwhile, you can already bank on any phone with our USSD service.",
+   569→    features: [
+   570→      { title: "Instant transfers", desc: "Send money to any Nigerian bank in seconds." },
+   571→      { title: "Airtime & bills", desc: "Top-up airtime, data, electricity and more." },
+   572→      { title: "Target savings", desc: "Create and track savings goals right on your phone." },
+   573→      { title: "Agent locator", desc: "Find the nearest Muamala agent or branch instantly." },
+   574→    ],
+   575→    ussdNote: "Banking on any phone — no smartphone, no data bundle needed.",
+   576→    internetBankingNote:
+   577→      "Internet banking login launches together with the mobile app — one secure sign-on for web and mobile.",
+   578→    playStoreUrl: "",
+   579→    appStoreUrl: "",
+   580→  },
+   581→  news: {
+   582→    eyebrow: "News & updates",
+   583→    title: "Latest from the bank",
+   584→    subtitle: "Announcements, product launches, community outreach and financial literacy tips.",
+   585→  },
+   586→  faq: {
+   587→    title: "Questions our customers ask",
+   588→    subtitle: "Can't find your answer here? Send us a message below or call us — a real person will respond.",
+   589→  },
+   590→  contact: {
+   591→    eyebrow: "Get in touch",
+   592→    title: "Talk to us today",
+   593→    subtitle:
+   594→      "Opening an account, applying for a loan, becoming an agent or just asking a question — we usually respond within one business day.",
+   595→    walkinTitle: "Prefer to walk into a branch?",
+   596→    walkinBody:
+   597→      "Walk into our Suleja head office at Murada Shopping Complex or call any of our agents around you — bring your BVN and valid ID and we'll have you banking in minutes.",
+   598→    subjects: [
+   599→      "General enquiry",
+   600→      "Open an account",
+   601→      "Loan application",
+   602→      "Agent partnership",
+   603→      "ATM/POS support",
+   604→      "Complaints & feedback",
+   605→    ],
+   606→  },
+   607→  footer: {
+   608→    blurb:
+   609→      "Muamala Micro-Finance Bank Limited is a community-focused microfinance bank headquartered in Suleja, Niger State — bringing savings, loans and payments within reach of every household and small business.",
+   610→    productLinks: [
+   611→      "Individual savings",
+   612→      "Group & ajo savings",
+   613→      "Business savings",
+   614→      "Micro & SME loans",
+   615→      "Cards & payments",
+   616→      "Agency banking",
+   617→    ],
+   618→    smallprint:
+   619→      "Muamala Micro-Finance Bank Limited (RC 7179149) is licensed by the Central Bank of Nigeria (CBN). Deposits are insured by the Nigeria Deposit Insurance Corporation (NDIC) up to ₦2,000,000 per depositor. Card, transfer and bill payment services are processed through Interswitch infrastructure.",
+   620→  },
+   621→  apply: {
+   622→    title: "Open an account or apply for a loan",
+   623→    subtitle:
+   624→      "Start online in two minutes — our team will call you back to complete the process at any branch or agent point near you.",
+   625→    accountNote:
+   626→      "Bring your BVN, a valid ID, one passport photograph and a utility bill when you visit the branch or agent to complete your account opening.",
+   627→    loanNote:
+   628→      "Loan applications are subject to our credit process. An officer will contact you within one business day to discuss your application.",
+   629→  },
+   630→  servicesPage: {
+   631→    title: "Customer service & self-service",
+   632→    subtitle:
+   633→      "Start an application, check a repayment, report a card issue or find an answer — most things can be done in minutes, online or on any phone.",
+   634→    repaymentTitle: "Loan repayment information",
+   635→    repaymentBody:
+   636→      "Repaying your Muamala loan is simple and flexible. Your schedule is agreed in your offer letter — weekly or monthly — and you can liquidate early without hidden penalties. If you foresee difficulty making an installment, contact your loan officer before the due date and we will work out a plan with you.",
+   637→    repaymentChannels: [
+   638→      "Direct debit from your Muamala savings account",
+   639→      "Standing order from any Nigerian bank",
+   640→      "Cash at the Suleja branch or any Muamala agent",
+   641→      "Transfer into your loan account",
+   642→      "Dial *777# and follow the loan repayment menu",
+   643→    ],
+   644→    supportTitle: "ATM/POS support & enquiries",
+   645→    supportBody:
+   646→      "Card stuck, transaction failed or POS terminal down? Report it and we will investigate immediately. Failed transactions are auto-reversed by the payment switch; if a reversal takes longer than 24 hours, contact us with the transaction reference and we will escalate for you.",
+   647→    whatsappTitle: "WhatsApp customer service",
+   648→    whatsappBody:
+   649→      "Chat with our customer service team on WhatsApp during business hours — enquiries, statements requests, card issues and general support.",
+   650→  },
+   651→  digitalPage: {
+   652→    title: "Digital banking & mobile app",
+   653→    subtitle:
+   654→      "Bank from your phone, any phone. Transfers, payments, savings goals and support — secured with bank-grade encryption and Interswitch infrastructure.",
+   655→    ussdStepsTitle: "Banking on any phone with USSD",
+   656→    ussdSteps: [
+   657→      "Dial *777# on the phone line registered to your account",
+   658→      "Choose an option — balance, transfer, airtime or repayment",
+   659→      "Enter your amount and select the beneficiary account",
+   660→      "Confirm with your USSD PIN and receive an instant SMS receipt",
+   661→    ],
+   662→    securityTitle: "Security you can bank on",
+   663→    securityBody:
+   664→      "Every Muamala digital channel is protected with bank-grade encryption, and card and payment processing runs on Interswitch infrastructure. We will never call, SMS or email you asking for your PIN, password or full card number.",
+   665→    securityTips: [
+   666→      "Never share your PIN, password or OTP with anyone — not even bank staff",
+   667→      "Muamala staff will never ask you to move money to “safe-keep” it",
+   668→      "Cover your PIN at POS terminals and ATMs",
+   669→      "Report lost cards or a stolen phone immediately by phone or WhatsApp",
+   670→      "Check your SMS and email alerts after every transaction",
+   671→      "Change your password regularly and avoid obvious numbers or names",
+   672→    ],
+   673→    supportTitle: "Password reset & support",
+   674→    supportBody:
+   675→      "Locked out or forgotten your password? Our support team can reset your access after verifying your identity — call us, chat on WhatsApp or send a message and we will walk you through it.",
+   676→  },
+   677→  compliancePage: {
+   678→    title: "Regulation & compliance",
+   679→    subtitle:
+   680→      "We hold ourselves to the highest regulatory standards — licensed by the Central Bank of Nigeria, deposits insured by the NDIC, and policies that put customers first.",
+   681→    cbnTitle: "CBN licence status",
+   682→    cbnBody:
+   683→      "Muamala Micro-Finance Bank Limited (RC 7179149) is licensed by the Central Bank of Nigeria as a microfinance bank and operates under its supervision, examination and reporting framework.",
+   684→    ndicTitle: "NDIC deposit insurance",
+   685→    ndicBody:
+   686→      "Customer deposits are insured by the Nigeria Deposit Insurance Corporation up to ₦2,000,000 per depositor — the statutory maximum microfinance bank coverage.",
+   687→    protectionTitle: "Customer protection",
+   688→    protectionBody:
+   689→      "We follow the CBN's consumer protection framework: clear disclosure of terms, fair treatment, responsible lending, data privacy and transparent, prompt complaint resolution.",
+   690→    complaintsTitle: "Complaints handling",
+   691→    complaintsBody:
+   692→      "Every complaint is logged and tracked. We acknowledge within 24 hours, investigate and give you a written resolution. Unresolved complaints can be escalated to the CBN Consumer Protection Department.",
+   693→    whistleTitle: "Whistleblowing channel",
+   694→    whistleBody:
+   695→      "Suspect fraud, misconduct or a regulatory breach? Report it confidentially by phone, email or in writing — reports can be made anonymously and are handled without retaliation.",
+   696→    amlTitle: "Anti-money laundering & KYC",
+   697→    amlBody:
+   698→      "We run a full AML/CFT programme — customer due diligence, KYC at onboarding, transaction monitoring and statutory reporting to the NFIU, in line with CBN and NDLEA/NFIU requirements.",
+   699→  },
+   700→};
+   701→
+   702→export type SettingsGroupKey = keyof SiteSettingsPayload;
+   703→

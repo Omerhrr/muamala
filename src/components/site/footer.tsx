@@ -10,18 +10,6 @@ type FooterProps = {
   pages: PageRecord[];
 };
 
-const QUICK_LINKS = [
-  { label: "About us", href: "/about" },
-  { label: "Products & services", href: "/products" },
-  { label: "Loans & financing", href: "/products#loan-rates" },
-  { label: "Digital banking", href: "/digital" },
-  { label: "Customer service", href: "/services" },
-  { label: "Regulation & compliance", href: "/compliance" },
-  { label: "News & updates", href: "/news" },
-  { label: "Open an account", href: "/apply" },
-  { label: "Contact us", href: "/contact" },
-];
-
 const SOCIALS = [
   { icon: Facebook, label: "Facebook", key: "facebook" as const },
   { icon: Instagram, label: "Instagram", key: "instagram" as const },
@@ -32,6 +20,7 @@ const SOCIALS = [
 export function Footer({ general, footer, pages }: FooterProps) {
   const telHref = `tel:${(general.phones[0] ?? "").replace(/[^0-9+]/g, "")}`;
   const addressLines = general.address.split("\n").filter(Boolean);
+  const quickLinks = (footer.quickLinks ?? []).filter((l) => l.label && l.href);
 
   return (
     <footer className="mt-auto bg-brand-950 text-brand-100">
@@ -60,10 +49,10 @@ export function Footer({ general, footer, pages }: FooterProps) {
 
           {/* Quick links */}
           <nav aria-label="Quick links">
-            <p className="text-sm font-bold uppercase tracking-wider text-gold-400">Quick links</p>
+            <p className="text-sm font-bold uppercase tracking-wider text-gold-400">{footer.quickLinksTitle}</p>
             <ul className="mt-5 space-y-3">
-              {QUICK_LINKS.map(({ label, href }) => (
-                <li key={label}>
+              {quickLinks.map(({ label, href }) => (
+                <li key={`${label}-${href}`}>
                   <a href={href} className="text-sm text-brand-200 transition-colors hover:text-gold-300">
                     {label}
                   </a>
@@ -74,7 +63,7 @@ export function Footer({ general, footer, pages }: FooterProps) {
 
           {/* Products + legal */}
           <nav aria-label="Products and policies">
-            <p className="text-sm font-bold uppercase tracking-wider text-gold-400">Products</p>
+            <p className="text-sm font-bold uppercase tracking-wider text-gold-400">{footer.productsTitle}</p>
             <ul className="mt-5 space-y-3">
               {footer.productLinks.map((label) => (
                 <li key={label}>
@@ -84,7 +73,7 @@ export function Footer({ general, footer, pages }: FooterProps) {
                 </li>
               ))}
             </ul>
-            <p className="mt-8 text-sm font-bold uppercase tracking-wider text-gold-400">Policies</p>
+            <p className="mt-8 text-sm font-bold uppercase tracking-wider text-gold-400">{footer.policiesTitle}</p>
             <ul className="mt-5 space-y-3">
               {pages.slice(0, 4).map((page) => (
                 <li key={page.slug}>
@@ -103,7 +92,7 @@ export function Footer({ general, footer, pages }: FooterProps) {
 
           {/* Contact */}
           <div>
-            <p className="text-sm font-bold uppercase tracking-wider text-gold-400">Contact</p>
+            <p className="text-sm font-bold uppercase tracking-wider text-gold-400">{footer.contactTitle}</p>
             <ul className="mt-5 space-y-4 text-sm text-brand-200">
               <li className="flex items-start gap-3">
                 <MapPin className="mt-0.5 size-4 shrink-0 text-gold-400" aria-hidden="true" />
@@ -118,13 +107,13 @@ export function Footer({ general, footer, pages }: FooterProps) {
               <li className="flex items-center gap-3">
                 <Phone className="size-4 shrink-0 text-gold-400" aria-hidden="true" />
                 <a href={telHref} className="hover:text-gold-300">
-                  {general.phones[0]}
+                  {general.phones[0] ?? ""}
                 </a>
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="size-4 shrink-0 text-gold-400" aria-hidden="true" />
                 <a href={`mailto:${general.emails[0] ?? ""}`} className="hover:text-gold-300">
-                  {general.emails[0]}
+                  {general.emails[0] ?? ""}
                 </a>
               </li>
             </ul>
@@ -132,7 +121,7 @@ export function Footer({ general, footer, pages }: FooterProps) {
               <span className="rounded-lg bg-gold-500 px-2.5 py-1 font-mono text-xs font-bold tracking-widest text-brand-950">
                 {general.ussd}
               </span>
-              <p className="text-xs text-brand-200">USSD banking on any phone</p>
+              <p className="text-xs text-brand-200">{footer.ussdCaption}</p>
             </div>
           </div>
         </div>
@@ -144,7 +133,7 @@ export function Footer({ general, footer, pages }: FooterProps) {
           <p className="text-xs leading-relaxed text-brand-300">{footer.smallprint}</p>
           <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-brand-300">
             <p>© {new Date().getFullYear()} {general.bankName}. All rights reserved.</p>
-            <p>This website is for information purposes only and does not constitute financial advice.</p>
+            <p>{footer.legalLine}</p>
           </div>
         </div>
       </div>

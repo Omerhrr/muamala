@@ -27,25 +27,6 @@ export async function generateMetadata() {
   };
 }
 
-const COMPLAINT_STEPS = [
-  {
-    title: "Lodge your complaint",
-    body: "In person at the branch, by phone, WhatsApp, email or the website enquiry form — every channel reaches the same complaint register.",
-  },
-  {
-    title: "Acknowledgement within 24 hours",
-    body: "You receive a reference number and the name of the officer handling your case.",
-  },
-  {
-    title: "Investigation & feedback",
-    body: "We investigate fairly and keep you informed — most issues are resolved within 5 business days.",
-  },
-  {
-    title: "Resolution & escalation",
-    body: "You receive a written resolution. If you are not satisfied, you may escalate to the CBN Consumer Protection Department — we will give you the details.",
-  },
-];
-
 export default async function CompliancePage() {
   const [settings, general, pages] = await Promise.all([
     getSettingsGroup("compliancePage"),
@@ -111,16 +92,12 @@ export default async function CompliancePage() {
   return (
     <>
       <PageHeader
-        eyebrow="Regulation & compliance"
+        eyebrow={s.pageEyebrow || "Regulation & compliance"}
         title={s.title}
         subtitle={s.subtitle}
       >
         <div className="mt-8 flex flex-wrap gap-2.5">
-          {[
-            `Licensed by the Central Bank of Nigeria`,
-            `Deposits insured by the NDIC`,
-            `Interswitch-secured payments`,
-          ].map((chip) => (
+          {(s.headerChips ?? []).map((chip) => (
             <span
               key={chip}
               className="inline-flex items-center gap-2 rounded-full border border-gold-500/40 bg-gold-500/10 px-4 py-2 text-xs font-bold text-gold-300"
@@ -137,10 +114,10 @@ export default async function CompliancePage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
           <Reveal className="max-w-2xl">
             <p className="text-xs font-bold uppercase tracking-[0.28em] text-gold-600">
-              How we are regulated
+              {s.pillarsEyebrow}
             </p>
             <h2 className="mt-3 font-serif text-3xl font-bold tracking-tight text-brand-900 sm:text-4xl">
-              Supervised, insured and accountable
+              {s.pillarsTitle}
             </h2>
           </Reveal>
           <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -175,18 +152,17 @@ export default async function CompliancePage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
           <Reveal className="max-w-2xl">
             <p className="text-xs font-bold uppercase tracking-[0.28em] text-gold-600">
-              Complaints handling process
+              {s.stepsEyebrow}
             </p>
             <h2 className="mt-3 font-serif text-3xl font-bold tracking-tight text-brand-900 sm:text-4xl">
-              Four steps from complaint to resolution
+              {s.stepsTitle}
             </h2>
             <p className="mt-4 leading-relaxed text-muted-foreground">
-              We take every complaint seriously — and we measure ourselves on how fast and fairly
-              we close them.
+              {s.stepsIntro}
             </p>
           </Reveal>
           <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {COMPLAINT_STEPS.map((step, index) => (
+            {(s.steps ?? []).map((step, index) => (
               <Reveal key={step.title} delay={index * 0.08}>
                 <div className="relative flex h-full flex-col rounded-2xl border border-border bg-background p-6">
                   <span className="font-serif text-4xl font-bold text-gold-500/50">
@@ -206,12 +182,10 @@ export default async function CompliancePage() {
             <div className="flex flex-col items-start justify-between gap-5 rounded-3xl bg-brand-950 p-8 text-brand-100 sm:p-10 lg:flex-row lg:items-center">
               <div className="max-w-2xl">
                 <h3 className="font-serif text-xl font-bold text-white">
-                  Ready to file a complaint?
+                  {s.ctaTitle}
                 </h3>
                 <p className="mt-2 text-sm leading-relaxed text-brand-200">
-                  Reach us through any channel below — in person at Murada Shopping Complex,
-                  Suleja, by phone, WhatsApp or email. Your reference number follows within 24
-                  hours.
+                  {s.ctaBody}
                 </p>
               </div>
               <div className="flex flex-wrap gap-3">

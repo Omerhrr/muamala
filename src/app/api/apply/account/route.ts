@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
     });
     return NextResponse.json({
       success: true,
-      message: "Thank you! Your account request has been received — our team will call you shortly.",
+      message: "Thank you! Your account request has been received. Our team will call you shortly.",
     });
   } catch (error) {
     console.error("Account request error:", error);

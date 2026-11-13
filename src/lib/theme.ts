@@ -1,5 +1,5 @@
 /**
- * Theme utilities — pure colour maths shared by server (layout injection)
+ * Theme utilities: pure colour maths shared by server (layout injection)
  * and client (admin live preview).
  */
 
@@ -164,7 +164,7 @@ const LIGHTNESS_STEPS: [string, number, number][] = [
   ["950", 0.16, 1],
 ];
 
-/** Build a Tailwind-style 50–950 scale from a base hex. */
+/** Build a Tailwind-style 50-950 scale from a base hex. */
 export function scaleFromHex(base: string): Record<string, string> {
   const [h, s0, l0] = hexToHsl(base);
   const out: Record<string, string> = {};

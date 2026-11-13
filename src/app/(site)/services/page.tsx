@@ -8,7 +8,6 @@ import {
   PiggyBank,
   ShieldCheck,
   UserPlus,
-  type LucideIcon,
 } from "lucide-react";
 import { PageHeader } from "@/components/site/page-header";
 import { Reveal } from "@/components/site/reveal";
@@ -23,9 +22,11 @@ export async function generateMetadata() {
   const general = await getSettingsGroup("general");
   return {
     title: `Customer service & self-service | ${general.bankName}`,
-    description: `Open an account, apply for a loan, check repayment options, report a card issue or find answers — ${general.shortName} customer service, online and on any phone.`,
+    description: `Open an account, apply for a loan, check repayment options, report a card issue or find answers. ${general.shortName} customer service, online and on any phone.`,
   };
 }
+
+const SELF_SERVICE_ICONS = [UserPlus, HandCoins, PiggyBank, CalendarCheck2, HelpCircle, CreditCard];
 
 export default async function ServicesPage() {
   const [settings, general, faq, faqs] = await Promise.all([
@@ -40,55 +41,17 @@ export default async function ServicesPage() {
   const wa = waLink(g.whatsapp);
   const telHref = `tel:${(g.phones[0] ?? "").replace(/[^0-9+]/g, "")}`;
 
-  const SELF_SERVICE: {
-    icon: LucideIcon;
-    title: string;
-    desc: string;
-    href: string;
-    external?: boolean;
-  }[] = [
-    {
-      icon: UserPlus,
-      title: "Open an account online",
-      desc: "Start your savings account application now — finish at any branch or agent with your BVN and valid ID.",
-      href: "/apply?tab=account",
-    },
-    {
-      icon: HandCoins,
-      title: "Apply for a loan",
-      desc: "Tell us how much you need and what it is for — an officer calls you back within one business day.",
-      href: "/apply?tab=loan",
-    },
-    {
-      icon: PiggyBank,
-      title: "Savings enquiry",
-      desc: "Ask about account types, interest rates, target savings or your balance by phone, WhatsApp or the enquiry form.",
-      href: "/contact",
-    },
-    {
-      icon: CalendarCheck2,
-      title: "Loan repayment",
-      desc: "Five easy ways to repay — direct debit, standing order, cash at an agent, transfer or USSD.",
-      href: "#repayment",
-    },
-    {
-      icon: HelpCircle,
-      title: "Frequently asked questions",
-      desc: "Answers on licensing, account opening, rates, USSD banking, deposit safety and more.",
-      href: "#faq",
-    },
-    {
-      icon: CreditCard,
-      title: "ATM / POS support",
-      desc: "Report a failed transaction, stuck card or terminal issue — we escalate with the switch on your behalf.",
-      href: "#support",
-    },
-  ];
+  const SELF_SERVICE = (s.selfService ?? []).map((card, index) => ({
+    icon: SELF_SERVICE_ICONS[index % SELF_SERVICE_ICONS.length],
+    title: card.title,
+    desc: card.desc,
+    href: card.href || "/contact",
+  }));
 
   return (
     <>
       <PageHeader
-        eyebrow="Customer service & self-service"
+        eyebrow={s.pageEyebrow || "Customer service & self-service"}
         title={s.title}
         subtitle={s.subtitle}
       >
@@ -101,7 +64,7 @@ export default async function ServicesPage() {
               className="inline-flex items-center gap-2 rounded-full bg-gold-500 px-6 py-3 text-sm font-bold text-brand-950 shadow-lg shadow-gold-500/20 transition-all hover:-translate-y-0.5 hover:bg-gold-400"
             >
               <MessageCircle className="size-4" aria-hidden="true" />
-              WhatsApp customer service
+              {s.whatsappCta}
             </a>
           )}
           <a
@@ -118,10 +81,10 @@ export default async function ServicesPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
           <Reveal className="max-w-2xl">
             <p className="text-xs font-bold uppercase tracking-[0.28em] text-gold-600">
-              Self-service
+              {s.selfServiceEyebrow}
             </p>
             <h2 className="mt-3 font-serif text-3xl font-bold tracking-tight text-brand-900 sm:text-4xl">
-              What would you like to do today?
+              {s.selfServiceTitle}
             </h2>
           </Reveal>
           <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -223,7 +186,7 @@ export default async function ServicesPage() {
                   className="mt-6 inline-flex w-fit items-center gap-2 rounded-full bg-brand-800 px-6 py-3 text-sm font-bold text-white shadow-lg transition-all hover:-translate-y-0.5 hover:bg-brand-900"
                 >
                   <MessageCircle className="size-4" aria-hidden="true" />
-                  Chat with us — {g.whatsapp}
+                  Chat with us: {g.whatsapp}
                 </a>
               )}
             </div>

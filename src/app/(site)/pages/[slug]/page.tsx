@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: Props) {
   if (!page) return { title: `Not found | ${general.bankName}` };
   return {
     title: `${page.title} | ${general.bankName}`,
-    description: `${page.title} — ${general.bankName} (${general.rcNumber}), Suleja, Niger State.`,
+    description: `${page.title} | ${general.bankName} (${general.rcNumber}), Suleja, Niger State.`,
   };
 }
 

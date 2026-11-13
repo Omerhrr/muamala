@@ -240,7 +240,7 @@ export function SettingsEditor() {
           setValues(merged);
           toast({
             title: "Using default content",
-            description: "Could not load saved settings — showing defaults.",
+            description: "Could not load saved settings, showing defaults.",
             variant: "destructive",
           });
         }
@@ -306,7 +306,7 @@ export function SettingsEditor() {
         <div>
           <h1 className="font-serif text-3xl font-bold text-brand-900">Text & settings</h1>
           <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-            Edit every word on the website — headings, paragraphs, contact details, statistics,
+            Edit every word on the website: headings, paragraphs, contact details, statistics,
             store links and more. Changes go live immediately after saving.
           </p>
         </div>

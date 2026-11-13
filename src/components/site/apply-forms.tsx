@@ -33,6 +33,8 @@ type Props = {
   loans: LoanProductRecord[];
 };
 
+const STEP_ICONS = [Wallet, BadgeCheck, ShieldCheck];
+
 const ACCOUNT_TYPES = [
   { value: "individual", label: "Individual savings" },
   { value: "group", label: "Group / cooperative savings" },
@@ -491,36 +493,21 @@ export function ApplyForms({ settings, general, loans }: Props) {
           </Reveal>
         </div>
 
-        {/* What to bring */}
+        {/* How it works (editable in admin: Text & settings, Apply page) */}
         <Reveal className="mt-12">
           <div className="grid gap-4 rounded-3xl bg-brand-950 p-8 text-brand-100 sm:grid-cols-3 sm:p-10">
-            <div className="flex gap-4">
-              <Wallet className="size-6 shrink-0 text-gold-400" aria-hidden="true" />
-              <div>
-                <p className="text-sm font-bold text-white">1. Come as you are</p>
-                <p className="mt-1 text-xs leading-relaxed text-brand-200">
-                  Start online now — you do not need a bank referral to begin.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-4">
-              <BadgeCheck className="size-6 shrink-0 text-gold-400" aria-hidden="true" />
-              <div>
-                <p className="text-sm font-bold text-white">2. We call you back</p>
-                <p className="mt-1 text-xs leading-relaxed text-brand-200">
-                  An officer contacts you within one business day to confirm details.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-4">
-              <ShieldCheck className="size-6 shrink-0 text-gold-400" aria-hidden="true" />
-              <div>
-                <p className="text-sm font-bold text-white">3. Complete at the branch</p>
-                <p className="mt-1 text-xs leading-relaxed text-brand-200">
-                  Bring BVN, valid ID, one passport photo and a utility bill — done in minutes.
-                </p>
-              </div>
-            </div>
+            {(settings.steps ?? []).map((step, index) => {
+              const Icon = STEP_ICONS[index % STEP_ICONS.length];
+              return (
+                <div key={`${step.title}-${index}`} className="flex gap-4">
+                  <Icon className="size-6 shrink-0 text-gold-400" aria-hidden="true" />
+                  <div>
+                    <p className="text-sm font-bold text-white">{step.title}</p>
+                    <p className="mt-1 text-xs leading-relaxed text-brand-200">{step.body}</p>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </Reveal>
       </div>

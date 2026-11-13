@@ -91,7 +91,7 @@ function AppScreen() {
         <div className="mt-2.5 space-y-2.5">
           {[
             { icon: ArrowUpRight, label: "Transfer to Ola Cosmetics", sub: "Today, 9:24am", amount: "-₦15,000", credit: false },
-            { icon: ArrowDownLeft, label: "POS settlement — Agent 231", sub: "Yesterday, 4:02pm", amount: "+₦62,400", credit: true },
+            { icon: ArrowDownLeft, label: "POS settlement, Agent 231", sub: "Yesterday, 4:02pm", amount: "+₦62,400", credit: true },
             { icon: PiggyBank, label: "Ajo target savings", sub: "Yesterday, 8:00am", amount: "+₦25,000", credit: true },
           ].map(({ icon: Icon, label, sub, amount, credit }) => (
             <div key={label} className="flex items-center justify-between">

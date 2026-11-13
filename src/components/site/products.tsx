@@ -4,32 +4,33 @@ import { getIcon } from "@/lib/icons";
 import type { ProductsSettings } from "@/lib/site-settings";
 import type { ProductRecord } from "@/lib/content";
 
-const CATEGORY_META: { key: string; label: string; blurb: string; icon: LucideIcon }[] = [
-  {
-    key: "savings",
+const CATEGORY_KEYS = ["savings", "loans", "digital", "other"] as const;
+
+const CATEGORY_ICONS: Record<string, LucideIcon> = {
+  savings: getIcon("PiggyBank"),
+  loans: getIcon("HandCoins"),
+  digital: getIcon("Smartphone"),
+  other: getIcon("Store"),
+};
+
+const CATEGORY_FALLBACK: Record<string, { label: string; blurb: string }> = {
+  savings: {
     label: "Savings Accounts",
     blurb: "Individual, group and business savings that reward consistency.",
-    icon: getIcon("PiggyBank"),
   },
-  {
-    key: "loans",
+  loans: {
     label: "Loan Facilities",
     blurb: "Personal loans, business loans and SME financing with responsible terms.",
-    icon: getIcon("HandCoins"),
   },
-  {
-    key: "digital",
+  digital: {
     label: "Digital Banking",
     blurb: "Mobile banking, instant transfers and balance enquiries on any phone.",
-    icon: getIcon("Smartphone"),
   },
-  {
-    key: "other",
+  other: {
     label: "Other Services",
     blurb: "POS services, bill payments and agency banking in your neighbourhood.",
-    icon: getIcon("Store"),
   },
-];
+};
 
 export function Products({
   settings,
@@ -38,6 +39,17 @@ export function Products({
   settings: ProductsSettings;
   products: ProductRecord[];
 }) {
+  const categories = CATEGORY_KEYS.map((key, index) => {
+    const saved = settings.categories?.[index];
+    const fallback = CATEGORY_FALLBACK[key];
+    return {
+      key,
+      label: saved?.label?.trim() || fallback.label,
+      blurb: saved?.blurb?.trim() || fallback.blurb,
+      icon: CATEGORY_ICONS[key],
+    };
+  });
+
   return (
     <section id="products" className="bg-background py-20 lg:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
@@ -51,7 +63,7 @@ export function Products({
           <p className="mt-4 leading-relaxed text-muted-foreground">{settings.subtitle}</p>
         </Reveal>
 
-        {CATEGORY_META.map((meta, catIndex) => {
+        {categories.map((meta, catIndex) => {
           const items = products.filter((p) => p.category === meta.key);
           if (items.length === 0) return null;
           const Icon = meta.icon;
