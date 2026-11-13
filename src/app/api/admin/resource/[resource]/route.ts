@@ -3,7 +3,7 @@ import { db } from "@/lib/db";
 import { isAuthenticated } from "@/lib/auth";
 import { getResource, coerceResourceValues } from "@/lib/admin-resources";
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 
 type Delegate = {
   findMany: (args: Record<string, unknown>) => Promise<Record<string, unknown>[]>;

@@ -1,5 +1,5 @@
 import { MessageCircle } from "lucide-react";
-import { waLink } from "@/lib/content";
+import { waLink } from "@/lib/wa";
 
 /** Floating WhatsApp support bubble (hidden when no number is configured). */
 export function FloatingWhatsApp({ whatsapp }: { whatsapp: string }) {

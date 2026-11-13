@@ -6,6 +6,7 @@ import {
   PiggyBank,
   Receipt,
   Send,
+  Smartphone,
   Star,
   Store,
   Wifi,

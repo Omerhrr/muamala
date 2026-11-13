@@ -215,8 +215,4 @@ export async function getPage(slug: string): Promise<PageRecord | null> {
 
 /* ---------------- helpers ---------------- */
 
-/** wa.me link from a display phone number. */
-export function waLink(whatsapp: string): string {
-  const digits = whatsapp.replace(/[^0-9]/g, "");
-  return `https://wa.me/${digits}`;
-}
+export { waLink } from "@/lib/wa";

@@ -279,13 +279,16 @@ export function coerceResourceValues(
       case "boolean":
         out[field.name] = Boolean(raw);
         break;
-      case "list":
-        out[field.name] = Array.isArray(raw)
+      case "list": {
+        const arr = Array.isArray(raw)
           ? raw.map((v) => String(v)).filter((v) => v.trim().length > 0)
           : typeof raw === "string"
             ? raw.split("\n").map((v) => v.trim()).filter(Boolean)
             : [];
+        // list columns are stored as JSON strings in SQLite
+        out[field.name] = JSON.stringify(arr);
         break;
+      }
       case "date": {
         const d = new Date(String(raw));
         out[field.name] = Number.isNaN(d.getTime()) ? new Date() : d;

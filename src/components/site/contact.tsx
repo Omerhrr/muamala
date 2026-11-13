@@ -15,7 +15,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Reveal } from "@/components/site/reveal";
-import { waLink } from "@/lib/content";
+import { waLink } from "@/lib/wa";
 import type { ContactSettings, GeneralSettings } from "@/lib/site-settings";
 
 export function Contact({
