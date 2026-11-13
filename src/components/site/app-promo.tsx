@@ -1,40 +1,20 @@
 import {
   ArrowLeftRight,
   BellRing,
+  Globe,
   MapPin,
   PiggyBank,
   Receipt,
   Send,
-  Smartphone,
   Star,
   Store,
   Wifi,
 } from "lucide-react";
 import { PhoneFrame } from "@/components/site/phone-frame";
 import { Reveal } from "@/components/site/reveal";
+import type { AppSettings, GeneralSettings } from "@/lib/site-settings";
 
-const FEATURES = [
-  {
-    icon: Send,
-    title: "Instant transfers",
-    desc: "Send money to any Nigerian bank in seconds.",
-  },
-  {
-    icon: Receipt,
-    title: "Airtime & bills",
-    desc: "Top-up airtime, data, electricity and more.",
-  },
-  {
-    icon: PiggyBank,
-    title: "Target savings",
-    desc: "Create and track savings goals right on your phone.",
-  },
-  {
-    icon: MapPin,
-    title: "Agent locator",
-    desc: "Find the nearest Muamala agent or branch instantly.",
-  },
-];
+const FEATURE_ICONS = [Send, Receipt, PiggyBank, MapPin, Globe, Wifi];
 
 function SavingsScreen() {
   return (
@@ -102,26 +82,46 @@ function StoreBadge({
   top,
   bottom,
   icon,
+  soon,
+  href,
 }: {
   top: string;
   bottom: string;
   icon: React.ReactNode;
+  soon: boolean;
+  href?: string;
 }) {
-  return (
+  const inner = (
     <div className="flex items-center gap-3 rounded-xl border border-white/20 bg-white/10 px-4 py-2.5 backdrop-blur-sm transition-colors hover:border-gold-400/60">
       {icon}
       <div className="leading-tight">
         <p className="text-[9px] font-medium uppercase tracking-wide text-brand-200">{top}</p>
         <p className="text-sm font-bold text-white">{bottom}</p>
       </div>
-      <span className="ml-1 rounded-full bg-gold-500 px-2 py-0.5 text-[9px] font-bold text-brand-950">
-        Soon
-      </span>
+      {soon && (
+        <span className="ml-1 rounded-full bg-gold-500 px-2 py-0.5 text-[9px] font-bold text-brand-950">
+          Soon
+        </span>
+      )}
     </div>
   );
+  if (!soon && href) {
+    return (
+      <a href={href} target="_blank" rel="noopener noreferrer" aria-label={bottom}>
+        {inner}
+      </a>
+    );
+  }
+  return inner;
 }
 
-export function AppPromo() {
+export function AppPromo({
+  settings,
+  general,
+}: {
+  settings: AppSettings;
+  general: GeneralSettings;
+}) {
   return (
     <section id="app" className="relative overflow-hidden bg-brand-950 py-20 lg:py-28">
       <div className="lattice-bg absolute inset-0" aria-hidden="true" />
@@ -139,31 +139,30 @@ export function AppPromo() {
         <div>
           <Reveal>
             <p className="text-xs font-bold uppercase tracking-[0.28em] text-gold-400">
-              Muamala Mobile
+              {settings.eyebrow}
             </p>
             <h2 className="mt-3 font-serif text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-[2.7rem] lg:leading-[1.15]">
-              Your branch, in your pocket
+              {settings.title}
             </h2>
-            <p className="mt-5 max-w-lg leading-relaxed text-brand-100/85">
-              The Muamala Mobile app is in final testing with our partners at Interswitch and will
-              hit the stores soon. Meanwhile, you can already bank on any phone with our USSD
-              service.
-            </p>
+            <p className="mt-5 max-w-lg leading-relaxed text-brand-100/85">{settings.subtitle}</p>
           </Reveal>
 
           <Reveal delay={0.12}>
             <ul className="mt-8 grid gap-5 sm:grid-cols-2">
-              {FEATURES.map(({ icon: Icon, title, desc }) => (
-                <li key={title} className="flex items-start gap-3.5">
-                  <div className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-gold-500/30 bg-gold-500/10">
-                    <Icon className="size-5 text-gold-400" aria-hidden="true" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-bold text-white">{title}</p>
-                    <p className="mt-0.5 text-xs leading-relaxed text-brand-200">{desc}</p>
-                  </div>
-                </li>
-              ))}
+              {settings.features.map(({ title, desc }, index) => {
+                const Icon = FEATURE_ICONS[index % FEATURE_ICONS.length];
+                return (
+                  <li key={title} className="flex items-start gap-3.5">
+                    <div className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-gold-500/30 bg-gold-500/10">
+                      <Icon className="size-5 text-gold-400" aria-hidden="true" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-bold text-white">{title}</p>
+                      <p className="mt-0.5 text-xs leading-relaxed text-brand-200">{desc}</p>
+                    </div>
+                  </li>
+                );
+              })}
             </ul>
           </Reveal>
 
@@ -172,25 +171,30 @@ export function AppPromo() {
               <StoreBadge
                 top="Get it on"
                 bottom="Google Play"
-                icon={
-                  <Smartphone className="size-6 text-gold-400" aria-hidden="true" />
-                }
+                icon={<Smartphone className="size-6 text-gold-400" aria-hidden="true" />}
+                soon={!settings.playStoreUrl}
+                href={settings.playStoreUrl || undefined}
               />
               <StoreBadge
                 top="Download on the"
                 bottom="App Store"
                 icon={<Star className="size-6 text-gold-400" aria-hidden="true" />}
+                soon={!settings.appStoreUrl}
+                href={settings.appStoreUrl || undefined}
               />
             </div>
 
             <div className="mt-6 inline-flex items-center gap-3 rounded-2xl border border-white/15 bg-white/5 px-5 py-3.5">
               <span className="rounded-lg bg-gold-500 px-3 py-1.5 font-mono text-sm font-bold tracking-widest text-brand-950">
-                *777#
+                {general.ussd}
               </span>
-              <p className="text-xs leading-snug text-brand-100">
-                Banking on any phone — no smartphone, no data bundle needed.
-              </p>
+              <p className="text-xs leading-snug text-brand-100">{settings.ussdNote}</p>
             </div>
+
+            <p className="mt-5 flex items-center gap-2 text-xs text-brand-200">
+              <Globe className="size-4 text-gold-400" aria-hidden="true" />
+              {settings.internetBankingNote}
+            </p>
           </Reveal>
         </div>
 
@@ -201,7 +205,7 @@ export function AppPromo() {
               <SavingsScreen />
             </PhoneFrame>
             <div className="absolute -left-8 top-10 rounded-2xl border border-border bg-white px-4 py-3 shadow-2xl">
-              <p className="text-[11px] font-bold text-brand-900">*777# works on</p>
+              <p className="text-[11px] font-bold text-brand-900">{general.ussd} works on</p>
               <p className="mt-0.5 text-[11px] text-muted-foreground">
                 MTN · Airtel · Glo · 9mobile
               </p>

@@ -7,6 +7,8 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// ---------- Public site submissions ----------
+
 model ContactMessage {
   id        String   @id @default(cuid())
   name      String
@@ -14,5 +16,126 @@ model ContactMessage {
   email     String?
   subject   String
   message   String
+  status    String   @default("new") // new | read | resolved
   createdAt DateTime @default(now())
+}
+
+model AccountRequest {
+  id        String   @id @default(cuid())
+  name      String
+  phone     String
+  email     String?
+  address   String?
+  type      String // individual | group | business
+  bvn       String?
+  note      String?
+  status    String   @default("new") // new | in-review | approved | rejected
+  createdAt DateTime @default(now())
+}
+
+model LoanApplication {
+  id        String   @id @default(cuid())
+  name      String
+  phone     String
+  product   String
+  amount     Float
+  term      Int // months
+  purpose   String?
+  status    String   @default("new") // new | in-review | approved | rejected
+  createdAt DateTime @default(now())
+}
+
+// ---------- CMS content ----------
+
+// Key-value store for editable text content, one row per settings group.
+// `value` holds a JSON object of { field: value }.
+model SiteSetting {
+  key       String   @id
+  value     String
+  updatedAt DateTime @updatedAt
+}
+
+// Colour themes selectable in the admin panel.
+model ThemeConfig {
+  id        String  @id @default(cuid())
+  name      String
+  brand     String // base brand hex
+  gold      String // base gold hex
+  bg        String // base cream/white hex
+  isActive  Boolean @default(false)
+  isPreset  Boolean @default(false)
+}
+
+model Product {
+  id       String  @id @default(cuid())
+  category String // savings | loans | digital | other
+  title    String
+  desc     String
+  features String // JSON string[]
+  icon     String  @default("PiggyBank")
+  order    Int     @default(0)
+  visible  Boolean @default(true)
+}
+
+model LoanProduct {
+  id        String  @id @default(cuid())
+  name      String
+  desc      String
+  ratePct   Float // monthly flat rate, e.g. 3.0
+  minAmount Float   @default(20000)
+  maxAmount Float   @default(2000000)
+  maxTerm   Int     @default(12) // months
+  security  String
+  icon      String  @default("Store")
+  order     Int     @default(0)
+  visible   Boolean @default(true)
+}
+
+model Faq {
+  id       String  @id @default(cuid())
+  question String
+  answer   String
+  order    Int     @default(0)
+  visible  Boolean @default(true)
+}
+
+model NewsPost {
+  id       String   @id @default(cuid())
+  title    String
+  category String   @default("Announcement")
+  excerpt  String
+  body     String
+  image    String? // optional data-URL or path
+  date     DateTime @default(now())
+  visible  Boolean  @default(true)
+}
+
+model TeamMember {
+  id      String  @id @default(cuid())
+  name    String
+  role    String
+  type    String // board | management
+  bio     String?
+  photo   String?
+  order   Int     @default(0)
+  visible Boolean @default(true)
+}
+
+// Regulatory / legal / info pages, rendered as markdown at /pages/[slug]
+model ContentPage {
+  id       String  @id @default(cuid())
+  slug     String  @unique
+  title    String
+  category String  @default("legal") // legal | regulatory | info
+  body     String
+  visible  Boolean @default(true)
+}
+
+// ---------- Admin ----------
+
+model AdminUser {
+  id           String   @id @default(cuid())
+  username     String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
 }

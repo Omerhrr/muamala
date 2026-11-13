@@ -1,22 +1,18 @@
 import Image from "next/image";
-import { CheckCircle2, Eye, HandHeart, Target, Users } from "lucide-react";
+import { ArrowRight, CheckCircle2, Eye, HandHeart, Target, Users } from "lucide-react";
 import { Reveal } from "@/components/site/reveal";
+import type { AboutSettings } from "@/lib/site-settings";
+import type { GeneralSettings } from "@/lib/site-settings";
 
-const PROMISES = [
-  "Licensed by the Central Bank of Nigeria (CBN)",
-  "Deposits insured by the NDIC up to the statutory limit",
-  "Branch and agent network across Niger State",
-  "Simple, transparent charges — no hidden fees",
-];
+const VALUE_ICONS = [HandHeart, Users, Target, Eye];
 
-const VALUES = [
-  { icon: HandHeart, label: "Integrity" },
-  { icon: Users, label: "Community first" },
-  { icon: Target, label: "Customer focus" },
-  { icon: Eye, label: "Transparency" },
-];
-
-export function About() {
+export function About({
+  settings,
+  general,
+}: {
+  settings: AboutSettings;
+  general: GeneralSettings;
+}) {
   return (
     <section id="about" className="bg-card py-20 lg:py-28">
       <div className="mx-auto grid max-w-7xl items-center gap-14 px-4 sm:px-6 lg:grid-cols-2 lg:gap-20">
@@ -41,7 +37,7 @@ export function About() {
             />
           </div>
           <div className="absolute -bottom-7 -right-4 rounded-2xl border border-gold-200 bg-white px-6 py-4 shadow-xl sm:-right-7">
-            <p className="font-serif text-2xl font-bold text-brand-800">RC 7179149</p>
+            <p className="font-serif text-2xl font-bold text-brand-800">{general.rcNumber}</p>
             <p className="mt-0.5 text-xs font-medium text-muted-foreground">
               Incorporated in Nigeria
             </p>
@@ -52,31 +48,21 @@ export function About() {
         <div>
           <Reveal>
             <p className="text-xs font-bold uppercase tracking-[0.28em] text-gold-600">
-              Who we are
+              {settings.eyebrow}
             </p>
             <h2 className="mt-3 font-serif text-3xl font-bold tracking-tight text-brand-900 sm:text-4xl lg:text-[2.6rem] lg:leading-[1.15]">
-              A community bank built for the everyday hustle of Nigeria
+              {settings.title}
             </h2>
           </Reveal>
 
           <Reveal delay={0.1}>
-            <p className="mt-6 leading-relaxed text-muted-foreground">
-              Muamala Micro-Finance Bank Limited is a Niger State–based microfinance bank on a
-              mission to bring formal financial services within reach of every trader, farmer,
-              artisan, salary earner and small business. Where big banks see too small, we see
-              the real economy — the market stalls, the workshops, the family shops that keep
-              communities moving.
-            </p>
-            <p className="mt-4 leading-relaxed text-muted-foreground">
-              We combine the reach of our branch and agent network with modern digital banking —
-              cards, transfers, USSD and a mobile app on the way — so you can save safely, borrow
-              responsibly and grow your business at your own pace.
-            </p>
+            <p className="mt-6 leading-relaxed text-muted-foreground">{settings.body1}</p>
+            <p className="mt-4 leading-relaxed text-muted-foreground">{settings.body2}</p>
           </Reveal>
 
           <Reveal delay={0.18}>
             <ul className="mt-8 space-y-3">
-              {PROMISES.map((promise) => (
+              {settings.promises.map((promise) => (
                 <li key={promise} className="flex items-start gap-3">
                   <CheckCircle2
                     className="mt-0.5 size-5 shrink-0 text-brand-600"
@@ -90,16 +76,32 @@ export function About() {
 
           <Reveal delay={0.26}>
             <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-4">
-              {VALUES.map(({ icon: Icon, label }) => (
-                <div
-                  key={label}
-                  className="flex items-center gap-2.5 rounded-xl border border-border bg-background px-3.5 py-3"
-                >
-                  <Icon className="size-4 text-gold-600" aria-hidden="true" />
-                  <span className="text-xs font-bold text-brand-900">{label}</span>
-                </div>
-              ))}
+              {settings.values.map(({ label }, index) => {
+                const Icon = VALUE_ICONS[index % VALUE_ICONS.length];
+                return (
+                  <div
+                    key={label}
+                    className="flex items-center gap-2.5 rounded-xl border border-border bg-background px-3.5 py-3"
+                  >
+                    <Icon className="size-4 text-gold-600" aria-hidden="true" />
+                    <span className="text-xs font-bold text-brand-900">{label}</span>
+                  </div>
+                );
+              })}
             </div>
+          </Reveal>
+
+          <Reveal delay={0.32}>
+            <a
+              href="/about"
+              className="group mt-8 inline-flex items-center gap-2 text-sm font-bold text-brand-700 transition-colors hover:text-gold-600"
+            >
+              Learn more about the bank
+              <ArrowRight
+                className="size-4 transition-transform group-hover:translate-x-1"
+                aria-hidden="true"
+              />
+            </a>
           </Reveal>
         </div>
       </div>

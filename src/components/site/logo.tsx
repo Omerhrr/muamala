@@ -11,17 +11,17 @@ export function Logo({ variant = "dark", className }: LogoProps) {
 
   return (
     <a
-      href="#home"
+      href="/"
       className={cn("flex items-center gap-2.5 rounded-md", className)}
-      aria-label="Muamala Micro-Finance Bank — back to top"
+      aria-label="Muamala Micro-Finance Bank — back to home"
     >
       <Image
-        src="/logo.svg"
+        src="/logo-mark.png"
         alt="Muamala Micro-Finance Bank Limited emblem"
-        width={42}
-        height={42}
+        width={40}
+        height={40}
         priority
-        className="size-10 lg:size-[42px]"
+        className="size-9 lg:size-10"
       />
       <span className="flex flex-col leading-none">
         <span
@@ -42,5 +42,25 @@ export function Logo({ variant = "dark", className }: LogoProps) {
         </span>
       </span>
     </a>
+  );
+}
+
+/** The mark wrapped in a white chip — used on dark surfaces like the footer. */
+export function LogoMarkChip({ className }: { className?: string }) {
+  return (
+    <span
+      className={cn(
+        "inline-flex size-12 items-center justify-center rounded-xl bg-white shadow-sm",
+        className
+      )}
+    >
+      <Image
+        src="/logo-mark.png"
+        alt="Muamala Micro-Finance Bank emblem"
+        width={40}
+        height={40}
+        className="size-10"
+      />
+    </span>
   );
 }

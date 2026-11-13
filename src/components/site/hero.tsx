@@ -16,13 +16,7 @@ import {
   Wifi,
 } from "lucide-react";
 import { FloatingCard, PhoneFrame } from "@/components/site/phone-frame";
-
-const STATS = [
-  { value: "12,000+", label: "Customers served" },
-  { value: "₦850M+", label: "Loans disbursed" },
-  { value: "40+", label: "Agent locations" },
-  { value: "98%", label: "Loan repayment rate" },
-];
+import type { HomeSettings } from "@/lib/site-settings";
 
 const container = {
   hidden: {},
@@ -135,8 +129,16 @@ function AppScreen() {
   );
 }
 
-export function Hero() {
+export function Hero({ settings }: { settings: HomeSettings }) {
   const reduce = useReducedMotion();
+
+  const { heroTitle, heroTitleAccent } = settings;
+  const accentIndex = heroTitleAccent
+    ? heroTitle.toLowerCase().indexOf(heroTitleAccent.toLowerCase())
+    : -1;
+  const before = accentIndex > -1 ? heroTitle.slice(0, accentIndex) : heroTitle;
+  const accent = accentIndex > -1 ? heroTitle.slice(accentIndex, accentIndex + heroTitleAccent.length) : "";
+  const after = accentIndex > -1 ? heroTitle.slice(accentIndex + heroTitleAccent.length) : "";
 
   return (
     <section id="home" className="relative overflow-hidden bg-brand-950">
@@ -166,7 +168,7 @@ export function Hero() {
           <motion.div variants={item}>
             <span className="inline-flex items-center gap-2 rounded-full border border-gold-500/40 bg-gold-500/10 px-4 py-1.5 text-xs font-semibold text-gold-300">
               <CheckCircle2 className="size-3.5" aria-hidden="true" />
-              Licensed by the Central Bank of Nigeria
+              {settings.heroBadge}
             </span>
           </motion.div>
 
@@ -174,36 +176,34 @@ export function Hero() {
             variants={item}
             className="mt-6 font-serif text-4xl font-bold leading-[1.12] tracking-tight text-white sm:text-5xl lg:text-[3.6rem]"
           >
-            Banking that grows with{" "}
-            <span className="italic text-gold-400">your hustle</span>, wherever you are in Niger
-            State.
+            {before}
+            {accent && <span className="italic text-gold-400">{accent}</span>}
+            {after}
           </motion.h1>
 
           <motion.p
             variants={item}
             className="mt-6 max-w-xl text-base leading-relaxed text-brand-100/85 sm:text-lg"
           >
-            Muamala Micro-Finance Bank gives market women, artisans, farmers and small businesses
-            the savings, loans and payments tools of a modern bank — with the warmth of the
-            community bank next door.
+            {settings.heroSubtitle}
           </motion.p>
 
           <motion.div variants={item} className="mt-8 flex flex-wrap items-center gap-4">
             <a
-              href="#contact"
+              href="/apply"
               className="group inline-flex items-center gap-2 rounded-full bg-gold-500 px-7 py-3.5 text-sm font-bold text-brand-950 shadow-xl shadow-gold-500/25 transition-all hover:-translate-y-0.5 hover:bg-gold-400"
             >
-              Open an Account
+              {settings.heroCtaPrimary}
               <ArrowRight
                 className="size-4 transition-transform group-hover:translate-x-1"
                 aria-hidden="true"
               />
             </a>
             <a
-              href="#products"
+              href="/#products"
               className="inline-flex items-center gap-2 rounded-full border border-white/25 px-7 py-3.5 text-sm font-bold text-white transition-colors hover:border-gold-400 hover:text-gold-300"
             >
-              Explore Products
+              {settings.heroCtaSecondary}
             </a>
           </motion.div>
 
@@ -212,7 +212,7 @@ export function Hero() {
             variants={item}
             className="mt-12 grid max-w-xl grid-cols-2 gap-x-6 gap-y-6 border-t border-white/10 pt-8 sm:grid-cols-4"
           >
-            {STATS.map((stat) => (
+            {settings.stats.map((stat) => (
               <div key={stat.label}>
                 <dt className="sr-only">{stat.label}</dt>
                 <dd className="font-serif text-2xl font-bold text-gold-300">{stat.value}</dd>

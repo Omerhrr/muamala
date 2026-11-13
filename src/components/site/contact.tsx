@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Clock, Loader2, Mail, MapPin, Phone, Send } from "lucide-react";
+import { Clock, Loader2, Mail, MapPin, MessageCircle, Phone, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -15,53 +15,32 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Reveal } from "@/components/site/reveal";
+import { waLink } from "@/lib/content";
+import type { ContactSettings, GeneralSettings } from "@/lib/site-settings";
 
-const CONTACT_INFO = [
-  {
-    icon: MapPin,
-    title: "Head Office",
-    lines: ["Plot 14, Bosso Road, by Tungan Gari Market,", "Minna, Niger State, Nigeria"],
-  },
-  {
-    icon: Phone,
-    title: "Call us",
-    lines: ["0803 123 4567", "0805 765 4321"],
-  },
-  {
-    icon: Mail,
-    title: "Email",
-    lines: ["hello@muamalamfb.com.ng", "support@muamalamfb.com.ng"],
-  },
-  {
-    icon: Clock,
-    title: "Opening hours",
-    lines: ["Mon – Fri: 8:00am – 4:00pm", "Sat: 9:00am – 1:00pm"],
-  },
-];
-
-const SUBJECTS = [
-  "General enquiry",
-  "Open an account",
-  "Loan application",
-  "Agent partnership",
-  "Complaints & feedback",
-];
-
-const EMPTY_FORM = {
-  name: "",
-  phone: "",
-  email: "",
-  subject: "",
-  message: "",
-};
-
-export function Contact() {
+export function Contact({
+  contact,
+  general,
+}: {
+  contact: ContactSettings;
+  general: GeneralSettings;
+}) {
   const { toast } = useToast();
-  const [form, setForm] = useState(EMPTY_FORM);
+  const [form, setForm] = useState({ name: "", phone: "", email: "", subject: "", message: "" });
   const [submitting, setSubmitting] = useState(false);
 
-  const update = (field: keyof typeof EMPTY_FORM) => (value: string) =>
+  const update = (field: keyof typeof form) => (value: string) =>
     setForm((prev) => ({ ...prev, [field]: value }));
+
+  const addressLines = general.address.split("\n").filter(Boolean);
+  const telHref = `tel:${(general.phones[0] ?? "").replace(/[^0-9+]/g, "")}`;
+
+  const INFO = [
+    { icon: MapPin, title: "Head Office", lines: addressLines },
+    { icon: Phone, title: "Call us", lines: general.phones },
+    { icon: Mail, title: "Email", lines: general.emails },
+    { icon: Clock, title: "Opening hours", lines: general.hours },
+  ];
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -80,7 +59,7 @@ export function Contact() {
           description:
             data.message ?? "Thank you for reaching out. Our team will contact you shortly.",
         });
-        setForm(EMPTY_FORM);
+        setForm({ name: "", phone: "", email: "", subject: "", message: "" });
       } else {
         toast({
           title: "Could not send message",
@@ -104,21 +83,18 @@ export function Contact() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <Reveal className="max-w-2xl">
           <p className="text-xs font-bold uppercase tracking-[0.28em] text-gold-600">
-            Get in touch
+            {contact.eyebrow}
           </p>
           <h2 className="mt-3 font-serif text-3xl font-bold tracking-tight text-brand-900 sm:text-4xl">
-            Talk to us today
+            {contact.title}
           </h2>
-          <p className="mt-4 leading-relaxed text-muted-foreground">
-            Opening an account, applying for a loan, becoming an agent or just asking a question —
-            we usually respond within one business day.
-          </p>
+          <p className="mt-4 leading-relaxed text-muted-foreground">{contact.subtitle}</p>
         </Reveal>
 
         <div className="mt-12 grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:gap-14">
           {/* Info cards */}
           <div className="space-y-4">
-            {CONTACT_INFO.map(({ icon: Icon, title, lines }, index) => (
+            {INFO.map(({ icon: Icon, title, lines }, index) => (
               <Reveal key={title} delay={index * 0.07}>
                 <div className="flex items-start gap-4 rounded-2xl border border-border bg-background p-5">
                   <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-brand-800">
@@ -138,20 +114,28 @@ export function Contact() {
 
             <Reveal delay={0.3}>
               <div className="rounded-2xl bg-brand-950 p-6">
-                <p className="font-serif text-lg font-bold text-white">
-                  Prefer to walk into a branch?
-                </p>
-                <p className="mt-1.5 text-sm leading-relaxed text-brand-200">
-                  Walk into our Minna head office or call any of our agents around you — bring your
-                  BVN and valid ID and we&rsquo;ll have you banking in minutes.
-                </p>
-                <a
-                  href="tel:+2348031234567"
-                  className="mt-4 inline-flex items-center gap-2 rounded-full bg-gold-500 px-5 py-2.5 text-sm font-bold text-brand-950 transition-colors hover:bg-gold-400"
-                >
-                  <Phone className="size-4" aria-hidden="true" />
-                  0803 123 4567
-                </a>
+                <p className="font-serif text-lg font-bold text-white">{contact.walkinTitle}</p>
+                <p className="mt-1.5 text-sm leading-relaxed text-brand-200">{contact.walkinBody}</p>
+                <div className="mt-4 flex flex-wrap gap-3">
+                  <a
+                    href={telHref}
+                    className="inline-flex items-center gap-2 rounded-full bg-gold-500 px-5 py-2.5 text-sm font-bold text-brand-950 transition-colors hover:bg-gold-400"
+                  >
+                    <Phone className="size-4" aria-hidden="true" />
+                    {general.phones[0]}
+                  </a>
+                  {general.whatsapp && (
+                    <a
+                      href={waLink(general.whatsapp)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 rounded-full border border-white/25 px-5 py-2.5 text-sm font-bold text-white transition-colors hover:border-gold-400 hover:text-gold-300"
+                    >
+                      <MessageCircle className="size-4" aria-hidden="true" />
+                      WhatsApp us
+                    </a>
+                  )}
+                </div>
               </div>
             </Reveal>
           </div>
@@ -206,7 +190,7 @@ export function Contact() {
                       <SelectValue placeholder="Select a subject" />
                     </SelectTrigger>
                     <SelectContent>
-                      {SUBJECTS.map((subject) => (
+                      {contact.subjects.map((subject) => (
                         <SelectItem key={subject} value={subject}>
                           {subject}
                         </SelectItem>
@@ -231,8 +215,8 @@ export function Contact() {
 
               <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
                 <p className="max-w-xs text-[11px] leading-relaxed text-muted-foreground">
-                  By submitting, you consent to Muamala MFB contacting you about this enquiry. We
-                  never share your details with third parties.
+                  By submitting, you consent to {general.shortName} contacting you about this
+                  enquiry. We never share your details with third parties.
                 </p>
                 <Button
                   type="submit"
@@ -255,6 +239,34 @@ export function Contact() {
             </form>
           </Reveal>
         </div>
+
+        {/* Map */}
+        {general.mapEmbedUrl && (
+          <Reveal delay={0.18} className="mt-12">
+            <div className="overflow-hidden rounded-3xl border border-border">
+              <iframe
+                src={general.mapEmbedUrl}
+                title={`${general.bankName} location map`}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                className="h-[360px] w-full"
+                allowFullScreen
+              />
+            </div>
+            {general.mapLink && (
+              <p className="mt-3 text-center text-xs text-muted-foreground">
+                <a
+                  href={general.mapLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-semibold text-brand-700 hover:text-gold-600"
+                >
+                  Open in Google Maps →
+                </a>
+              </p>
+            )}
+          </Reveal>
+        )}
       </div>
     </section>
   );
