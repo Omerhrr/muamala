@@ -142,6 +142,47 @@ export type ApplySettings = {
   loanNote: string;
 };
 
+export type ServicesPageSettings = {
+  title: string;
+  subtitle: string;
+  repaymentTitle: string;
+  repaymentBody: string;
+  repaymentChannels: string[];
+  supportTitle: string;
+  supportBody: string;
+  whatsappTitle: string;
+  whatsappBody: string;
+};
+
+export type DigitalPageSettings = {
+  title: string;
+  subtitle: string;
+  ussdStepsTitle: string;
+  ussdSteps: string[];
+  securityTitle: string;
+  securityBody: string;
+  securityTips: string[];
+  supportTitle: string;
+  supportBody: string;
+};
+
+export type CompliancePageSettings = {
+  title: string;
+  subtitle: string;
+  cbnTitle: string;
+  cbnBody: string;
+  ndicTitle: string;
+  ndicBody: string;
+  protectionTitle: string;
+  protectionBody: string;
+  complaintsTitle: string;
+  complaintsBody: string;
+  whistleTitle: string;
+  whistleBody: string;
+  amlTitle: string;
+  amlBody: string;
+};
+
 export type SiteSettingsPayload = {
   general: GeneralSettings;
   home: HomeSettings;
@@ -156,6 +197,9 @@ export type SiteSettingsPayload = {
   contact: ContactSettings;
   footer: FooterSettings;
   apply: ApplySettings;
+  servicesPage: ServicesPageSettings;
+  digitalPage: DigitalPageSettings;
+  compliancePage: CompliancePageSettings;
 };
 
 export const SETTING_GROUPS: GroupDef[] = [
@@ -356,6 +400,59 @@ export const SETTING_GROUPS: GroupDef[] = [
       { name: "loanNote", label: "Loan form note", type: "textarea" },
     ],
   },
+  {
+    key: "servicesPage",
+    title: "Customer service page",
+    description: "Texts for the /services page: self-service cards, loan repayment information, ATM/POS support and WhatsApp support.",
+    fields: [
+      { name: "title", label: "Title", type: "textarea" },
+      { name: "subtitle", label: "Subtitle", type: "textarea" },
+      { name: "repaymentTitle", label: "Loan repayment title", type: "text" },
+      { name: "repaymentBody", label: "Loan repayment body", type: "textarea" },
+      { name: "repaymentChannels", label: "Repayment channels", type: "list" },
+      { name: "supportTitle", label: "ATM/POS support title", type: "text" },
+      { name: "supportBody", label: "ATM/POS support body", type: "textarea" },
+      { name: "whatsappTitle", label: "WhatsApp support title", type: "text" },
+      { name: "whatsappBody", label: "WhatsApp support body", type: "textarea" },
+    ],
+  },
+  {
+    key: "digitalPage",
+    title: "Digital banking page",
+    description: "Texts for the /digital page: USSD steps, security tips and support.",
+    fields: [
+      { name: "title", label: "Title", type: "textarea" },
+      { name: "subtitle", label: "Subtitle", type: "textarea" },
+      { name: "ussdStepsTitle", label: "USSD steps title", type: "text" },
+      { name: "ussdSteps", label: "USSD steps", type: "list", help: "One step per line — shown as a numbered how-to." },
+      { name: "securityTitle", label: "Security title", type: "text" },
+      { name: "securityBody", label: "Security body", type: "textarea" },
+      { name: "securityTips", label: "Security tips", type: "list" },
+      { name: "supportTitle", label: "Support title", type: "text" },
+      { name: "supportBody", label: "Support body", type: "textarea" },
+    ],
+  },
+  {
+    key: "compliancePage",
+    title: "Compliance page",
+    description: "Texts for the /compliance page: licence, deposit insurance, customer protection, complaints and whistleblowing summaries.",
+    fields: [
+      { name: "title", label: "Title", type: "textarea" },
+      { name: "subtitle", label: "Subtitle", type: "textarea" },
+      { name: "cbnTitle", label: "CBN card title", type: "text" },
+      { name: "cbnBody", label: "CBN card body", type: "textarea" },
+      { name: "ndicTitle", label: "NDIC card title", type: "text" },
+      { name: "ndicBody", label: "NDIC card body", type: "textarea" },
+      { name: "protectionTitle", label: "Customer protection card title", type: "text" },
+      { name: "protectionBody", label: "Customer protection card body", type: "textarea" },
+      { name: "complaintsTitle", label: "Complaints card title", type: "text" },
+      { name: "complaintsBody", label: "Complaints card body", type: "textarea" },
+      { name: "whistleTitle", label: "Whistleblowing card title", type: "text" },
+      { name: "whistleBody", label: "Whistleblowing card body", type: "textarea" },
+      { name: "amlTitle", label: "AML card title", type: "text" },
+      { name: "amlBody", label: "AML card body", type: "textarea" },
+    ],
+  },
 ];
 
 export const DEFAULT_SETTINGS: SiteSettingsPayload = {
@@ -529,6 +626,76 @@ export const DEFAULT_SETTINGS: SiteSettingsPayload = {
       "Bring your BVN, a valid ID, one passport photograph and a utility bill when you visit the branch or agent to complete your account opening.",
     loanNote:
       "Loan applications are subject to our credit process. An officer will contact you within one business day to discuss your application.",
+  },
+  servicesPage: {
+    title: "Customer service & self-service",
+    subtitle:
+      "Start an application, check a repayment, report a card issue or find an answer — most things can be done in minutes, online or on any phone.",
+    repaymentTitle: "Loan repayment information",
+    repaymentBody:
+      "Repaying your Muamala loan is simple and flexible. Your schedule is agreed in your offer letter — weekly or monthly — and you can liquidate early without hidden penalties. If you foresee difficulty making an installment, contact your loan officer before the due date and we will work out a plan with you.",
+    repaymentChannels: [
+      "Direct debit from your Muamala savings account",
+      "Standing order from any Nigerian bank",
+      "Cash at the Suleja branch or any Muamala agent",
+      "Transfer into your loan account",
+      "Dial *777# and follow the loan repayment menu",
+    ],
+    supportTitle: "ATM/POS support & enquiries",
+    supportBody:
+      "Card stuck, transaction failed or POS terminal down? Report it and we will investigate immediately. Failed transactions are auto-reversed by the payment switch; if a reversal takes longer than 24 hours, contact us with the transaction reference and we will escalate for you.",
+    whatsappTitle: "WhatsApp customer service",
+    whatsappBody:
+      "Chat with our customer service team on WhatsApp during business hours — enquiries, statements requests, card issues and general support.",
+  },
+  digitalPage: {
+    title: "Digital banking & mobile app",
+    subtitle:
+      "Bank from your phone, any phone. Transfers, payments, savings goals and support — secured with bank-grade encryption and Interswitch infrastructure.",
+    ussdStepsTitle: "Banking on any phone with USSD",
+    ussdSteps: [
+      "Dial *777# on the phone line registered to your account",
+      "Choose an option — balance, transfer, airtime or repayment",
+      "Enter your amount and select the beneficiary account",
+      "Confirm with your USSD PIN and receive an instant SMS receipt",
+    ],
+    securityTitle: "Security you can bank on",
+    securityBody:
+      "Every Muamala digital channel is protected with bank-grade encryption, and card and payment processing runs on Interswitch infrastructure. We will never call, SMS or email you asking for your PIN, password or full card number.",
+    securityTips: [
+      "Never share your PIN, password or OTP with anyone — not even bank staff",
+      "Muamala staff will never ask you to move money to “safe-keep” it",
+      "Cover your PIN at POS terminals and ATMs",
+      "Report lost cards or a stolen phone immediately by phone or WhatsApp",
+      "Check your SMS and email alerts after every transaction",
+      "Change your password regularly and avoid obvious numbers or names",
+    ],
+    supportTitle: "Password reset & support",
+    supportBody:
+      "Locked out or forgotten your password? Our support team can reset your access after verifying your identity — call us, chat on WhatsApp or send a message and we will walk you through it.",
+  },
+  compliancePage: {
+    title: "Regulation & compliance",
+    subtitle:
+      "We hold ourselves to the highest regulatory standards — licensed by the Central Bank of Nigeria, deposits insured by the NDIC, and policies that put customers first.",
+    cbnTitle: "CBN licence status",
+    cbnBody:
+      "Muamala Micro-Finance Bank Limited (RC 7179149) is licensed by the Central Bank of Nigeria as a microfinance bank and operates under its supervision, examination and reporting framework.",
+    ndicTitle: "NDIC deposit insurance",
+    ndicBody:
+      "Customer deposits are insured by the Nigeria Deposit Insurance Corporation up to ₦2,000,000 per depositor — the statutory maximum microfinance bank coverage.",
+    protectionTitle: "Customer protection",
+    protectionBody:
+      "We follow the CBN's consumer protection framework: clear disclosure of terms, fair treatment, responsible lending, data privacy and transparent, prompt complaint resolution.",
+    complaintsTitle: "Complaints handling",
+    complaintsBody:
+      "Every complaint is logged and tracked. We acknowledge within 24 hours, investigate and give you a written resolution. Unresolved complaints can be escalated to the CBN Consumer Protection Department.",
+    whistleTitle: "Whistleblowing channel",
+    whistleBody:
+      "Suspect fraud, misconduct or a regulatory breach? Report it confidentially by phone, email or in writing — reports can be made anonymously and are handled without retaliation.",
+    amlTitle: "Anti-money laundering & KYC",
+    amlBody:
+      "We run a full AML/CFT programme — customer due diligence, KYC at onboarding, transaction monitoring and statutory reporting to the NFIU, in line with CBN and NDLEA/NFIU requirements.",
   },
 };
 

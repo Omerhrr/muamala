@@ -9,12 +9,12 @@ import type { GeneralSettings } from "@/lib/site-settings";
 
 const NAV_LINKS = [
   { label: "About", href: "/about" },
-  { label: "Products", href: "/#products" },
+  { label: "Products", href: "/products" },
   { label: "Loans", href: "/#loans" },
-  { label: "Mobile App", href: "/#app" },
+  { label: "Digital Banking", href: "/digital" },
+  { label: "Support", href: "/services" },
   { label: "News", href: "/news" },
-  { label: "FAQ", href: "/#faq" },
-  { label: "Contact", href: "/#contact" },
+  { label: "Contact", href: "/contact" },
 ];
 
 export function Navbar({ general }: { general: GeneralSettings }) {

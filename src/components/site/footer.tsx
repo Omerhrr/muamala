@@ -12,12 +12,14 @@ type FooterProps = {
 
 const QUICK_LINKS = [
   { label: "About us", href: "/about" },
-  { label: "Our products", href: "/#products" },
-  { label: "Loans & financing", href: "/#loans" },
-  { label: "Muamala Mobile app", href: "/#app" },
+  { label: "Products & services", href: "/products" },
+  { label: "Loans & financing", href: "/products#loan-rates" },
+  { label: "Digital banking", href: "/digital" },
+  { label: "Customer service", href: "/services" },
+  { label: "Regulation & compliance", href: "/compliance" },
   { label: "News & updates", href: "/news" },
   { label: "Open an account", href: "/apply" },
-  { label: "Contact us", href: "/#contact" },
+  { label: "Contact us", href: "/contact" },
 ];
 
 const SOCIALS = [
@@ -91,6 +93,11 @@ export function Footer({ general, footer, pages }: FooterProps) {
                   </a>
                 </li>
               ))}
+              <li>
+                <a href="/compliance" className="text-sm font-semibold text-gold-300 transition-colors hover:text-gold-200">
+                  All policies &amp; disclosures →
+                </a>
+              </li>
             </ul>
           </nav>
 
