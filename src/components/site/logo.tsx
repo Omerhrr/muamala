@@ -16,7 +16,8 @@ type LogoProps = {
 export function Logo({ brand, variant = "dark", className, hideMark }: LogoProps) {
   const isLight = variant === "light";
   const mode = brand.logoMode ?? "image-text";
-  const height = Math.min(72, Math.max(24, Number(brand.logoHeight) || 40));
+  // Rendered 1.5x the admin value so the logo reads clearly in the header.
+  const height = Math.min(88, Math.round(Math.min(72, Math.max(24, Number(brand.logoHeight) || 40)) * 1.5));
   const showImage = !hideMark && mode !== "text-only" && !!brand.logoMark;
   const showText = mode !== "image-only" && (!!brand.wordmark || !!brand.wordmarkSub);
   const label = brand.wordmark ? `${brand.wordmark} ${brand.wordmarkSub ?? ""}`.trim() : brand.logoAlt;
@@ -25,7 +26,7 @@ export function Logo({ brand, variant = "dark", className, hideMark }: LogoProps
     <a
       href="/"
       className={cn(
-        "flex min-w-0 items-center gap-2.5 rounded-md focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gold-400",
+        "flex min-w-0 items-center gap-3 rounded-md focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gold-400",
         className
       )}
       aria-label={`${label}, home`}
@@ -38,7 +39,7 @@ export function Logo({ brand, variant = "dark", className, hideMark }: LogoProps
           style={{ height, maxHeight: height, ["--logo-h" as string]: `${height}px` }}
           className={cn(
             "logo-img w-auto shrink-0 object-contain",
-            mode === "image-only" ? "max-w-[180px] sm:max-w-[260px]" : "max-w-[72px] sm:max-w-[120px]"
+            mode === "image-only" ? "max-w-[180px] sm:max-w-[260px]" : "max-w-[88px] sm:max-w-[150px]"
           )}
         />
       )}
@@ -47,7 +48,7 @@ export function Logo({ brand, variant = "dark", className, hideMark }: LogoProps
           {brand.wordmark && (
             <span
               className={cn(
-                "truncate font-serif text-xl font-bold tracking-tight",
+                "whitespace-nowrap font-serif text-[1.7rem] font-bold tracking-tight sm:text-[2.35rem]",
                 isLight ? "text-white" : "text-brand-900"
               )}
             >
@@ -55,13 +56,20 @@ export function Logo({ brand, variant = "dark", className, hideMark }: LogoProps
             </span>
           )}
           {brand.wordmarkSub && (
+            // w-0 + min-w-full: the subtitle never widens the block, it stretches
+            // edge to edge under the name so both lines are exactly the same width.
             <span
+              aria-label={brand.wordmarkSub}
               className={cn(
-                "mt-1 truncate text-[10px] font-semibold uppercase tracking-[0.22em]",
+                "mt-1.5 flex w-0 min-w-full justify-between whitespace-nowrap text-[7px] font-semibold uppercase sm:text-[9px]",
                 isLight ? "text-gold-300" : "text-gold-600"
               )}
             >
-              {brand.wordmarkSub}
+              {Array.from(brand.wordmarkSub).map((ch, i) => (
+                <span key={i} aria-hidden="true" className={ch === " " ? "w-[0.6em]" : undefined}>
+                  {ch === " " ? "" : ch}
+                </span>
+              ))}
             </span>
           )}
         </span>
