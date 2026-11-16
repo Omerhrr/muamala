@@ -183,8 +183,8 @@
 /* Logo scales down on small screens so wide uploaded logos never crowd the menu button */
 @media (max-width: 639px) {
   .logo-img {
-    height: min(var(--logo-h, 40px), 46px) !important;
-    max-height: 46px !important;
+    height: min(var(--logo-h, 40px), 44px) !important;
+    max-height: 44px !important;
   }
 }
 

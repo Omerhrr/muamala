@@ -102,7 +102,7 @@ export function Navbar({ general, brand, nav, announcement }: NavbarProps) {
           solid ? "bg-background/95 shadow-[0_1px_0_0_var(--border)] backdrop-blur-md" : "bg-transparent"
         )}
       >
-        <div className="mx-auto flex h-[84px] max-w-7xl items-center justify-between gap-3 px-4 sm:px-6">
+        <div className="mx-auto flex h-[88px] max-w-7xl lg:h-[112px] items-center justify-between gap-3 px-4 sm:px-6">
           <Logo brand={brand} variant={solid ? "dark" : "light"} />
 
           <div className="hidden items-center gap-6 lg:flex xl:gap-7">
@@ -164,7 +164,7 @@ export function Navbar({ general, brand, nav, announcement }: NavbarProps) {
               animate={{ height: "auto", opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
               transition={{ duration: 0.25, ease: "easeInOut" }}
-              className="max-h-[calc(100dvh-84px)] overflow-y-auto overscroll-contain border-t border-border bg-background lg:hidden"
+              className="max-h-[calc(100dvh-88px)] overflow-y-auto overscroll-contain border-t border-border bg-background lg:hidden"
             >
               <div className="space-y-1 px-4 pb-6 pt-3">
                 {links.map((link) => (

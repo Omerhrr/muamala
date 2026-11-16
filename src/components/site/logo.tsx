@@ -48,7 +48,7 @@ export function Logo({ brand, variant = "dark", className, hideMark }: LogoProps
           {brand.wordmark && (
             <span
               className={cn(
-                "whitespace-nowrap font-serif text-[1.7rem] font-bold tracking-tight sm:text-[2.35rem]",
+                "whitespace-nowrap font-serif text-[2.1rem] font-bold tracking-tight sm:text-[4.6rem]",
                 isLight ? "text-white" : "text-brand-900"
               )}
             >
@@ -61,7 +61,7 @@ export function Logo({ brand, variant = "dark", className, hideMark }: LogoProps
             <span
               aria-label={brand.wordmarkSub}
               className={cn(
-                "mt-1.5 flex w-0 min-w-full justify-between whitespace-nowrap text-[7px] font-semibold uppercase sm:text-[9px]",
+                "mt-2 flex w-0 min-w-full justify-between whitespace-nowrap text-[7px] font-semibold uppercase sm:text-[15px]",
                 isLight ? "text-gold-300" : "text-gold-600"
               )}
             >
