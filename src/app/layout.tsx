@@ -25,27 +25,22 @@ const geistMono = Geist_Mono({
 
 export async function generateMetadata(): Promise<Metadata> {
   try {
-    const general = (await getSiteSettings()).general;
+    const { brand, general } = await getSiteSettings();
+    const title = brand.siteTitle || general.bankName;
     return {
-      title: `${general.bankName} | Community Banking in Niger State`,
-      description: `${general.bankName} (${general.rcNumber}) is a Central Bank of Nigeria licensed microfinance bank providing savings, loans, payments and agent banking to individuals and small businesses in Suleja, Niger State and beyond.`,
-      keywords: [
-        "Muamala Micro-Finance Bank",
-        "microfinance bank Nigeria",
-        "Suleja",
-        "Niger State",
-        "savings",
-        "loans",
-        "agent banking",
-        "CBN licensed",
-      ],
+      title: { default: title, template: `%s | ${general.shortName || general.bankName}` },
+      description: brand.siteDescription,
+      keywords: brand.keywords,
       authors: [{ name: general.bankName }],
+      icons: { icon: "/api/favicon" },
       openGraph: {
-        title: general.bankName,
-        description: general.tagline,
+        title,
+        description: brand.siteDescription || general.tagline,
         siteName: general.bankName,
         type: "website",
+        ...(brand.ogImage ? { images: [{ url: "/api/og-image" }] } : {}),
       },
+      twitter: { card: brand.ogImage ? "summary_large_image" : "summary", title, description: brand.siteDescription },
     };
   } catch {
     return {
@@ -54,6 +49,8 @@ export async function generateMetadata(): Promise<Metadata> {
     };
   }
 }
+
+export const viewport = { width: "device-width", initialScale: 1, themeColor: "#06231c" };
 
 export default async function RootLayout({
   children,

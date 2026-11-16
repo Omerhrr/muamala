@@ -13,17 +13,17 @@ import {
 } from "lucide-react";
 import { PhoneFrame } from "@/components/site/phone-frame";
 import { Reveal } from "@/components/site/reveal";
-import type { AppSettings, GeneralSettings } from "@/lib/site-settings";
+import type { AppSettings, GeneralSettings, MockSettings, UiSettings } from "@/lib/site-settings";
 
 const FEATURE_ICONS = [Send, Receipt, PiggyBank, MapPin, Globe, Wifi];
 
-function SavingsScreen() {
+function SavingsScreen({ m }: { m: MockSettings }) {
   return (
     <div className="flex h-full flex-col px-4 pb-3 pt-10">
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-sm font-bold text-brand-900">My Savings</p>
-          <p className="text-[10px] text-muted-foreground">Grow it, one goal at a time</p>
+          <p className="text-sm font-bold text-brand-900">{m.savTitle}</p>
+          <p className="text-[10px] text-muted-foreground">{m.savSub}</p>
         </div>
         <div className="flex size-8 items-center justify-center rounded-full bg-brand-800">
           <BellRing className="size-4 text-gold-300" aria-hidden="true" />
@@ -34,22 +34,19 @@ function SavingsScreen() {
       <div className="mt-4 space-y-3">
         <div className="rounded-2xl bg-gradient-to-br from-brand-800 to-brand-950 p-4 text-white shadow-lg">
           <div className="flex items-center justify-between">
-            <p className="text-[11px] font-semibold text-brand-100">Shop restock goal</p>
+            <p className="text-[11px] font-semibold text-brand-100">{m.savGoalName}</p>
             <span className="rounded-full bg-gold-500 px-2 py-0.5 text-[9px] font-bold text-brand-950">
-              78%
+              {m.savGoalPct}%
             </span>
           </div>
-          <p className="mt-1.5 font-serif text-2xl font-bold">₦156,000</p>
-          <p className="text-[10px] text-brand-200">of ₦200,000 target · matures 30 Apr</p>
+          <p className="mt-1.5 font-serif text-2xl font-bold">{m.savGoalAmount}</p>
+          <p className="text-[10px] text-brand-200">{m.savGoalNote}</p>
           <div className="mt-2.5 h-1.5 overflow-hidden rounded-full bg-white/20">
-            <div className="h-full w-[78%] rounded-full bg-gold-400" />
+            <div className="h-full rounded-full bg-gold-400" style={{ width: `${Math.min(100, Number(m.savGoalPct) || 0)}%` }} />
           </div>
         </div>
 
-        {[
-          { name: "Rent contribution", saved: "₦85,000", of: "₦300,000", pct: 28 },
-          { name: "Children school fees", saved: "₦120,500", of: "₦150,000", pct: 80 },
-        ].map(({ name, saved, of, pct }) => (
+        {m.savGoals.map(({ name, saved, of, pct }) => (
           <div key={name} className="rounded-2xl bg-white p-3.5 shadow-sm">
             <div className="flex items-center justify-between">
               <p className="text-[11px] font-bold text-brand-900">{name}</p>
@@ -59,13 +56,13 @@ function SavingsScreen() {
               {saved} <span className="text-[10px] font-medium text-muted-foreground">of {of}</span>
             </p>
             <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-muted">
-              <div className="h-full rounded-full bg-brand-600" style={{ width: `${pct}%` }} />
+              <div className="h-full rounded-full bg-brand-600" style={{ width: `${Math.min(100, Number(pct) || 0)}%` }} />
             </div>
           </div>
         ))}
 
         <div className="rounded-2xl border border-dashed border-gold-400 bg-gold-50 p-3.5 text-center">
-          <p className="text-[11px] font-bold text-gold-700">+ Create a new goal</p>
+          <p className="text-[11px] font-bold text-gold-700">{m.savNew}</p>
         </div>
       </div>
 
@@ -85,12 +82,14 @@ function StoreBadge({
   icon,
   soon,
   href,
+  soonLabel,
 }: {
   top: string;
   bottom: string;
   icon: React.ReactNode;
   soon: boolean;
   href?: string;
+  soonLabel: string;
 }) {
   const inner = (
     <div className="flex items-center gap-3 rounded-xl border border-white/20 bg-white/10 px-4 py-2.5 backdrop-blur-sm transition-colors hover:border-gold-400/60">
@@ -101,7 +100,7 @@ function StoreBadge({
       </div>
       {soon && (
         <span className="ml-1 rounded-full bg-gold-500 px-2 py-0.5 text-[9px] font-bold text-brand-950">
-          Soon
+          {soonLabel}
         </span>
       )}
     </div>
@@ -119,9 +118,13 @@ function StoreBadge({
 export function AppPromo({
   settings,
   general,
+  ui,
+  mock,
 }: {
   settings: AppSettings;
   general: GeneralSettings;
+  ui: UiSettings;
+  mock: MockSettings;
 }) {
   return (
     <section id="app" className="relative overflow-hidden bg-brand-950 py-20 lg:py-28">
@@ -170,15 +173,17 @@ export function AppPromo({
           <Reveal delay={0.2}>
             <div className="mt-9 flex flex-wrap gap-3">
               <StoreBadge
-                top="Get it on"
-                bottom="Google Play"
+                top={ui.storeGoogleTop}
+                bottom={ui.storeGoogle}
+                soonLabel={ui.storeSoon}
                 icon={<Smartphone className="size-6 text-gold-400" aria-hidden="true" />}
                 soon={!settings.playStoreUrl}
                 href={settings.playStoreUrl || undefined}
               />
               <StoreBadge
-                top="Download on the"
-                bottom="App Store"
+                top={ui.storeAppleTop}
+                bottom={ui.storeApple}
+                soonLabel={ui.storeSoon}
                 icon={<Star className="size-6 text-gold-400" aria-hidden="true" />}
                 soon={!settings.appStoreUrl}
                 href={settings.appStoreUrl || undefined}
@@ -203,12 +208,12 @@ export function AppPromo({
         <Reveal delay={0.15} className="hidden lg:block">
           <div className="relative rotate-2 transition-transform duration-500 hover:rotate-0">
             <PhoneFrame>
-              <SavingsScreen />
+              <SavingsScreen m={mock} />
             </PhoneFrame>
             <div className="absolute -left-8 top-10 rounded-2xl border border-border bg-white px-4 py-3 shadow-2xl">
-              <p className="text-[11px] font-bold text-brand-900">{general.ussd} works on</p>
+              <p className="text-[11px] font-bold text-brand-900">{general.ussd} {ui.ussdWorksOn}</p>
               <p className="mt-0.5 text-[11px] text-muted-foreground">
-                MTN · Airtel · Glo · 9mobile
+                {ui.ussdNetworks}
               </p>
             </div>
           </div>

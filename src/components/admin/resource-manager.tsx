@@ -29,6 +29,7 @@ import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { RESOURCES, type ResourceDef, type ResourceField } from "@/lib/admin-resources";
 import { ICON_NAMES, getIcon } from "@/lib/icons";
+import { ImageField } from "@/components/admin/image-field";
 
 type Row = Record<string, unknown> & { id: string };
 
@@ -58,6 +59,7 @@ function displayValue(column: string, value: unknown): string {
     return Number.isNaN(d.getTime()) ? "-" : dateFmt.format(d);
   }
   if (typeof value === "boolean") return value ? "Yes" : "No";
+  if (typeof value === "string" && value.startsWith("data:")) return "Uploaded image";
   const s = String(value);
   return s.length > 80 ? `${s.slice(0, 80)}…` : s;
 }
@@ -144,6 +146,8 @@ function FormField({
         </div>
       );
     }
+    case "image":
+      return <ImageField value={String(value ?? "")} onChange={(next) => onChange(next)} maxSize={1200} />;
     case "list":
       return (
         <Textarea

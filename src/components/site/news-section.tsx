@@ -1,6 +1,6 @@
 import { ArrowRight, CalendarDays, Newspaper } from "lucide-react";
 import { Reveal } from "@/components/site/reveal";
-import type { NewsSettings } from "@/lib/site-settings";
+import type { NewsSettings, UiSettings } from "@/lib/site-settings";
 import type { NewsRecord } from "@/lib/content";
 
 const fmt = new Intl.DateTimeFormat("en-NG", {
@@ -12,9 +12,11 @@ const fmt = new Intl.DateTimeFormat("en-NG", {
 export function NewsSection({
   settings,
   posts,
+  ui,
 }: {
   settings: NewsSettings;
   posts: NewsRecord[];
+  ui: UiSettings;
 }) {
   if (posts.length === 0) return null;
 
@@ -35,7 +37,7 @@ export function NewsSection({
             href="/news"
             className="group inline-flex items-center gap-2 rounded-full border border-border bg-card px-5 py-2.5 text-sm font-bold text-brand-800 transition-colors hover:border-gold-300 hover:text-gold-600"
           >
-            All news
+            {ui.allNews}
             <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
           </a>
         </Reveal>
@@ -63,7 +65,7 @@ export function NewsSection({
                   {post.excerpt}
                 </p>
                 <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-bold text-brand-700 transition-colors group-hover:text-gold-600">
-                  Read more
+                  {ui.readMore}
                   <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
                 </span>
               </a>
@@ -75,13 +77,13 @@ export function NewsSection({
   );
 }
 
-export function NewsEmpty({ settings }: { settings: NewsSettings }) {
+export function NewsEmpty({ settings, ui }: { settings: NewsSettings; ui: UiSettings }) {
   return (
     <section id="news" className="bg-background py-20">
       <div className="mx-auto max-w-7xl px-4 text-center sm:px-6">
         <Newspaper className="mx-auto size-10 text-gold-500" aria-hidden="true" />
         <h2 className="mt-4 font-serif text-2xl font-bold text-brand-900">{settings.title}</h2>
-        <p className="mt-2 text-sm text-muted-foreground">Announcements will appear here soon.</p>
+        <p className="mt-2 text-sm text-muted-foreground">{ui.newsEmpty}</p>
       </div>
     </section>
   );

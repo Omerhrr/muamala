@@ -1,8 +1,6 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
 # dependencies
-node_modules
-/.pnp
+node_modules/
+.pnp
 .pnp.*
 .yarn/*
 !.yarn/patches
@@ -10,49 +8,50 @@ node_modules
 !.yarn/releases
 !.yarn/versions
 
-# testing
-/coverage
-
-# next.js
+# next.js build output
 /.next/
 /out/
-
-# production
 /build
+next-env.d.ts
+*.tsbuildinfo
 
-# misc
-.DS_Store
-*.pem
+# environment files (secrets): keep only the example
+.env
+.env.*
+!production.env.example
 
-# debug
+# database & runtime data (SQLite files, backups, uploads)
+db/
+data/
+upload/
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+backup-*.db
+*.bak
+
+# logs
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
-.env*
+# testing
+/coverage
 
-# vercel
-.vercel
+# OS / editor junk
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.pem
 
-
-# typescript
-*.tsbuildinfo
-next-env.d.ts
+# AI tooling & local scratch
+.claude/
 local-*
-.claude
-.z-ai-config
-*.log
-dev.log
-dev.out.log
-test
-prompt
 
-server.log
-# Skills directory
-/skills/
-# runtime data & user uploads
-db/
-upload/
-*.sqlite3
+# docker local overrides
+docker-compose.override.yml

@@ -14,24 +14,22 @@ import { PageHeader } from "@/components/site/page-header";
 import { Reveal } from "@/components/site/reveal";
 import { AppPromo } from "@/components/site/app-promo";
 import { waLink } from "@/lib/wa";
-import { getSettingsGroup } from "@/lib/content";
+import { getSettingsGroup, pageMeta } from "@/lib/content";
 import type { AppSettings, DigitalPageSettings, GeneralSettings } from "@/lib/site-settings";
 
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata() {
-  const general = await getSettingsGroup("general");
-  return {
-    title: `Digital banking & mobile app | ${general.bankName}`,
-    description: `Muamala Mobile app, USSD banking, secure transfers and payments, and digital support from ${general.shortName}. Bank from your phone, any phone.`,
-  };
+  return pageMeta("digital");
 }
 
 export default async function DigitalPage() {
-  const [settings, general, app] = await Promise.all([
+  const [settings, general, app, ui, mock] = await Promise.all([
     getSettingsGroup("digitalPage"),
     getSettingsGroup("general"),
     getSettingsGroup("app"),
+    getSettingsGroup("ui"),
+    getSettingsGroup("mock"),
   ]);
   const s = settings as DigitalPageSettings;
   const g = general as GeneralSettings;
@@ -52,7 +50,7 @@ export default async function DigitalPage() {
             className="inline-flex items-center gap-2 rounded-full bg-gold-500 px-6 py-3 text-sm font-bold text-brand-950 shadow-lg shadow-gold-500/20 transition-all hover:-translate-y-0.5 hover:bg-gold-400"
           >
             <Smartphone className="size-4" aria-hidden="true" />
-            Get the mobile app
+            {ui.dgApp}
           </a>
           <span className="inline-flex items-center gap-2 rounded-full border border-white/25 px-5 py-3 text-sm font-bold text-white">
             <Globe className="size-4 text-gold-400" aria-hidden="true" />
@@ -98,13 +96,13 @@ export default async function DigitalPage() {
               </div>
               <div className="mt-7 space-y-4">
                 <div className="rounded-xl border border-border bg-background px-4 py-3.5 text-sm text-muted-foreground">
-                  Account number or phone number
+                  {ui.dgLoginAcct}
                 </div>
                 <div className="rounded-xl border border-border bg-background px-4 py-3.5 text-sm text-muted-foreground">
-                  Password
+                  {ui.dgLoginPwd}
                 </div>
                 <div className="rounded-xl bg-secondary px-4 py-3.5 text-center text-sm font-bold text-brand-900/60">
-                  Sign in
+                  {ui.dgLoginBtn}
                 </div>
                 <p className="text-center text-xs leading-relaxed text-muted-foreground">
                   {s.loginNote}
@@ -116,14 +114,14 @@ export default async function DigitalPage() {
                   className="inline-flex items-center justify-center gap-2 rounded-full border border-brand-800/30 px-5 py-2.5 text-sm font-bold text-brand-900 transition-colors hover:border-gold-500 hover:text-gold-700"
                 >
                   <KeyRound className="size-4" aria-hidden="true" />
-                  Reset password help
+                  {ui.dgReset}
                 </a>
                 <a
                   href="#support"
                   className="inline-flex items-center justify-center gap-2 rounded-full bg-brand-800 px-5 py-2.5 text-sm font-bold text-white transition-colors hover:bg-brand-900"
                 >
                   <LifeBuoy className="size-4" aria-hidden="true" />
-                  Support
+                  {ui.dgSupportBtn}
                 </a>
               </div>
             </div>
@@ -132,30 +130,29 @@ export default async function DigitalPage() {
       </section>
 
       {/* App promo (dark, from settings) */}
-      <AppPromo settings={a} general={g} />
+      <AppPromo settings={a} general={g} ui={ui} mock={mock} />
 
       {/* USSD how-to */}
       <section id="ussd" className="scroll-mt-28 bg-card py-20 lg:py-24">
         <div className="mx-auto grid max-w-7xl gap-12 px-4 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
           <Reveal>
             <p className="text-xs font-bold uppercase tracking-[0.28em] text-gold-600">
-              USSD banking
+              {ui.dgUssdEyebrow}
             </p>
             <h2 className="mt-3 font-serif text-3xl font-bold tracking-tight text-brand-900 sm:text-4xl">
               {s.ussdStepsTitle}
             </h2>
             <p className="mt-5 leading-relaxed text-muted-foreground">
-              {a.ussdNote} Works on MTN, Airtel, Glo and 9mobile, with no smartphone and no data
-              bundle required.
+              {a.ussdNote} {ui.dgUssdWorks}
             </p>
             <div className="mt-8 inline-flex items-center gap-4 rounded-2xl border border-border bg-background px-6 py-4">
               <span className="rounded-lg bg-brand-800 px-3.5 py-2 font-mono text-lg font-bold tracking-widest text-gold-300">
                 {g.ussd}
               </span>
               <p className="text-xs font-semibold leading-snug text-muted-foreground">
-                Dial the code on the line
+                {ui.dgDial1}
                 <br />
-                registered to your account
+                {ui.dgDial2}
               </p>
             </div>
           </Reveal>
@@ -182,7 +179,7 @@ export default async function DigitalPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
           <Reveal className="max-w-2xl">
             <p className="text-xs font-bold uppercase tracking-[0.28em] text-gold-600">
-              Secure transfers & payments
+              {ui.dgSecureTitle}
             </p>
             <h2 className="mt-3 font-serif text-3xl font-bold tracking-tight text-brand-900 sm:text-4xl">
               {s.securityTitle}
@@ -206,16 +203,14 @@ export default async function DigitalPage() {
               <div className="flex items-start gap-4">
                 <ArrowLeftRight className="mt-0.5 size-6 shrink-0 text-gold-400" aria-hidden="true" />
                 <p className="text-sm leading-relaxed text-brand-200">
-                  Every transfer and payment is processed over Interswitch infrastructure with
-                  bank-grade encryption, PIN and device verification, and you get an instant SMS
-                  or email alert for every transaction.
+                  {ui.dgSecureBody}
                 </p>
               </div>
               <a
                 href="/pages/customer-protection"
                 className="inline-flex shrink-0 items-center gap-2 rounded-full border border-white/25 px-5 py-2.5 text-sm font-bold text-white transition-colors hover:border-gold-300 hover:text-gold-300"
               >
-                Read our protection policy
+                {ui.dgProtection}
                 <ArrowRight className="size-4" aria-hidden="true" />
               </a>
             </div>
@@ -227,7 +222,7 @@ export default async function DigitalPage() {
       <section id="support" className="lattice-bg scroll-mt-28 bg-brand-950 py-16 text-brand-100">
         <div className="mx-auto grid max-w-7xl gap-10 px-4 sm:px-6 lg:grid-cols-[1fr_auto] lg:items-center">
           <div className="max-w-2xl">
-            <p className="text-xs font-bold uppercase tracking-[0.28em] text-gold-400">Support</p>
+            <p className="text-xs font-bold uppercase tracking-[0.28em] text-gold-400">{ui.dgSupportEyebrow}</p>
             <h2 className="mt-3 font-serif text-2xl font-bold text-white sm:text-3xl">
               {s.supportTitle}
             </h2>
@@ -239,7 +234,7 @@ export default async function DigitalPage() {
               className="inline-flex items-center gap-2 rounded-full bg-gold-500 px-6 py-3 text-sm font-bold text-brand-950 transition-all hover:-translate-y-0.5 hover:bg-gold-400"
             >
               <PhoneCall className="size-4" aria-hidden="true" />
-              Call us
+              {ui.dgCall}
             </a>
             {g.whatsapp && (
               <a
@@ -249,14 +244,14 @@ export default async function DigitalPage() {
                 className="inline-flex items-center gap-2 rounded-full border border-white/25 px-6 py-3 text-sm font-bold text-white transition-colors hover:border-gold-300 hover:text-gold-300"
               >
                 <MessageCircle className="size-4" aria-hidden="true" />
-                WhatsApp
+                {ui.dgWhatsapp}
               </a>
             )}
             <a
               href={`mailto:${g.emails[0] ?? ""}`}
               className="inline-flex items-center gap-2 rounded-full border border-white/25 px-6 py-3 text-sm font-bold text-white transition-colors hover:border-gold-300 hover:text-gold-300"
             >
-              Email support
+              {ui.dgEmailSupport}
             </a>
           </div>
         </div>

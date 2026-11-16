@@ -1,18 +1,13 @@
-import Image from "next/image";
 import { ArrowRight, CalendarDays, Newspaper } from "lucide-react";
 import { PageHeader } from "@/components/site/page-header";
 import { Reveal } from "@/components/site/reveal";
-import { getNews, getSettingsGroup } from "@/lib/content";
-import type { NewsSettings } from "@/lib/site-settings";
+import { getNews, getSettingsGroup, pageMeta } from "@/lib/content";
+import type { NewsSettings, UiSettings } from "@/lib/site-settings";
 
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata() {
-  const general = await getSettingsGroup("general");
-  return {
-    title: `News & updates | ${general.bankName}`,
-    description: `Announcements, product launches, community outreach and financial literacy articles from ${general.shortName}.`,
-  };
+  return pageMeta("news");
 }
 
 const fmt = new Intl.DateTimeFormat("en-NG", {
@@ -22,7 +17,8 @@ const fmt = new Intl.DateTimeFormat("en-NG", {
 });
 
 export default async function NewsPage() {
-  const [settings, posts] = await Promise.all([getSettingsGroup("news"), getNews()]);
+  const [settings, ui, posts] = await Promise.all([getSettingsGroup("news"), getSettingsGroup("ui"), getNews()]);
+  const u = ui as UiSettings;
   const n = settings as NewsSettings;
 
   return (
@@ -39,10 +35,10 @@ export default async function NewsPage() {
             <div className="rounded-3xl border border-dashed border-border bg-card p-12 text-center">
               <Newspaper className="mx-auto size-10 text-gold-500" aria-hidden="true" />
               <h2 className="mt-4 font-serif text-2xl font-bold text-brand-900">
-                No announcements yet
+                {u.newsPageEmptyTitle}
               </h2>
               <p className="mt-2 text-sm text-muted-foreground">
-                News, events and updates will appear here soon.
+                {u.newsPageEmptyBody}
               </p>
             </div>
           ) : (
@@ -55,11 +51,11 @@ export default async function NewsPage() {
                   >
                     {post.image ? (
                       <div className="relative aspect-[16/9] overflow-hidden">
-                        <Image
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
                           src={post.image}
                           alt={post.title}
-                          width={640}
-                          height={360}
+                          loading="lazy"
                           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                         />
                       </div>
@@ -85,7 +81,7 @@ export default async function NewsPage() {
                         {post.excerpt}
                       </p>
                       <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-bold text-brand-700 transition-colors group-hover:text-gold-600">
-                        Read more
+                        {u.readMore}
                         <ArrowRight
                           className="size-4 transition-transform group-hover:translate-x-1"
                           aria-hidden="true"

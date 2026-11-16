@@ -1,32 +1,29 @@
 import { PageHeader } from "@/components/site/page-header";
 import { ApplyForms } from "@/components/site/apply-forms";
-import { getLoanProducts, getSettingsGroup } from "@/lib/content";
+import { getLoanProducts, getSettingsGroup, pageMeta } from "@/lib/content";
 
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata() {
-  const general = await getSettingsGroup("general");
-  return {
-    title: `Open an account or apply for a loan | ${general.bankName}`,
-    description: `Start your ${general.shortName} account opening or loan application online. Our team will call you back within one business day.`,
-  };
+  return pageMeta("apply");
 }
 
 export default async function ApplyPage() {
-  const [general, apply, loans] = await Promise.all([
+  const [general, apply, ui, loans] = await Promise.all([
     getSettingsGroup("general"),
     getSettingsGroup("apply"),
+    getSettingsGroup("ui"),
     getLoanProducts(),
   ]);
 
   return (
     <>
       <PageHeader
-        eyebrow={apply.eyebrow || "Get started"}
+        eyebrow={apply.eyebrow}
         title={apply.title}
         subtitle={apply.subtitle}
       />
-      <ApplyForms settings={apply} general={general} loans={loans} />
+      <ApplyForms settings={apply} general={general} loans={loans} ui={ui} />
     </>
   );
 }

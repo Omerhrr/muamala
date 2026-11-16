@@ -388,10 +388,12 @@ Interested in becoming an agent? Requirements are simple: a registered shop or b
   /* ---------- admin user ---------- */
   const adminCount = await db.adminUser.count();
   if (adminCount === 0) {
+    const username = process.env.ADMIN_USERNAME || "admin";
+    const password = process.env.ADMIN_PASSWORD || "muamala2026";
     await db.adminUser.create({
-      data: { username: "admin", passwordHash: hashPassword("muamala2026") },
+      data: { username, passwordHash: hashPassword(password) },
     });
-    console.log("admin: seeded (username: admin / password: muamala2026)");
+    console.log(`admin: seeded (username: ${username})`);
   } else {
     console.log("admin: already present, skipped");
   }

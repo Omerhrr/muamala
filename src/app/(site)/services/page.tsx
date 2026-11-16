@@ -13,26 +13,23 @@ import { PageHeader } from "@/components/site/page-header";
 import { Reveal } from "@/components/site/reveal";
 import { Faq } from "@/components/site/faq";
 import { waLink } from "@/lib/wa";
-import { getFaqs, getSettingsGroup } from "@/lib/content";
+import { getFaqs, getSettingsGroup, pageMeta } from "@/lib/content";
 import type { FaqSettings, GeneralSettings, ServicesPageSettings } from "@/lib/site-settings";
 
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata() {
-  const general = await getSettingsGroup("general");
-  return {
-    title: `Customer service & self-service | ${general.bankName}`,
-    description: `Open an account, apply for a loan, check repayment options, report a card issue or find answers. ${general.shortName} customer service, online and on any phone.`,
-  };
+  return pageMeta("services");
 }
 
 const SELF_SERVICE_ICONS = [UserPlus, HandCoins, PiggyBank, CalendarCheck2, HelpCircle, CreditCard];
 
 export default async function ServicesPage() {
-  const [settings, general, faq, faqs] = await Promise.all([
+  const [settings, general, faq, ui, faqs] = await Promise.all([
     getSettingsGroup("servicesPage"),
     getSettingsGroup("general"),
     getSettingsGroup("faq"),
+    getSettingsGroup("ui"),
     getFaqs(),
   ]);
   const s = settings as ServicesPageSettings;
@@ -105,7 +102,7 @@ export default async function ServicesPage() {
                     {desc}
                   </p>
                   <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-bold text-brand-700 transition-colors group-hover:text-gold-600">
-                    Continue
+                    {ui.svContinue}
                     <ArrowRight
                       className="size-4 transition-transform group-hover:translate-x-1"
                       aria-hidden="true"
@@ -123,7 +120,7 @@ export default async function ServicesPage() {
         <div className="mx-auto grid max-w-7xl gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:gap-16">
           <Reveal>
             <p className="text-xs font-bold uppercase tracking-[0.28em] text-gold-600">
-              Loan repayment
+              {ui.svRepayEyebrow}
             </p>
             <h2 className="mt-3 font-serif text-3xl font-bold tracking-tight text-brand-900 sm:text-4xl">
               {s.repaymentTitle}
@@ -134,14 +131,14 @@ export default async function ServicesPage() {
                 href="/contact"
                 className="inline-flex items-center gap-2 rounded-full bg-brand-800 px-6 py-3 text-sm font-bold text-white shadow-lg transition-all hover:-translate-y-0.5 hover:bg-brand-900"
               >
-                Talk to our loan team
+                {ui.svTalkLoan}
                 <ArrowRight className="size-4" aria-hidden="true" />
               </a>
               <a
                 href="/apply?tab=loan"
                 className="inline-flex items-center gap-2 rounded-full border border-brand-800/30 px-6 py-3 text-sm font-bold text-brand-900 transition-colors hover:border-gold-500 hover:text-gold-700"
               >
-                Apply for a loan
+                {ui.svApplyLoan}
               </a>
             </div>
           </Reveal>
@@ -149,7 +146,7 @@ export default async function ServicesPage() {
             <div className="rounded-3xl bg-brand-950 p-8 text-brand-100 sm:p-10">
               <ShieldCheck className="size-8 text-gold-400" aria-hidden="true" />
               <h3 className="mt-4 font-serif text-xl font-bold text-white">
-                Five ways to repay
+                {ui.svFiveWays}
               </h3>
               <ol className="mt-5 space-y-3.5">
                 {s.repaymentChannels.map((channel, index) => (
@@ -203,14 +200,14 @@ export default async function ServicesPage() {
                   href="/contact"
                   className="inline-flex items-center gap-2 rounded-full bg-gold-500 px-6 py-3 text-sm font-bold text-brand-950 transition-all hover:-translate-y-0.5 hover:bg-gold-400"
                 >
-                  Report an issue
+                  {ui.svReport}
                   <ArrowRight className="size-4" aria-hidden="true" />
                 </a>
                 <a
                   href={telHref}
                   className="inline-flex items-center gap-2 rounded-full border border-white/25 px-6 py-3 text-sm font-bold text-white transition-colors hover:border-gold-300 hover:text-gold-300"
                 >
-                  Call the bank
+                  {ui.svCallBank}
                 </a>
               </div>
             </div>
@@ -219,7 +216,7 @@ export default async function ServicesPage() {
       </section>
 
       {/* FAQ */}
-      <Faq settings={f} faqs={faqs} general={g} />
+      <Faq settings={f} faqs={faqs} general={g} ui={ui} />
     </>
   );
 }

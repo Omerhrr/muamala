@@ -1,9 +1,9 @@
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import { ArrowLeft, CalendarDays } from "lucide-react";
 import { PageHeader } from "@/components/site/page-header";
 import { Markdown } from "@/components/site/markdown";
 import { getNewsPost, getSettingsGroup } from "@/lib/content";
+import type { UiSettings } from "@/lib/site-settings";
 
 export const dynamic = "force-dynamic";
 
@@ -11,10 +11,10 @@ type Props = { params: Promise<{ id: string }> };
 
 export async function generateMetadata({ params }: Props) {
   const { id } = await params;
-  const post = await getNewsPost(id);
-  if (!post) return { title: "News | Muamala MFB" };
+  const [post, general, ui] = await Promise.all([getNewsPost(id), getSettingsGroup("general"), getSettingsGroup("ui")]);
+  if (!post) return { title: `${(ui as UiSettings).bankPageSuffix} | ${general.shortName}` };
   return {
-    title: `${post.title} | Muamala MFB`,
+    title: `${post.title} | ${general.shortName}`,
     description: post.excerpt,
   };
 }
@@ -27,8 +27,9 @@ const fmt = new Intl.DateTimeFormat("en-NG", {
 
 export default async function NewsDetailPage({ params }: Props) {
   const { id } = await params;
-  const post = await getNewsPost(id);
+  const [post, ui] = await Promise.all([getNewsPost(id), getSettingsGroup("ui")]);
   if (!post) notFound();
+  const u = ui as UiSettings;
 
   return (
     <>
@@ -43,14 +44,8 @@ export default async function NewsDetailPage({ params }: Props) {
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           {post.image && (
             <div className="overflow-hidden rounded-3xl border border-border shadow-lg">
-              <Image
-                src={post.image}
-                alt={post.title}
-                width={1024}
-                height={576}
-                className="w-full object-cover"
-                priority
-              />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={post.image} alt={post.title} className="w-full object-cover" />
             </div>
           )}
 
@@ -64,13 +59,13 @@ export default async function NewsDetailPage({ params }: Props) {
               className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-5 py-2.5 text-sm font-bold text-brand-800 transition-colors hover:border-gold-300 hover:text-gold-600"
             >
               <ArrowLeft className="size-4" aria-hidden="true" />
-              Back to all news
+              {u.backToAllNews}
             </a>
             <a
               href="/#contact"
               className="text-sm font-bold text-brand-700 underline-offset-4 hover:text-gold-600 hover:underline"
             >
-              Questions? Contact us
+              {u.newsQuestions}
             </a>
           </div>
         </div>

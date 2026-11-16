@@ -1,0 +1,24 @@
+# This VPS already runs a Caddy container (booklet-caddy-1) on ports 80/443,
+# so this stack does NOT start its own proxy. The app joins Caddy's Docker network
+# and Caddy proxies muamala.rogan.live -> muamala-web:3000 (see Caddyfile).
+services:
+  app:
+    build: .
+    image: muamala-web:latest
+    container_name: muamala-web
+    restart: unless-stopped
+    env_file: .env.production
+    environment:
+      DATABASE_URL: file:/data/muamala.db
+    volumes:
+      - muamala-data:/data
+    networks:
+      - proxy
+
+volumes:
+  muamala-data:
+
+networks:
+  proxy:
+    external: true
+    name: ${CADDY_NETWORK:-booklet_booklet}

@@ -20,7 +20,7 @@ import { Slider } from "@/components/ui/slider";
 import { Reveal } from "@/components/site/reveal";
 import { getIcon } from "@/lib/icons";
 import type { LoanProductRecord } from "@/lib/content";
-import type { LoansSettings } from "@/lib/site-settings";
+import type { LoansSettings, UiSettings } from "@/lib/site-settings";
 
 const naira = (value: number) =>
   new Intl.NumberFormat("en-NG", {
@@ -35,10 +35,12 @@ function LoanCalculator({
   loans,
   calcNote,
   buildApplyHref,
+  ui,
 }: {
   loans: LoanProductRecord[];
   calcNote: string;
   buildApplyHref: CalcApplyLink;
+  ui: UiSettings;
 }) {
   const [productId, setProductId] = useState(loans[0]?.id ?? "");
   const product = loans.find((p) => p.id === productId) ?? loans[0];
@@ -81,15 +83,15 @@ function LoanCalculator({
           <Calculator className="size-5 text-brand-950" aria-hidden="true" />
         </div>
         <div>
-          <h3 className="font-serif text-xl font-bold text-white">Loan calculator</h3>
-          <p className="text-xs text-brand-200">Estimate repayment in seconds</p>
+          <h3 className="font-serif text-xl font-bold text-white">{ui.calcTitle}</h3>
+          <p className="text-xs text-brand-200">{ui.calcSub}</p>
         </div>
       </div>
 
       <div className="mt-6 space-y-7">
         <div>
           <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-brand-200">
-            Loan type
+            {ui.calcLoanType}
           </label>
           <Select value={product.id} onValueChange={setProductId}>
             <SelectTrigger className="h-11 w-full border-white/20 bg-white/10 text-sm font-semibold text-white [&>span]:line-clamp-1 [&>span]:text-white [&_svg]:text-gold-400">
@@ -108,7 +110,7 @@ function LoanCalculator({
         <div>
           <div className="mb-3 flex items-center justify-between">
             <label className="text-xs font-bold uppercase tracking-wider text-brand-200">
-              Loan amount
+              {ui.calcAmount}
             </label>
             <span className="rounded-lg bg-gold-500/15 px-3 py-1 text-sm font-bold text-gold-300">
               {naira(safeAmount)}
@@ -132,7 +134,7 @@ function LoanCalculator({
         <div>
           <div className="mb-3 flex items-center justify-between">
             <label className="text-xs font-bold uppercase tracking-wider text-brand-200">
-              Repayment tenor
+              {ui.calcTenor}
             </label>
             <span className="rounded-lg bg-gold-500/15 px-3 py-1 text-sm font-bold text-gold-300">
               {safeMonths} month{safeMonths > 1 ? "s" : ""}
@@ -156,24 +158,24 @@ function LoanCalculator({
         {/* Results */}
         <div className="grid grid-cols-1 gap-3 rounded-2xl border border-white/10 bg-white/5 p-4 sm:grid-cols-3">
           <div className="rounded-xl bg-gold-500 p-3.5 text-center text-brand-950 sm:col-span-3">
-            <p className="text-[11px] font-bold uppercase tracking-wider">Monthly repayment</p>
+            <p className="text-[11px] font-bold uppercase tracking-wider">{ui.calcMonthly}</p>
             <p className="mt-1 font-serif text-3xl font-bold">{naira(monthlyPayment)}</p>
           </div>
           <div className="rounded-xl bg-white/5 p-3 text-center">
             <p className="text-[10px] font-semibold uppercase tracking-wider text-brand-200">
-              Total interest
+              {ui.calcInterest}
             </p>
             <p className="mt-1 text-sm font-bold text-white">{naira(totalInterest)}</p>
           </div>
           <div className="rounded-xl bg-white/5 p-3 text-center">
             <p className="text-[10px] font-semibold uppercase tracking-wider text-brand-200">
-              Total repayment
+              {ui.calcTotal}
             </p>
             <p className="mt-1 text-sm font-bold text-white">{naira(totalRepayment)}</p>
           </div>
           <div className="rounded-xl bg-white/5 p-3 text-center">
             <p className="text-[10px] font-semibold uppercase tracking-wider text-brand-200">
-              Flat rate
+              {ui.calcRate}
             </p>
             <p className="mt-1 text-sm font-bold text-white">{rateLabel}% / month</p>
           </div>
@@ -185,7 +187,7 @@ function LoanCalculator({
           href={buildApplyHref(product.id, safeAmount, safeMonths)}
           className="group flex h-12 w-full items-center justify-center gap-2 rounded-full bg-gold-500 text-sm font-bold text-brand-950 transition-colors hover:bg-gold-400"
         >
-          Apply for this loan
+          {ui.applyThisLoan}
           <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
         </a>
       </div>
@@ -196,9 +198,11 @@ function LoanCalculator({
 export function Loans({
   settings,
   loans,
+  ui,
 }: {
   settings: LoansSettings;
   loans: LoanProductRecord[];
+  ui: UiSettings;
 }) {
   const buildApplyHref: CalcApplyLink = (id, amount, months) => {
     const product = loans.find((l) => l.id === id);
@@ -240,7 +244,7 @@ export function Loans({
                         <div>
                           <h3 className="font-serif text-lg font-bold text-brand-900">{name}</h3>
                           <span className="mt-0.5 inline-block rounded-full bg-gold-100 px-2.5 py-0.5 text-[11px] font-bold text-gold-700">
-                            {ratePct.toFixed(1)}% monthly flat
+                            {ratePct.toFixed(1)}% {ui.loanMonthlyFlat}
                           </span>
                         </div>
                       </div>
@@ -251,7 +255,7 @@ export function Loans({
                         </p>
                         <p className="mt-1 flex items-center gap-1.5 justify-end">
                           <BadgeCheck className="size-3.5 text-brand-600" aria-hidden="true" />
-                          Up to {maxTerm} months
+                          {ui.loanUpTo} {maxTerm} months
                         </p>
                       </div>
                     </div>
@@ -259,13 +263,13 @@ export function Loans({
                     <div className="mt-3 flex flex-wrap items-center gap-2">
                       <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1 text-[11px] font-semibold text-brand-800">
                         <FileCheck2 className="size-3.5 text-gold-600" aria-hidden="true" />
-                        Security: {security}
+                        {ui.loanSecurity} {security}
                       </span>
                       <a
                         href={buildApplyHref(id, minAmount, Math.min(12, maxTerm))}
                         className="group ml-auto inline-flex items-center gap-1.5 text-sm font-bold text-brand-700 hover:text-gold-600"
                       >
-                        Apply now
+                        {ui.applyNow}
                         <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
                       </a>
                     </div>
@@ -278,8 +282,13 @@ export function Loans({
               <div className="flex flex-wrap items-center gap-4 rounded-2xl border border-gold-300/70 bg-gold-50 p-5">
                 <Briefcase className="size-8 shrink-0 text-gold-600" aria-hidden="true" />
                 <p className="text-sm leading-relaxed text-brand-900">
-                  <span className="font-bold">What you need to apply:</span>{" "}
-                  {settings.requirementsNote}
+                  {settings.requirementsNote.trim().toLowerCase().startsWith(ui.loanNeed.trim().toLowerCase()) ? (
+                    settings.requirementsNote
+                  ) : (
+                    <>
+                      <span className="font-bold">{ui.loanNeed}</span> {settings.requirementsNote}
+                    </>
+                  )}
                 </p>
               </div>
             </Reveal>
@@ -287,7 +296,7 @@ export function Loans({
 
           {/* Calculator */}
           <Reveal delay={0.1} className="lg:sticky lg:top-28">
-            <LoanCalculator loans={loans} calcNote={settings.calcNote} buildApplyHref={buildApplyHref} />
+            <LoanCalculator loans={loans} calcNote={settings.calcNote} buildApplyHref={buildApplyHref} ui={ui} />
           </Reveal>
         </div>
       </div>

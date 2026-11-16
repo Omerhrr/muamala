@@ -13,24 +13,21 @@ import {
 } from "lucide-react";
 import { PageHeader } from "@/components/site/page-header";
 import { Reveal } from "@/components/site/reveal";
-import { getPages, getSettingsGroup } from "@/lib/content";
+import { getPages, getSettingsGroup, pageMeta } from "@/lib/content";
 import { waLink } from "@/lib/wa";
 import type { CompliancePageSettings, GeneralSettings } from "@/lib/site-settings";
 
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata() {
-  const general = await getSettingsGroup("general");
-  return {
-    title: `Regulation & compliance | ${general.bankName}`,
-    description: `${general.shortName}'s CBN licence, NDIC deposit insurance, customer protection, tariffs, rates, complaints procedure, whistleblowing and AML/KYC policies.`,
-  };
+  return pageMeta("compliance");
 }
 
 export default async function CompliancePage() {
-  const [settings, general, pages] = await Promise.all([
+  const [settings, general, ui, pages] = await Promise.all([
     getSettingsGroup("compliancePage"),
     getSettingsGroup("general"),
+    getSettingsGroup("ui"),
     getPages(),
   ]);
   const s = settings as CompliancePageSettings;
@@ -61,28 +58,28 @@ export default async function CompliancePage() {
       title: s.protectionTitle,
       body: s.protectionBody,
       href: "/pages/customer-protection",
-      cta: "Read the policy",
+      cta: ui.cpReadPolicy,
     },
     {
       icon: FileText,
       title: s.amlTitle,
       body: s.amlBody,
       href: "/pages/aml-policy",
-      cta: "Read the policy",
+      cta: ui.cpReadPolicy,
     },
     {
       icon: Megaphone,
       title: s.complaintsTitle,
       body: s.complaintsBody,
       href: "/pages/complaints-procedure",
-      cta: "Full procedure",
+      cta: ui.cpFullProc,
     },
     {
       icon: Siren,
       title: s.whistleTitle,
       body: s.whistleBody,
       href: "/pages/whistleblowing",
-      cta: "How to report",
+      cta: ui.cpHowReport,
     },
   ];
 
@@ -193,7 +190,7 @@ export default async function CompliancePage() {
                   href={complainHref}
                   className="inline-flex items-center gap-2 rounded-full bg-gold-500 px-6 py-3 text-sm font-bold text-brand-950 transition-all hover:-translate-y-0.5 hover:bg-gold-400"
                 >
-                  Use the enquiry form
+                  {ui.cpEnquiry}
                   <ArrowRight className="size-4" aria-hidden="true" />
                 </a>
                 <a
@@ -201,7 +198,7 @@ export default async function CompliancePage() {
                   className="inline-flex items-center gap-2 rounded-full border border-white/25 px-6 py-3 text-sm font-bold text-white transition-colors hover:border-gold-300 hover:text-gold-300"
                 >
                   <PhoneCall className="size-4" aria-hidden="true" />
-                  Call us
+                  {ui.cpCall}
                 </a>
                 {g.whatsapp && (
                   <a
@@ -210,7 +207,7 @@ export default async function CompliancePage() {
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 rounded-full border border-white/25 px-6 py-3 text-sm font-bold text-white transition-colors hover:border-gold-300 hover:text-gold-300"
                   >
-                    WhatsApp
+                    {ui.cpWhatsapp}
                   </a>
                 )}
                 <a
@@ -218,7 +215,7 @@ export default async function CompliancePage() {
                   className="inline-flex items-center gap-2 rounded-full border border-white/25 px-6 py-3 text-sm font-bold text-white transition-colors hover:border-gold-300 hover:text-gold-300"
                 >
                   <Mail className="size-4" aria-hidden="true" />
-                  Email
+                  {ui.cpEmail}
                 </a>
               </div>
             </div>
@@ -231,14 +228,13 @@ export default async function CompliancePage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
           <Reveal className="max-w-2xl">
             <p className="text-xs font-bold uppercase tracking-[0.28em] text-gold-600">
-              Policies & disclosures
+              {ui.cpDocsEyebrow}
             </p>
             <h2 className="mt-3 font-serif text-3xl font-bold tracking-tight text-brand-900 sm:text-4xl">
-              Read our full documents
+              {ui.cpDocsTitle}
             </h2>
             <p className="mt-4 leading-relaxed text-muted-foreground">
-              Everything below is published in plain language and kept up to date. Printed copies
-              are available on request at the branch.
+              {ui.cpDocsBody}
             </p>
           </Reveal>
 
@@ -246,7 +242,7 @@ export default async function CompliancePage() {
             <div className="mt-12">
               <h3 className="flex items-center gap-2.5 text-sm font-bold uppercase tracking-[0.22em] text-brand-800">
                 <Landmark className="size-4 text-gold-600" aria-hidden="true" />
-                Regulatory & compliance
+                {ui.cpRegCat}
               </h3>
               <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
                 {regulatory.map((page, index) => (
@@ -263,7 +259,7 @@ export default async function CompliancePage() {
                           {page.title}
                         </p>
                         <p className="mt-1.5 inline-flex items-center gap-1 text-xs font-bold text-brand-700">
-                          Read document
+                          {ui.cpReadDoc}
                           <ArrowRight
                             className="size-3.5 transition-transform group-hover:translate-x-1"
                             aria-hidden="true"
@@ -281,7 +277,7 @@ export default async function CompliancePage() {
             <div className="mt-12">
               <h3 className="flex items-center gap-2.5 text-sm font-bold uppercase tracking-[0.22em] text-brand-800">
                 <Gavel className="size-4 text-gold-600" aria-hidden="true" />
-                Legal
+                {ui.cpLegalCat}
               </h3>
               <div className="mt-5 grid gap-5 sm:grid-cols-2">
                 {legal.map((page, index) => (
@@ -298,7 +294,7 @@ export default async function CompliancePage() {
                           {page.title}
                         </p>
                         <p className="mt-1.5 inline-flex items-center gap-1 text-xs font-bold text-brand-700">
-                          Read document
+                          {ui.cpReadDoc}
                           <ArrowRight
                             className="size-3.5 transition-transform group-hover:translate-x-1"
                             aria-hidden="true"
@@ -319,18 +315,17 @@ export default async function CompliancePage() {
         <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-8 px-4 sm:px-6 lg:flex-row lg:items-center">
           <div className="max-w-2xl">
             <h2 className="font-serif text-2xl font-bold text-white sm:text-3xl">
-              Questions about your rights as a customer?
+              {ui.cpBandTitle}
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-brand-200">
-              Our compliance team is available during business hours to answer questions about
-              your deposits, data, charges and protections.
+              {ui.cpBandBody}
             </p>
           </div>
           <a
             href="/contact"
             className="inline-flex items-center gap-2 rounded-full bg-gold-500 px-6 py-3 text-sm font-bold text-brand-950 transition-all hover:-translate-y-0.5 hover:bg-gold-400"
           >
-            Contact the bank
+            {ui.cpBandBtn}
             <ArrowRight className="size-4" aria-hidden="true" />
           </a>
         </div>

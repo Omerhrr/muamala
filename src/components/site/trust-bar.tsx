@@ -1,11 +1,11 @@
 import { Landmark, ShieldCheck, Zap } from "lucide-react";
-import type { TrustSettings } from "@/lib/site-settings";
+import type { TrustSettings, UiSettings } from "@/lib/site-settings";
 
 const ICONS = [Landmark, ShieldCheck, Zap];
 
-export function TrustBar({ settings }: { settings: TrustSettings }) {
+export function TrustBar({ settings, ui }: { settings: TrustSettings; ui: UiSettings }) {
   return (
-    <section aria-label="Regulatory assurance" className="border-b border-gold-200 bg-gold-50">
+    <section aria-label={ui.trustAria} className="border-b border-gold-200 bg-gold-50">
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-6 px-4 py-6 sm:px-6 md:grid-cols-3">
         {settings.items.map(({ title, sub }, index) => {
           const Icon = ICONS[index % ICONS.length];

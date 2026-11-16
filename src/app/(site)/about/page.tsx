@@ -1,18 +1,13 @@
-import Image from "next/image";
 import { ArrowRight, Banknote, Eye, Landmark, ShieldCheck, Target } from "lucide-react";
 import { PageHeader } from "@/components/site/page-header";
 import { Reveal } from "@/components/site/reveal";
-import { getSettingsGroup, getPages, getTeam } from "@/lib/content";
-import type { AboutPageSettings } from "@/lib/site-settings";
+import { getSettingsGroup, getPages, getTeam, pageMeta } from "@/lib/content";
+import type { AboutPageSettings, AboutSettings, TrustSettings, UiSettings } from "@/lib/site-settings";
 
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata() {
-  const general = await getSettingsGroup("general");
-  return {
-    title: `About us | ${general.bankName}`,
-    description: `Learn about ${general.shortName}: our story, vision, mission, board and management team, corporate governance and community work in Suleja, Niger State.`,
-  };
+  return pageMeta("about");
 }
 
 const fmtInitials = (name: string) =>
@@ -26,17 +21,24 @@ function TeamCard({
   name,
   role,
   bio,
+  photo,
 }: {
   name: string;
   role: string;
   bio: string | null;
+  photo?: string | null;
 }) {
   return (
     <div className="flex h-full flex-col rounded-2xl border border-border bg-card p-6 transition-shadow hover:shadow-lg">
       <div className="flex items-center gap-4">
-        <span className="flex size-14 shrink-0 items-center justify-center rounded-full bg-brand-800 font-serif text-lg font-bold text-gold-300">
-          {fmtInitials(name)}
-        </span>
+        {photo ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={photo} alt={name} loading="lazy" className="size-14 shrink-0 rounded-full object-cover" />
+        ) : (
+          <span className="flex size-14 shrink-0 items-center justify-center rounded-full bg-brand-800 font-serif text-lg font-bold text-gold-300">
+            {fmtInitials(name)}
+          </span>
+        )}
         <div>
           <p className="font-serif text-lg font-bold leading-snug text-brand-900">{name}</p>
           <p className="mt-0.5 text-sm font-semibold text-gold-700">{role}</p>
@@ -48,14 +50,20 @@ function TeamCard({
 }
 
 export default async function AboutPage() {
-  const [general, aboutPage, aboutHome, team, pages] = await Promise.all([
+  const [general, aboutPage, aboutHome, trust, ui, team, pages] = await Promise.all([
     getSettingsGroup("general"),
     getSettingsGroup("aboutPage"),
     getSettingsGroup("about"),
+    getSettingsGroup("trust"),
+    getSettingsGroup("ui"),
     getTeam(),
     getPages(),
   ]);
   const a = aboutPage as AboutPageSettings;
+  const home = aboutHome as AboutSettings;
+  const trustItems = (trust as TrustSettings).items ?? [];
+  const u = ui as UiSettings;
+  const TRUST_ICONS = [Landmark, ShieldCheck, Banknote];
   const valueChips = ((aboutHome as { values?: { label: string }[] }).values ?? [])
     .map((v) => v.label)
     .filter(Boolean);
@@ -93,11 +101,11 @@ export default async function AboutPage() {
               aria-hidden="true"
             />
             <div className="relative overflow-hidden rounded-3xl shadow-2xl">
-              <Image
-                src="/images/about-market.jpg"
-                alt="Traders and customers at a market in Suleja, Niger State"
-                width={1152}
-                height={864}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={home.image}
+                alt={home.imageAlt}
+                loading="lazy"
                 className="h-full w-full object-cover"
               />
             </div>
@@ -111,27 +119,16 @@ export default async function AboutPage() {
             </h2>
             <p className="mt-5 leading-relaxed text-muted-foreground">{a.historyBody}</p>
             <div className="mt-8 grid gap-4 sm:grid-cols-3">
-              <div className="rounded-2xl border border-border bg-card p-5">
-                <Landmark className="size-6 text-gold-600" aria-hidden="true" />
-                <p className="mt-3 text-sm font-bold text-brand-900">CBN licensed</p>
-                <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                  A fully licensed microfinance bank
-                </p>
-              </div>
-              <div className="rounded-2xl border border-border bg-card p-5">
-                <ShieldCheck className="size-6 text-gold-600" aria-hidden="true" />
-                <p className="mt-3 text-sm font-bold text-brand-900">NDIC insured</p>
-                <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                  Deposits insured up to the statutory limit
-                </p>
-              </div>
-              <div className="rounded-2xl border border-border bg-card p-5">
-                <Banknote className="size-6 text-gold-600" aria-hidden="true" />
-                <p className="mt-3 text-sm font-bold text-brand-900">Interswitch powered</p>
-                <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                  Secure cards, transfers & bills
-                </p>
-              </div>
+              {trustItems.map(({ title, sub }, index) => {
+                const Icon = TRUST_ICONS[index % TRUST_ICONS.length];
+                return (
+                  <div key={`${title}-${index}`} className="rounded-2xl border border-border bg-card p-5">
+                    <Icon className="size-6 text-gold-600" aria-hidden="true" />
+                    <p className="mt-3 text-sm font-bold text-brand-900">{title}</p>
+                    <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{sub}</p>
+                  </div>
+                );
+              })}
             </div>
           </Reveal>
         </div>
@@ -165,7 +162,7 @@ export default async function AboutPage() {
           <Reveal className="mt-12">
             <div className="rounded-3xl border border-border bg-card p-8 sm:p-10">
               <h3 className="text-sm font-bold uppercase tracking-[0.22em] text-gold-600">
-                Our core values
+                {u.aboutCoreValues}
               </h3>
               <div className="mt-5 flex flex-wrap gap-3">
                 {valueChips.map((value) => (
@@ -201,7 +198,7 @@ export default async function AboutPage() {
             <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {team.board.map((member, index) => (
                 <Reveal key={member.id} delay={index * 0.06}>
-                  <TeamCard name={member.name} role={member.role} bio={member.bio} />
+                  <TeamCard name={member.name} role={member.role} bio={member.bio} photo={member.photo} />
                 </Reveal>
               ))}
             </div>

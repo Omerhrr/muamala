@@ -35,6 +35,9 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json({ error: "Unknown settings group" }, { status: 400 });
     }
     const value = JSON.stringify(body.data ?? {});
+    if (value.length > 8_000_000) {
+      return NextResponse.json({ error: "These changes are too large to save. Use smaller images." }, { status: 413 });
+    }
     await db.siteSetting.upsert({
       where: { key: group },
       update: { value },

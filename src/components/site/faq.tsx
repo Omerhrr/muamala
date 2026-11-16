@@ -5,17 +5,19 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Reveal } from "@/components/site/reveal";
-import type { FaqSettings, GeneralSettings } from "@/lib/site-settings";
+import type { FaqSettings, GeneralSettings, UiSettings } from "@/lib/site-settings";
 import type { FaqRecord } from "@/lib/content";
 
 export function Faq({
   settings,
   faqs,
   general,
+  ui,
 }: {
   settings: FaqSettings;
   faqs: FaqRecord[];
   general: GeneralSettings;
+  ui: UiSettings;
 }) {
   return (
     <section id="faq" className="bg-background py-20 lg:py-28">
@@ -47,11 +49,11 @@ export function Faq({
 
         {general.phones[0] && (
           <Reveal delay={0.2} className="mt-6 text-center text-sm text-muted-foreground">
-            Still stuck? Call{" "}
+            {ui.faqStuck}{" "}
             <a href={`tel:${general.phones[0].replace(/[^0-9+]/g, "")}`} className="font-bold text-brand-800 hover:text-gold-600">
               {general.phones[0]}
             </a>{" "}
-            and a real person will respond.
+            {ui.faqStuckAfter}
           </Reveal>
         )}
       </div>

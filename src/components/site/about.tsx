@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { ArrowRight, CheckCircle2, Eye, HandHeart, Target, Users } from "lucide-react";
 import { Reveal } from "@/components/site/reveal";
 import type { AboutSettings } from "@/lib/site-settings";
@@ -19,27 +18,28 @@ export function About({
         {/* Image composition */}
         <Reveal className="relative">
           <div
-            className="absolute -left-4 -top-4 h-full w-full rounded-3xl border-2 border-gold-300/60"
+            className="absolute left-0 top-0 -translate-x-2 -translate-y-2 sm:-translate-x-4 sm:-translate-y-4 h-full w-full rounded-3xl border-2 border-gold-300/60"
             aria-hidden="true"
           />
           <div className="relative overflow-hidden rounded-3xl shadow-2xl">
-            <Image
-              src="/images/about-market.jpg"
-              alt="A Nigerian entrepreneur arranging goods in her market stall"
-              width={1152}
-              height={864}
-              priority
-              className="h-[420px] w-full object-cover transition-transform duration-700 hover:scale-105"
-            />
+            {settings.image && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={settings.image}
+                alt={settings.imageAlt}
+                loading="lazy"
+                className="h-[300px] w-full object-cover transition-transform duration-700 hover:scale-105 sm:h-[420px]"
+              />
+            )}
             <div
               className="absolute inset-0 bg-gradient-to-t from-brand-950/45 via-transparent to-transparent"
               aria-hidden="true"
             />
           </div>
-          <div className="absolute -bottom-7 -right-4 rounded-2xl border border-gold-200 bg-white px-6 py-4 shadow-xl sm:-right-7">
+          <div className="absolute -bottom-6 right-2 rounded-2xl border border-gold-200 bg-white px-5 py-3 shadow-xl sm:-right-7 sm:px-6 sm:py-4">
             <p className="font-serif text-2xl font-bold text-brand-800">{general.rcNumber}</p>
             <p className="mt-0.5 text-xs font-medium text-muted-foreground">
-              Incorporated in Nigeria
+              {settings.rcCaption}
             </p>
           </div>
         </Reveal>
@@ -93,10 +93,10 @@ export function About({
 
           <Reveal delay={0.32}>
             <a
-              href="/about"
+              href={settings.learnMoreHref || "/about"}
               className="group mt-8 inline-flex items-center gap-2 text-sm font-bold text-brand-700 transition-colors hover:text-gold-600"
             >
-              Learn more about the bank
+              {settings.learnMoreLabel}
               <ArrowRight
                 className="size-4 transition-transform group-hover:translate-x-1"
                 aria-hidden="true"

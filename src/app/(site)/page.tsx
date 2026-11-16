@@ -8,7 +8,6 @@ import { AppPromo } from "@/components/site/app-promo";
 import { Faq } from "@/components/site/faq";
 import { Contact } from "@/components/site/contact";
 import { getSiteSettings, getProducts, getLoanProducts, getFaqs, getNews } from "@/lib/content";
-import { MessageCircle } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -23,27 +22,19 @@ export default async function Home() {
 
   return (
     <>
-      <Hero settings={settings.home} />
-      {settings.home.announcement && (
-        <div className="bg-gold-500 px-4 py-2.5 text-center">
-          <p className="text-xs font-semibold text-brand-950 sm:text-sm">
-            <MessageCircle className="mr-1.5 inline size-4 -translate-y-px" aria-hidden="true" />
-            {settings.home.announcement}
-          </p>
-        </div>
-      )}
-      <TrustBar settings={settings.trust} />
+      <Hero settings={settings.home} mock={settings.mock} />
+      <TrustBar settings={settings.trust} ui={settings.ui} />
       <About settings={settings.about} general={settings.general} />
-      <Products settings={settings.products} products={products} />
-      <Loans settings={settings.loans} loans={loans} />
-      <AppPromo settings={settings.app} general={settings.general} />
+      <Products settings={settings.products} products={products} ui={settings.ui} />
+      <Loans settings={settings.loans} loans={loans} ui={settings.ui} />
+      <AppPromo settings={settings.app} general={settings.general} ui={settings.ui} mock={settings.mock} />
       {news.length > 0 ? (
-        <NewsSection settings={settings.news} posts={news} />
+        <NewsSection settings={settings.news} posts={news} ui={settings.ui} />
       ) : (
-        <NewsEmpty settings={settings.news} />
+        <NewsEmpty settings={settings.news} ui={settings.ui} />
       )}
-      <Faq settings={settings.faq} faqs={faqs} general={settings.general} />
-      <Contact contact={settings.contact} general={settings.general} />
+      <Faq settings={settings.faq} faqs={faqs} general={settings.general} ui={settings.ui} />
+      <Contact contact={settings.contact} general={settings.general} ui={settings.ui} />
     </>
   );
 }

@@ -1,7 +1,7 @@
 import { ArrowRight, type LucideIcon } from "lucide-react";
 import { Reveal } from "@/components/site/reveal";
 import { getIcon } from "@/lib/icons";
-import type { ProductsSettings } from "@/lib/site-settings";
+import type { ProductsSettings, UiSettings } from "@/lib/site-settings";
 import type { ProductRecord } from "@/lib/content";
 
 const CATEGORY_KEYS = ["savings", "loans", "digital", "other"] as const;
@@ -35,9 +35,11 @@ const CATEGORY_FALLBACK: Record<string, { label: string; blurb: string }> = {
 export function Products({
   settings,
   products,
+  ui,
 }: {
   settings: ProductsSettings;
   products: ProductRecord[];
+  ui: UiSettings;
 }) {
   const categories = CATEGORY_KEYS.map((key, index) => {
     const saved = settings.categories?.[index];
@@ -113,7 +115,7 @@ export function Products({
                           href={meta.key === "loans" ? "/apply?tab=loan" : "/apply?tab=account"}
                           className="mt-6 inline-flex items-center gap-1.5 text-sm font-bold text-brand-700 transition-colors hover:text-gold-600"
                         >
-                          Get started
+                          {ui.getStarted}
                           <ArrowRight
                             className="size-4 transition-transform group-hover:translate-x-1"
                             aria-hidden="true"

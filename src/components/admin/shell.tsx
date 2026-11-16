@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import {
   Banknote,
@@ -21,8 +21,11 @@ import {
   X,
   ExternalLink,
   KeyRound,
+  Image as ImageIcon,
+  ListTree,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import type { BrandSettings } from "@/lib/site-settings";
 
 type NavItem = { href: string; label: string; icon: React.ComponentType<{ className?: string }> };
 type NavGroup = { title: string; items: NavItem[] };
@@ -36,6 +39,8 @@ const NAV: NavGroup[] = [
     title: "Site content",
     items: [
       { href: "/admin/settings", label: "Text & settings", icon: Settings },
+      { href: "/admin/settings?group=brand", label: "Logo & branding", icon: ImageIcon },
+      { href: "/admin/settings?group=nav", label: "Menu & navigation", icon: ListTree },
       { href: "/admin/theme", label: "Theme & colours", icon: Palette },
       { href: "/admin/resources/products", label: "Products & services", icon: PiggyBank },
       { href: "/admin/resources/loans", label: "Loan products", icon: HandCoins },
@@ -59,7 +64,15 @@ const NAV: NavGroup[] = [
   },
 ];
 
-export function AdminShell({ user, children }: { user: string; children: React.ReactNode }) {
+export function AdminShell({
+  user,
+  brand,
+  children,
+}: {
+  user: string;
+  brand: BrandSettings;
+  children: React.ReactNode;
+}) {
   const pathname = usePathname();
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -76,8 +89,14 @@ export function AdminShell({ user, children }: { user: string; children: React.R
     }
   };
 
-  const isActive = (href: string) =>
-    href === "/admin" ? pathname === "/admin" : pathname.startsWith(href);
+  const searchParams = useSearchParams();
+  const search = searchParams.toString() ? `?${searchParams.toString()}` : "";
+  const isActive = (href: string) => {
+    if (href === "/admin") return pathname === "/admin";
+    if (href.includes("?")) return pathname + search === href;
+    if (href === "/admin/settings") return pathname === href && !search.includes("group=brand") && !search.includes("group=nav");
+    return pathname.startsWith(href);
+  };
 
   const nav = (
     <nav className="flex-1 space-y-6 overflow-y-auto px-3 py-5">
@@ -114,14 +133,14 @@ export function AdminShell({ user, children }: { user: string; children: React.R
     </nav>
   );
 
-  const brand = (
+  const brandBlock = (
     <Link href="/admin" className="flex items-center gap-3 px-5 py-5">
-      <span className="flex size-10 items-center justify-center rounded-xl bg-white">
-        { }
-        <img src="/logo-mark.png" alt="" width={36} height={36} className="size-9" />
+      <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-white p-1">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={brand.logoMark} alt="" className="max-h-full max-w-full object-contain" />
       </span>
-      <span className="flex flex-col leading-tight">
-        <span className="text-sm font-bold text-white">Muamala MFB</span>
+      <span className="flex min-w-0 flex-col leading-tight">
+        <span className="truncate text-sm font-bold text-white">{brand.adminName}</span>
         <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-gold-300">
           Content manager
         </span>
@@ -133,7 +152,7 @@ export function AdminShell({ user, children }: { user: string; children: React.R
     <div className="flex min-h-screen bg-muted/50">
       {/* Desktop sidebar */}
       <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 flex-col border-r border-white/10 bg-brand-950 lg:flex">
-        {brand}
+        {brandBlock}
         {nav}
         <div className="border-t border-white/10 p-4">
           <div className="mb-3 flex items-center gap-2.5 px-1">
@@ -171,11 +190,11 @@ export function AdminShell({ user, children }: { user: string; children: React.R
       {/* Mobile top bar */}
       <div className="fixed inset-x-0 top-0 z-40 flex h-14 items-center justify-between border-b border-white/10 bg-brand-950 px-4 lg:hidden">
         <div className="flex items-center gap-2.5">
-          <span className="flex size-8 items-center justify-center rounded-lg bg-white">
-            { }
-            <img src="/logo-mark.png" alt="" width={28} height={28} className="size-7" />
+          <span className="flex size-8 items-center justify-center rounded-lg bg-white p-0.5">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={brand.logoMark} alt="" className="max-h-full max-w-full object-contain" />
           </span>
-          <span className="text-sm font-bold text-white">Muamala Admin</span>
+          <span className="truncate text-sm font-bold text-white">{brand.adminName} Admin</span>
         </div>
         <button
           type="button"

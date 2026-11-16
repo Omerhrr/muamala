@@ -179,3 +179,30 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #a98620;
 }
+
+/* Logo scales down on small screens so wide uploaded logos never crowd the menu button */
+@media (max-width: 639px) {
+  .logo-img {
+    height: min(var(--logo-h, 40px), 36px) !important;
+    max-height: 36px !important;
+  }
+}
+
+/* Keep native controls comfortably tappable on touch screens */
+@media (pointer: coarse) {
+  input:not([type="checkbox"]):not([type="radio"]),
+  select,
+  textarea {
+    font-size: 16px; /* prevents iOS zoom-on-focus */
+  }
+}
+
+/* Visible keyboard focus everywhere */
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}

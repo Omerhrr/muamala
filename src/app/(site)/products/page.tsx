@@ -2,17 +2,13 @@ import { ArrowRight, HelpCircle, type LucideIcon } from "lucide-react";
 import { PageHeader } from "@/components/site/page-header";
 import { Reveal } from "@/components/site/reveal";
 import { getIcon } from "@/lib/icons";
-import { getLoanProducts, getProducts, getSettingsGroup } from "@/lib/content";
-import type { ProductsSettings } from "@/lib/site-settings";
+import { getLoanProducts, getProducts, getSettingsGroup, pageMeta } from "@/lib/content";
+import type { ProductsSettings, UiSettings } from "@/lib/site-settings";
 
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata() {
-  const general = await getSettingsGroup("general");
-  return {
-    title: `Products & services | ${general.bankName}`,
-    description: `Savings accounts, loan facilities, digital banking, POS, bill payments and agency banking from ${general.shortName} in Suleja, Niger State.`,
-  };
+  return pageMeta("products");
 }
 
 const CATEGORIES: {
@@ -55,17 +51,19 @@ const CATEGORIES: {
 const naira = (n: number) => `₦${n.toLocaleString("en-NG")}`;
 
 export default async function ProductsPage() {
-  const [settings, products, loans] = await Promise.all([
+  const [settings, ui, products, loans] = await Promise.all([
     getSettingsGroup("products"),
+    getSettingsGroup("ui"),
     getProducts(),
     getLoanProducts(),
   ]);
   const p = settings as ProductsSettings;
+  const u = ui as UiSettings;
 
   return (
     <>
       <PageHeader
-        eyebrow="Products & services"
+        eyebrow={u.prodEyebrow}
         title={p.title}
         subtitle={p.subtitle}
       >
@@ -74,14 +72,14 @@ export default async function ProductsPage() {
             href="/apply"
             className="inline-flex items-center gap-2 rounded-full bg-gold-500 px-6 py-3 text-sm font-bold text-brand-950 shadow-lg shadow-gold-500/20 transition-all hover:-translate-y-0.5 hover:bg-gold-400"
           >
-            Open an Account
+            {u.prodCtaPrimary}
             <ArrowRight className="size-4" aria-hidden="true" />
           </a>
           <a
             href="/contact"
             className="inline-flex items-center gap-2 rounded-full border border-white/25 px-6 py-3 text-sm font-bold text-white transition-colors hover:border-gold-300 hover:text-gold-300"
           >
-            Talk to us
+            {u.prodCtaSecondary}
           </a>
         </div>
         {/* Category quick-nav */}
@@ -92,7 +90,7 @@ export default async function ProductsPage() {
               href={`#${cat.anchor}`}
               className="rounded-full border border-white/20 px-4 py-2 text-xs font-bold text-brand-100 transition-colors hover:border-gold-300 hover:text-gold-300"
             >
-              {cat.label}
+              {p.categories?.[CATEGORIES.indexOf(cat)]?.label?.trim() || cat.label}
             </a>
           ))}
         </div>
@@ -101,7 +99,12 @@ export default async function ProductsPage() {
       {/* Product categories */}
       <section className="bg-background py-20 lg:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
-          {CATEGORIES.map((meta, catIndex) => {
+          {CATEGORIES.map((base, catIndex) => {
+            const meta = {
+              ...base,
+              label: p.categories?.[catIndex]?.label?.trim() || base.label,
+              blurb: p.categories?.[catIndex]?.blurb?.trim() || base.blurb,
+            };
             const items = products.filter((prod) => prod.category === meta.key);
             if (items.length === 0) return null;
             const Icon = meta.icon;
@@ -156,7 +159,7 @@ export default async function ProductsPage() {
                               href={meta.key === "loans" ? "/apply?tab=loan" : "/apply?tab=account"}
                               className="mt-6 inline-flex items-center gap-1.5 text-sm font-bold text-brand-700 transition-colors hover:text-gold-600"
                             >
-                              Get started
+                              {u.getStarted}
                               <ArrowRight
                                 className="size-4 transition-transform group-hover:translate-x-1"
                                 aria-hidden="true"
@@ -179,10 +182,10 @@ export default async function ProductsPage() {
                 <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
                   <div>
                     <p className="text-xs font-bold uppercase tracking-[0.28em] text-gold-600">
-                      Current credit offers
+                      {u.prodCreditEyebrow}
                     </p>
                     <h2 className="mt-3 font-serif text-2xl font-bold tracking-tight text-brand-900 sm:text-3xl">
-                      Loan products at a glance
+                      {u.prodCreditTitle}
                     </h2>
                   </div>
                   <a
@@ -190,7 +193,7 @@ export default async function ProductsPage() {
                     className="inline-flex items-center gap-2 rounded-full bg-secondary px-5 py-2.5 text-sm font-bold text-brand-900 transition-colors hover:bg-secondary/70"
                   >
                     <HelpCircle className="size-4 text-gold-600" aria-hidden="true" />
-                    Try the repayment calculator
+                    {u.prodCalcLink}
                   </a>
                 </div>
               </Reveal>
@@ -198,12 +201,12 @@ export default async function ProductsPage() {
                 <table className="w-full text-left text-sm">
                   <thead className="bg-brand-950 text-brand-100">
                     <tr>
-                      <th className="px-5 py-4 font-bold">Product</th>
-                      <th className="px-5 py-4 font-bold">Flat rate / month</th>
-                      <th className="hidden px-5 py-4 font-bold sm:table-cell">Amount range</th>
-                      <th className="hidden px-5 py-4 font-bold sm:table-cell">Max tenor</th>
-                      <th className="hidden px-5 py-4 font-bold md:table-cell">Security</th>
-                      <th className="px-5 py-4 font-bold">Apply</th>
+                      <th className="px-5 py-4 font-bold">{u.thProduct}</th>
+                      <th className="px-5 py-4 font-bold">{u.thRate}</th>
+                      <th className="hidden px-5 py-4 font-bold sm:table-cell">{u.thAmount}</th>
+                      <th className="hidden px-5 py-4 font-bold sm:table-cell">{u.thTenor}</th>
+                      <th className="hidden px-5 py-4 font-bold md:table-cell">{u.thSecurity}</th>
+                      <th className="px-5 py-4 font-bold">{u.thApply}</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border bg-card">
@@ -213,6 +216,9 @@ export default async function ProductsPage() {
                           <p className="font-bold text-brand-900">{loan.name}</p>
                           <p className="mt-0.5 max-w-xs text-xs text-muted-foreground">
                             {loan.desc}
+                          </p>
+                          <p className="mt-2 text-xs font-semibold text-brand-800 sm:hidden">
+                            {naira(loan.minAmount)} - {naira(loan.maxAmount)} · {loan.maxTerm} mo
                           </p>
                         </td>
                         <td className="px-5 py-4 font-bold text-gold-700">{loan.ratePct}%</td>
@@ -238,14 +244,13 @@ export default async function ProductsPage() {
                 </table>
               </div>
               <p className="mt-4 text-xs leading-relaxed text-muted-foreground">
-                Rates are flat monthly rates on the principal and are indicative. Final pricing
-                depends on product terms, credit assessment and applicable charges. See our{" "}
+                {u.prodRatesNote}{" "}
                 <a href="/pages/deposit-lending-rates" className="font-semibold text-brand-700 hover:text-gold-600">
-                  current lending &amp; deposit rates
+                  {u.prodRatesLink}
                 </a>{" "}
                 and{" "}
                 <a href="/pages/tariff-guide" className="font-semibold text-brand-700 hover:text-gold-600">
-                  tariff guide
+                  {u.prodTariffLink}
                 </a>
                 .
               </p>
@@ -259,11 +264,10 @@ export default async function ProductsPage() {
         <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-8 px-4 sm:px-6 lg:flex-row lg:items-center">
           <div className="max-w-2xl">
             <h2 className="font-serif text-2xl font-bold text-white sm:text-3xl">
-              Not sure which product fits you?
+              {u.prodBandTitle}
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-brand-200">
-              Talk to our team. We will listen to your goals and match you with the savings or
-              credit product that fits your cash-flow. No jargon, no pressure.
+              {u.prodBandBody}
             </p>
           </div>
           <div className="flex flex-wrap gap-3">
@@ -271,14 +275,14 @@ export default async function ProductsPage() {
               href="/apply"
               className="inline-flex items-center gap-2 rounded-full bg-gold-500 px-6 py-3 text-sm font-bold text-brand-950 transition-all hover:-translate-y-0.5 hover:bg-gold-400"
             >
-              Start online
+              {u.prodBandPrimary}
               <ArrowRight className="size-4" aria-hidden="true" />
             </a>
             <a
               href="/contact"
               className="inline-flex items-center gap-2 rounded-full border border-white/25 px-6 py-3 text-sm font-bold text-white transition-colors hover:border-gold-300 hover:text-gold-300"
             >
-              Contact the bank
+              {u.prodBandSecondary}
             </a>
           </div>
         </div>

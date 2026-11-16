@@ -1,12 +1,21 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { ArrowDown, ArrowUp, Loader2, Plus, Save, Trash2 } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { ArrowDown, ArrowUp, ExternalLink, Loader2, Plus, RotateCcw, Save, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
+import { ImageField } from "@/components/admin/image-field";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { DEFAULT_SETTINGS, SETTING_GROUPS } from "@/lib/site-settings";
 import type { FieldDef, GroupDef } from "@/lib/site-settings";
@@ -22,14 +31,26 @@ function ListField({
   value: string[];
   onChange: (next: string[]) => void;
 }) {
-  const text = value.join("\n");
+  // keep the raw text locally so blank lines and Enter work while typing
+  const [text, setText] = useState(value.join("\n"));
+  const last = useRef(value.join("\n"));
+  useEffect(() => {
+    const incoming = value.join("\n");
+    if (incoming !== last.current) {
+      last.current = incoming;
+      setText(incoming);
+    }
+  }, [value]);
   return (
     <Textarea
-      rows={Math.max(3, value.length + 1)}
+      rows={Math.max(3, text.split("\n").length + 1)}
       value={text}
-      onChange={(e) =>
-        onChange(e.target.value.split("\n").map((line) => line.trimStart()).filter(Boolean))
-      }
+      onChange={(e) => {
+        setText(e.target.value);
+        const parsed = e.target.value.split("\n").map((line) => line.trim()).filter(Boolean);
+        last.current = parsed.join("\n");
+        onChange(parsed);
+      }}
       placeholder="One entry per line"
       className="bg-white"
     />
@@ -148,12 +169,38 @@ function FieldEditor({
   field,
   value,
   onChange,
+  defaultValue,
 }: {
   field: FieldDef;
   value: unknown;
   onChange: (next: unknown) => void;
+  defaultValue?: string;
 }) {
   switch (field.type) {
+    case "image":
+      return (
+        <ImageField
+          value={String(value ?? "")}
+          onChange={(next) => onChange(next)}
+          maxSize={field.maxSize}
+          defaultValue={defaultValue}
+        />
+      );
+    case "select":
+      return (
+        <Select value={String(value ?? "")} onValueChange={(v) => onChange(v)}>
+          <SelectTrigger className="w-full bg-white sm:max-w-md">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {(field.options ?? []).map((opt) => (
+              <SelectItem key={opt.value} value={opt.value}>
+                {opt.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      );
     case "textarea":
       return (
         <Textarea
@@ -206,7 +253,14 @@ export function SettingsEditor() {
   const { toast } = useToast();
   const [groups, setGroups] = useState<GroupDef[]>(SETTING_GROUPS);
   const [values, setValues] = useState<ValuesByGroup>({});
-  const [active, setActive] = useState<string>(SETTING_GROUPS[0]?.key ?? "general");
+  const searchParams = useSearchParams();
+  const requested = searchParams.get("group");
+  const [active, setActive] = useState<string>(
+    SETTING_GROUPS.some((g) => g.key === requested) ? (requested as string) : SETTING_GROUPS[0]?.key ?? "general"
+  );
+  useEffect(() => {
+    if (requested && SETTING_GROUPS.some((g) => g.key === requested)) setActive(requested);
+  }, [requested]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [dirty, setDirty] = useState<Record<string, boolean>>({});
@@ -252,6 +306,26 @@ export function SettingsEditor() {
       cancelled = true;
     };
   }, [toast]);
+
+  const anyDirty = Object.values(dirty).some(Boolean);
+  useEffect(() => {
+    if (!anyDirty) return;
+    const handler = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = "";
+    };
+    window.addEventListener("beforeunload", handler);
+    return () => window.removeEventListener("beforeunload", handler);
+  }, [anyDirty]);
+
+  const resetGroup = (groupKey: string) => {
+    if (!window.confirm("Reset this whole section to the original text? You still need to press Save to publish it.")) return;
+    setValues((prev) => ({
+      ...prev,
+      [groupKey]: structuredClone(DEFAULT_SETTINGS[groupKey as keyof typeof DEFAULT_SETTINGS]) as Record<string, unknown>,
+    }));
+    setDirty((prev) => ({ ...prev, [groupKey]: true }));
+  };
 
   const activeGroup = useMemo(
     () => groups.find((g) => g.key === active) ?? groups[0],
@@ -314,8 +388,26 @@ export function SettingsEditor() {
 
       <div className="mt-6 grid gap-6 lg:grid-cols-[240px_1fr]">
         {/* Group navigation */}
-        <nav className="lg:sticky lg:top-6 lg:self-start">
-          <ul className="flex flex-wrap gap-2 lg:flex-col">
+        <div className="lg:hidden">
+          <Label htmlFor="group-select" className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-muted-foreground">
+            Section to edit
+          </Label>
+          <Select value={active} onValueChange={setActive}>
+            <SelectTrigger id="group-select" className="h-12 w-full bg-white text-base font-semibold">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent className="max-h-[60vh]">
+              {groups.map((group) => (
+                <SelectItem key={group.key} value={group.key}>
+                  {group.title}
+                  {dirty[group.key] ? "  •" : ""}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <nav className="hidden lg:sticky lg:top-6 lg:block lg:self-start">
+          <ul className="flex flex-col gap-1.5">
             {groups.map((group) => (
               <li key={group.key}>
                 <button
@@ -343,7 +435,7 @@ export function SettingsEditor() {
 
         {/* Active group editor */}
         {activeGroup && (
-          <section key={activeGroup.key} className="rounded-3xl border border-border bg-card p-6 sm:p-8">
+          <section key={activeGroup.key} className="rounded-3xl border border-border bg-card p-4 pb-24 sm:p-8 sm:pb-8">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
                 <h2 className="font-serif text-xl font-bold text-brand-900">
@@ -377,6 +469,9 @@ export function SettingsEditor() {
                     field={field}
                     value={values[activeGroup.key]?.[field.name]}
                     onChange={(next) => updateField(activeGroup.key, field.name, next)}
+                    defaultValue={String(
+                      (DEFAULT_SETTINGS[activeGroup.key as keyof typeof DEFAULT_SETTINGS] as Record<string, unknown>)?.[field.name] ?? ""
+                    )}
                   />
                   {field.help && (
                     <p className="text-xs leading-relaxed text-muted-foreground">{field.help}</p>
@@ -385,11 +480,21 @@ export function SettingsEditor() {
               ))}
             </div>
 
-            <div className="mt-8 flex justify-end border-t border-border pt-5">
+            <div className="fixed inset-x-0 bottom-0 z-30 flex items-center justify-between gap-2 border-t border-border bg-card/95 px-4 py-3 backdrop-blur sm:static sm:z-auto sm:mt-8 sm:bg-transparent sm:px-0 sm:pb-0 sm:pt-5 sm:backdrop-blur-none">
+              <div className="flex items-center gap-1">
+                <Button type="button" variant="ghost" size="sm" onClick={() => resetGroup(activeGroup.key)} className="h-10 gap-1.5 text-muted-foreground">
+                  <RotateCcw className="size-4" />
+                  <span className="hidden sm:inline">Reset section</span>
+                </Button>
+                <a href="/" target="_blank" rel="noopener noreferrer" className="inline-flex h-10 items-center gap-1.5 rounded-md px-3 text-sm font-medium text-muted-foreground hover:bg-secondary">
+                  <ExternalLink className="size-4" />
+                  <span className="hidden sm:inline">View site</span>
+                </a>
+              </div>
               <Button
                 onClick={() => saveGroup(activeGroup.key)}
                 disabled={saving}
-                className="rounded-full bg-brand-800 px-6 font-bold text-white hover:bg-brand-700"
+                className="h-11 rounded-full bg-brand-800 px-6 font-bold text-white hover:bg-brand-700"
               >
                 {saving ? (
                   <Loader2 className="size-4 animate-spin" />

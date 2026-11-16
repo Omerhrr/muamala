@@ -5,6 +5,12 @@ import { db } from "@/lib/db";
 const SECRET =
   process.env.ADMIN_SESSION_SECRET ?? "muamala-mfb-admin-session-secret-v1";
 
+if (!process.env.ADMIN_SESSION_SECRET && process.env.NODE_ENV === "production") {
+  console.warn(
+    "[security] ADMIN_SESSION_SECRET is not set: using the built-in default secret. Set a long random value in your environment."
+  );
+}
+
 export const SESSION_COOKIE = "mfb_admin_session";
 const SESSION_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
 

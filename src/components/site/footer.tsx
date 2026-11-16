@@ -1,12 +1,14 @@
 import { Facebook, Instagram, Linkedin, Mail, MapPin, Phone, Twitter } from "lucide-react";
 import { Logo, LogoMarkChip } from "@/components/site/logo";
 import { waLink } from "@/lib/content";
-import type { FooterSettings, GeneralSettings } from "@/lib/site-settings";
+import type { BrandSettings, FooterSettings, GeneralSettings, UiSettings } from "@/lib/site-settings";
 import type { PageRecord } from "@/lib/content";
 
 type FooterProps = {
+  ui: UiSettings;
   general: GeneralSettings;
   footer: FooterSettings;
+  brand: BrandSettings;
   pages: PageRecord[];
 };
 
@@ -17,29 +19,36 @@ const SOCIALS = [
   { icon: Linkedin, label: "LinkedIn", key: "linkedin" as const },
 ];
 
-export function Footer({ general, footer, pages }: FooterProps) {
+export function Footer({ general, footer, brand, pages, ui }: FooterProps) {
   const telHref = `tel:${(general.phones[0] ?? "").replace(/[^0-9+]/g, "")}`;
   const addressLines = general.address.split("\n").filter(Boolean);
   const quickLinks = (footer.quickLinks ?? []).filter((l) => l.label && l.href);
+  const productLinks = (
+    footer.productLinkItems?.length
+      ? footer.productLinkItems
+      : (footer.productLinks ?? []).map((label) => ({ label, href: "/products" }))
+  ).filter((l) => l.label);
 
   return (
     <footer className="mt-auto bg-brand-950 text-brand-100">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
-        <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-[1.3fr_0.8fr_0.8fr_1fr]">
+        <div className="grid gap-10 sm:gap-12 md:grid-cols-2 lg:grid-cols-[1.3fr_0.8fr_0.8fr_1fr]">
           {/* Brand */}
           <div>
             <div className="flex items-center gap-3">
-              <LogoMarkChip />
-              <Logo variant="light" />
+              <LogoMarkChip brand={brand} />
+              <Logo brand={brand} variant="light" hideMark />
             </div>
             <p className="mt-5 max-w-sm text-sm leading-relaxed text-brand-200">{footer.blurb}</p>
             <div className="mt-6 flex gap-3">
-              {SOCIALS.map(({ icon: Icon, label, key }) => (
+              {SOCIALS.filter(({ key }) => general[key] && general[key] !== "#").map(({ icon: Icon, label, key }) => (
                 <a
                   key={label}
-                  href={general[key] || "#"}
+                  href={general[key]}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   aria-label={label}
-                  className="flex size-9 items-center justify-center rounded-full border border-white/15 text-brand-200 transition-colors hover:border-gold-400 hover:text-gold-300"
+                  className="flex size-11 items-center justify-center rounded-full border border-white/15 text-brand-200 transition-colors hover:border-gold-400 hover:text-gold-300"
                 >
                   <Icon className="size-4" aria-hidden="true" />
                 </a>
@@ -48,12 +57,12 @@ export function Footer({ general, footer, pages }: FooterProps) {
           </div>
 
           {/* Quick links */}
-          <nav aria-label="Quick links">
+          <nav aria-label={ui.footerNavLabel}>
             <p className="text-sm font-bold uppercase tracking-wider text-gold-400">{footer.quickLinksTitle}</p>
             <ul className="mt-5 space-y-3">
               {quickLinks.map(({ label, href }) => (
                 <li key={`${label}-${href}`}>
-                  <a href={href} className="text-sm text-brand-200 transition-colors hover:text-gold-300">
+                  <a href={href} className="inline-flex min-h-8 items-center text-sm text-brand-200 transition-colors hover:text-gold-300">
                     {label}
                   </a>
                 </li>
@@ -62,12 +71,12 @@ export function Footer({ general, footer, pages }: FooterProps) {
           </nav>
 
           {/* Products + legal */}
-          <nav aria-label="Products and policies">
+          <nav aria-label={ui.footerProductsAria}>
             <p className="text-sm font-bold uppercase tracking-wider text-gold-400">{footer.productsTitle}</p>
             <ul className="mt-5 space-y-3">
-              {footer.productLinks.map((label) => (
-                <li key={label}>
-                  <a href="/#products" className="text-sm text-brand-200 transition-colors hover:text-gold-300">
+              {productLinks.map(({ label, href }) => (
+                <li key={`${label}-${href}`}>
+                  <a href={href || "/products"} className="text-sm text-brand-200 transition-colors hover:text-gold-300">
                     {label}
                   </a>
                 </li>
@@ -83,8 +92,8 @@ export function Footer({ general, footer, pages }: FooterProps) {
                 </li>
               ))}
               <li>
-                <a href="/compliance" className="text-sm font-semibold text-gold-300 transition-colors hover:text-gold-200">
-                  All policies &amp; disclosures →
+                <a href={footer.policiesAllHref || "/compliance"} className="text-sm font-semibold text-gold-300 transition-colors hover:text-gold-200">
+                  {footer.policiesAllLabel || "All policies & disclosures →"}
                 </a>
               </li>
             </ul>
@@ -132,7 +141,7 @@ export function Footer({ general, footer, pages }: FooterProps) {
         <div className="mx-auto max-w-7xl space-y-3 px-4 py-6 sm:px-6">
           <p className="text-xs leading-relaxed text-brand-300">{footer.smallprint}</p>
           <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-brand-300">
-            <p>© {new Date().getFullYear()} {general.bankName}. All rights reserved.</p>
+            <p>© {new Date().getFullYear()} {general.bankName}. {ui.footerRights}</p>
             <p>{footer.legalLine}</p>
           </div>
         </div>

@@ -3,6 +3,7 @@ import { ArrowLeft, FileText } from "lucide-react";
 import { PageHeader } from "@/components/site/page-header";
 import { Markdown } from "@/components/site/markdown";
 import { getPage, getPages, getSettingsGroup } from "@/lib/content";
+import type { UiSettings } from "@/lib/site-settings";
 
 export const dynamic = "force-dynamic";
 
@@ -12,7 +13,7 @@ export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
   const page = await getPage(slug);
   const general = await getSettingsGroup("general");
-  if (!page) return { title: `Not found | ${general.bankName}` };
+  if (!page) return { title: `${(await getSettingsGroup("ui")).notFoundTitle} | ${general.bankName}` };
   return {
     title: `${page.title} | ${general.bankName}`,
     description: `${page.title} | ${general.bankName} (${general.rcNumber}), Suleja, Niger State.`,
@@ -27,11 +28,13 @@ const CATEGORY_LABELS: Record<string, string> = {
 
 export default async function ContentPage({ params }: Props) {
   const { slug } = await params;
-  const [page, allPages, general] = await Promise.all([
+  const [page, allPages, general, ui] = await Promise.all([
     getPage(slug),
     getPages(),
     getSettingsGroup("general"),
+    getSettingsGroup("ui"),
   ]);
+  const u = ui as UiSettings;
   if (!page) notFound();
 
   const others = allPages.filter((p) => p.slug !== slug).slice(0, 8);
@@ -54,7 +57,7 @@ export default async function ContentPage({ params }: Props) {
             <div className="rounded-3xl border border-border bg-card p-6">
               <p className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-gold-600">
                 <FileText className="size-4" aria-hidden="true" />
-                Policies & info
+                {u.policiesAside}
               </p>
               <ul className="mt-4 space-y-2.5">
                 {allPages.map((p) => (
@@ -74,7 +77,7 @@ export default async function ContentPage({ params }: Props) {
               </ul>
               {others.length === 0 && (
                 <p className="mt-4 text-xs text-muted-foreground">
-                  More documents will be published here.
+                  {u.policiesMore}
                 </p>
               )}
             </div>
@@ -87,7 +90,7 @@ export default async function ContentPage({ params }: Props) {
             className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-5 py-2.5 text-sm font-bold text-brand-800 transition-colors hover:border-gold-300 hover:text-gold-600"
           >
             <ArrowLeft className="size-4" aria-hidden="true" />
-            Back to home
+            {u.backHome}
           </a>
         </div>
       </section>

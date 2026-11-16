@@ -26,20 +26,17 @@ import { Reveal } from "@/components/site/reveal";
 import { waLink } from "@/lib/wa";
 import type { ApplySettings, GeneralSettings } from "@/lib/site-settings";
 import type { LoanProductRecord } from "@/lib/content";
+import type { UiSettings } from "@/lib/site-settings";
 
 type Props = {
   settings: ApplySettings;
   general: GeneralSettings;
   loans: LoanProductRecord[];
+  ui: UiSettings;
 };
 
 const STEP_ICONS = [Wallet, BadgeCheck, ShieldCheck];
 
-const ACCOUNT_TYPES = [
-  { value: "individual", label: "Individual savings" },
-  { value: "group", label: "Group / cooperative savings" },
-  { value: "business", label: "Business current account" },
-];
 
 type SuccessState = { title: string; message: string } | null;
 
@@ -48,11 +45,13 @@ function SuccessCard({
   message,
   whatsapp,
   onReset,
+  ui,
 }: {
   title: string;
   message: string;
   whatsapp: string;
   onReset: () => void;
+  ui: UiSettings;
 }) {
   return (
     <div className="rounded-3xl border border-gold-300/70 bg-gold-50 p-8 text-center sm:p-10">
@@ -67,19 +66,24 @@ function SuccessCard({
             rel="noopener noreferrer"
             className="rounded-full bg-brand-800 px-5 py-2.5 text-sm font-bold text-white transition-colors hover:bg-brand-700"
           >
-            Chat with us on WhatsApp
+            {ui.apSuccessWa}
           </a>
         )}
         <Button variant="outline" onClick={onReset} className="rounded-full px-5">
-          Submit another request
+          {ui.apSuccessAgain}
         </Button>
       </div>
     </div>
   );
 }
 
-export function ApplyForms({ settings, general, loans }: Props) {
+export function ApplyForms({ settings, general, loans, ui }: Props) {
   const { toast } = useToast();
+  const ACCOUNT_TYPES = [
+    { value: "individual", label: ui.apTypeIndividual },
+    { value: "group", label: ui.apTypeGroup },
+    { value: "business", label: ui.apTypeBusiness },
+  ];
   const [success, setSuccess] = useState<SuccessState>(null);
 
   /* ---------- account form ---------- */
@@ -106,22 +110,22 @@ export function ApplyForms({ settings, general, loans }: Props) {
       const data = (await res.json()) as { success: boolean; message?: string; error?: string };
       if (data.success) {
         setSuccess({
-          title: "Account request received!",
+          title: ui.apAccSuccessTitle,
           message:
             data.message ??
-            "Our account officer will call you shortly to complete your account opening.",
+            ui.apAccSuccessMsg,
         });
       } else {
         toast({
-          title: "Could not submit",
-          description: data.error ?? "Please check your details and try again.",
+          title: ui.apErrTitle,
+          description: data.error ?? ui.apErrBody,
           variant: "destructive",
         });
       }
     } catch {
       toast({
-        title: "Network error",
-        description: "Please check your connection and try again.",
+        title: ui.apNetTitle,
+        description: ui.apNetBody,
         variant: "destructive",
       });
     } finally {
@@ -161,22 +165,22 @@ export function ApplyForms({ settings, general, loans }: Props) {
       const data = (await res.json()) as { success: boolean; message?: string; error?: string };
       if (data.success) {
         setSuccess({
-          title: "Loan application received!",
+          title: ui.apLoanSuccessTitle,
           message:
             data.message ??
-            "A loan officer will contact you within one business day to discuss your application.",
+            ui.apLoanSuccessMsg,
         });
       } else {
         toast({
-          title: "Could not submit",
-          description: data.error ?? "Please check your details and try again.",
+          title: ui.apErrTitle,
+          description: data.error ?? ui.apErrBody,
           variant: "destructive",
         });
       }
     } catch {
       toast({
-        title: "Network error",
-        description: "Please check your connection and try again.",
+        title: ui.apNetTitle,
+        description: ui.apNetBody,
         variant: "destructive",
       });
     } finally {
@@ -196,6 +200,7 @@ export function ApplyForms({ settings, general, loans }: Props) {
             message={success.message}
             whatsapp={general.whatsapp}
             onReset={() => setSuccess(null)}
+            ui={ui}
           />
         </div>
       </section>
@@ -215,9 +220,9 @@ export function ApplyForms({ settings, general, loans }: Props) {
                 </span>
                 <div>
                   <h2 className="font-serif text-xl font-bold text-brand-900">
-                    Open a savings account
+                    {ui.apAccTitle}
                   </h2>
-                  <p className="text-xs text-muted-foreground">Individual, group or business</p>
+                  <p className="text-xs text-muted-foreground">{ui.apAccSub}</p>
                 </div>
               </div>
 
@@ -225,20 +230,20 @@ export function ApplyForms({ settings, general, loans }: Props) {
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="space-y-1.5">
                     <Label htmlFor="acc-name" className={labelCls}>
-                      Full name *
+                      {ui.apName}
                     </Label>
                     <Input
                       id="acc-name"
                       required
                       value={acc.name}
                       onChange={(e) => setAcc({ ...acc, name: e.target.value })}
-                      placeholder="e.g. Amina Yusuf"
+                      placeholder={ui.apNamePh}
                       className={inputCls}
                     />
                   </div>
                   <div className="space-y-1.5">
                     <Label htmlFor="acc-phone" className={labelCls}>
-                      Phone number *
+                      {ui.apPhone}
                     </Label>
                     <Input
                       id="acc-phone"
@@ -246,7 +251,7 @@ export function ApplyForms({ settings, general, loans }: Props) {
                       type="tel"
                       value={acc.phone}
                       onChange={(e) => setAcc({ ...acc, phone: e.target.value })}
-                      placeholder="0803 000 0000"
+                      placeholder={ui.apPhonePh}
                       className={inputCls}
                     />
                   </div>
@@ -254,27 +259,27 @@ export function ApplyForms({ settings, general, loans }: Props) {
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="space-y-1.5">
                     <Label htmlFor="acc-email" className={labelCls}>
-                      Email (optional)
+                      {ui.apEmail}
                     </Label>
                     <Input
                       id="acc-email"
                       type="email"
                       value={acc.email}
                       onChange={(e) => setAcc({ ...acc, email: e.target.value })}
-                      placeholder="you@example.com"
+                      placeholder={ui.apEmailPh}
                       className={inputCls}
                     />
                   </div>
                   <div className="space-y-1.5">
                     <Label htmlFor="acc-type" className={labelCls}>
-                      Account type *
+                      {ui.apType}
                     </Label>
                     <Select
                       value={acc.type}
                       onValueChange={(value) => setAcc({ ...acc, type: value })}
                     >
                       <SelectTrigger id="acc-type" className={inputCls}>
-                        <SelectValue placeholder="Choose account type" />
+                        <SelectValue placeholder={ui.apTypePh} />
                       </SelectTrigger>
                       <SelectContent>
                         {ACCOUNT_TYPES.map((t) => (
@@ -288,19 +293,19 @@ export function ApplyForms({ settings, general, loans }: Props) {
                 </div>
                 <div className="space-y-1.5">
                   <Label htmlFor="acc-address" className={labelCls}>
-                    Home / shop address (optional)
+                    {ui.apAddress}
                   </Label>
                   <Input
                     id="acc-address"
                     value={acc.address}
                     onChange={(e) => setAcc({ ...acc, address: e.target.value })}
-                    placeholder="Street, area, town"
+                    placeholder={ui.apAddressPh}
                     className={inputCls}
                   />
                 </div>
                 <div className="space-y-1.5">
                   <Label htmlFor="acc-bvn" className={labelCls}>
-                    BVN (optional)
+                    {ui.apBvn}
                   </Label>
                   <Input
                     id="acc-bvn"
@@ -308,20 +313,20 @@ export function ApplyForms({ settings, general, loans }: Props) {
                     maxLength={11}
                     value={acc.bvn}
                     onChange={(e) => setAcc({ ...acc, bvn: e.target.value.replace(/[^0-9]/g, "") })}
-                    placeholder="11 digits"
+                    placeholder={ui.apBvnPh}
                     className={inputCls}
                   />
                 </div>
                 <div className="space-y-1.5">
                   <Label htmlFor="acc-note" className={labelCls}>
-                    Anything we should know? (optional)
+                    {ui.apNote}
                   </Label>
                   <Textarea
                     id="acc-note"
                     rows={3}
                     value={acc.note}
                     onChange={(e) => setAcc({ ...acc, note: e.target.value })}
-                    placeholder="e.g. I want to open a joint account with my cooperative…"
+                    placeholder={ui.apNotePh}
                     className={inputCls}
                   />
                 </div>
@@ -333,10 +338,10 @@ export function ApplyForms({ settings, general, loans }: Props) {
                   {accBusy ? (
                     <>
                       <Loader2 className="size-4 animate-spin" aria-hidden="true" />
-                      Submitting…
+                      {ui.apSubmitting}
                     </>
                   ) : (
-                    "Submit account request"
+                    ui.apAccSubmit
                   )}
                 </Button>
                 <p className="flex items-start gap-2 text-xs leading-relaxed text-muted-foreground">
@@ -355,9 +360,9 @@ export function ApplyForms({ settings, general, loans }: Props) {
                   <Banknote className="size-5 text-brand-950" aria-hidden="true" />
                 </span>
                 <div>
-                  <h2 className="font-serif text-xl font-bold text-brand-900">Apply for a loan</h2>
+                  <h2 className="font-serif text-xl font-bold text-brand-900">{ui.apLoanTitle}</h2>
                   <p className="text-xs text-muted-foreground">
-                    Personal, business and SME facilities
+                    {ui.apLoanSub}
                   </p>
                 </div>
               </div>
@@ -366,20 +371,20 @@ export function ApplyForms({ settings, general, loans }: Props) {
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="space-y-1.5">
                     <Label htmlFor="loan-name" className={labelCls}>
-                      Full name *
+                      {ui.apName}
                     </Label>
                     <Input
                       id="loan-name"
                       required
                       value={loan.name}
                       onChange={(e) => setLoan({ ...loan, name: e.target.value })}
-                      placeholder="e.g. Emeka Obi"
+                      placeholder={ui.apLoanNamePh}
                       className={inputCls}
                     />
                   </div>
                   <div className="space-y-1.5">
                     <Label htmlFor="loan-phone" className={labelCls}>
-                      Phone number *
+                      {ui.apPhone}
                     </Label>
                     <Input
                       id="loan-phone"
@@ -387,21 +392,21 @@ export function ApplyForms({ settings, general, loans }: Props) {
                       type="tel"
                       value={loan.phone}
                       onChange={(e) => setLoan({ ...loan, phone: e.target.value })}
-                      placeholder="0803 000 0000"
+                      placeholder={ui.apPhonePh}
                       className={inputCls}
                     />
                   </div>
                 </div>
                 <div className="space-y-1.5">
                   <Label htmlFor="loan-product" className={labelCls}>
-                    Loan product *
+                    {ui.apLoanProduct}
                   </Label>
                   <Select
                     value={loan.product}
                     onValueChange={(value) => setLoan({ ...loan, product: value })}
                   >
                     <SelectTrigger id="loan-product" className={inputCls}>
-                      <SelectValue placeholder="Choose a loan product" />
+                      <SelectValue placeholder={ui.apLoanProductPh} />
                     </SelectTrigger>
                     <SelectContent>
                       {loans.map((l) => (
@@ -422,7 +427,7 @@ export function ApplyForms({ settings, general, loans }: Props) {
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="space-y-1.5">
                     <Label htmlFor="loan-amount" className={labelCls}>
-                      Amount needed (₦) *
+                      {ui.apAmount}
                     </Label>
                     <Input
                       id="loan-amount"
@@ -438,19 +443,19 @@ export function ApplyForms({ settings, general, loans }: Props) {
                   </div>
                   <div className="space-y-1.5">
                     <Label htmlFor="loan-term" className={labelCls}>
-                      Repayment period *
+                      {ui.apTerm}
                     </Label>
                     <Select
                       value={loan.term}
                       onValueChange={(value) => setLoan({ ...loan, term: value })}
                     >
                       <SelectTrigger id="loan-term" className={inputCls}>
-                        <SelectValue placeholder="Choose tenor" />
+                        <SelectValue placeholder={ui.apTermPh} />
                       </SelectTrigger>
                       <SelectContent>
                         {[3, 6, 9, 12, 18, 24].map((m) => (
                           <SelectItem key={m} value={String(m)}>
-                            {m} months
+                            {m} {ui.apMonths}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -459,14 +464,14 @@ export function ApplyForms({ settings, general, loans }: Props) {
                 </div>
                 <div className="space-y-1.5">
                   <Label htmlFor="loan-purpose" className={labelCls}>
-                    What will you use it for? (optional)
+                    {ui.apPurpose}
                   </Label>
                   <Textarea
                     id="loan-purpose"
                     rows={3}
                     value={loan.purpose}
                     onChange={(e) => setLoan({ ...loan, purpose: e.target.value })}
-                    placeholder="e.g. Restocking my provisions shop in Murada market…"
+                    placeholder={ui.apPurposePh}
                     className={inputCls}
                   />
                 </div>
@@ -478,10 +483,10 @@ export function ApplyForms({ settings, general, loans }: Props) {
                   {loanBusy ? (
                     <>
                       <Loader2 className="size-4 animate-spin" aria-hidden="true" />
-                      Submitting…
+                      {ui.apSubmitting}
                     </>
                   ) : (
-                    "Submit loan application"
+                    ui.apLoanSubmit
                   )}
                 </Button>
                 <p className="flex items-start gap-2 text-xs leading-relaxed text-muted-foreground">

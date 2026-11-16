@@ -16,14 +16,16 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Reveal } from "@/components/site/reveal";
 import { waLink } from "@/lib/wa";
-import type { ContactSettings, GeneralSettings } from "@/lib/site-settings";
+import type { ContactSettings, GeneralSettings, UiSettings } from "@/lib/site-settings";
 
 export function Contact({
   contact,
   general,
+  ui,
 }: {
   contact: ContactSettings;
   general: GeneralSettings;
+  ui: UiSettings;
 }) {
   const { toast } = useToast();
   const [form, setForm] = useState({ name: "", phone: "", email: "", subject: "", message: "" });
@@ -36,10 +38,10 @@ export function Contact({
   const telHref = `tel:${(general.phones[0] ?? "").replace(/[^0-9+]/g, "")}`;
 
   const INFO = [
-    { icon: MapPin, title: "Head Office", lines: addressLines },
-    { icon: Phone, title: "Call us", lines: general.phones },
-    { icon: Mail, title: "Email", lines: general.emails },
-    { icon: Clock, title: "Opening hours", lines: general.hours },
+    { icon: MapPin, title: ui.contactHead, lines: addressLines },
+    { icon: Phone, title: ui.contactCall, lines: general.phones },
+    { icon: Mail, title: ui.contactEmail, lines: general.emails },
+    { icon: Clock, title: ui.contactHours, lines: general.hours },
   ];
 
   async function handleSubmit(e: React.FormEvent) {
@@ -55,22 +57,22 @@ export function Contact({
 
       if (res.ok && data.success) {
         toast({
-          title: "Message sent",
+          title: ui.ctSentTitle,
           description:
-            data.message ?? "Thank you for reaching out. Our team will contact you shortly.",
+            data.message ?? ui.ctSentBody,
         });
         setForm({ name: "", phone: "", email: "", subject: "", message: "" });
       } else {
         toast({
-          title: "Could not send message",
+          title: ui.ctFailTitle,
           description: data.error ?? "Please check your details and try again.",
           variant: "destructive",
         });
       }
     } catch {
       toast({
-        title: "Network error",
-        description: "Please check your connection and try again.",
+        title: ui.ctNetTitle,
+        description: ui.ctNetBody,
         variant: "destructive",
       });
     } finally {
@@ -132,7 +134,7 @@ export function Contact({
                       className="inline-flex items-center gap-2 rounded-full border border-white/25 px-5 py-2.5 text-sm font-bold text-white transition-colors hover:border-gold-400 hover:text-gold-300"
                     >
                       <MessageCircle className="size-4" aria-hidden="true" />
-                      WhatsApp us
+                      {ui.ctWa}
                     </a>
                   )}
                 </div>
@@ -148,46 +150,46 @@ export function Contact({
             >
               <div className="grid gap-5 sm:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="name">Full name *</Label>
+                  <Label htmlFor="name">{ui.formName} *</Label>
                   <Input
                     id="name"
                     value={form.name}
                     onChange={(e) => update("name")(e.target.value)}
-                    placeholder="e.g. Aisha Mohammed"
+                    placeholder={ui.ctNamePh}
                     required
                     minLength={2}
                     maxLength={100}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="phone">Phone number *</Label>
+                  <Label htmlFor="phone">{ui.formPhone} *</Label>
                   <Input
                     id="phone"
                     type="tel"
                     value={form.phone}
                     onChange={(e) => update("phone")(e.target.value)}
-                    placeholder="e.g. 0803 123 4567"
+                    placeholder={ui.ctPhonePh}
                     required
                     minLength={7}
                     maxLength={20}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email (optional)</Label>
+                  <Label htmlFor="email">{ui.formEmail}</Label>
                   <Input
                     id="email"
                     type="email"
                     value={form.email}
                     onChange={(e) => update("email")(e.target.value)}
-                    placeholder="you@example.com"
+                    placeholder={ui.ctEmailPh}
                     maxLength={120}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="subject">Subject *</Label>
+                  <Label htmlFor="subject">{ui.formSubject} *</Label>
                   <Select value={form.subject} onValueChange={update("subject")} required>
                     <SelectTrigger id="subject" className="w-full">
-                      <SelectValue placeholder="Select a subject" />
+                      <SelectValue placeholder={ui.ctSubjectPh} />
                     </SelectTrigger>
                     <SelectContent>
                       {contact.subjects.map((subject) => (
@@ -199,12 +201,12 @@ export function Contact({
                   </Select>
                 </div>
                 <div className="space-y-2 sm:col-span-2">
-                  <Label htmlFor="message">Message *</Label>
+                  <Label htmlFor="message">{ui.formMessage} *</Label>
                   <Textarea
                     id="message"
                     value={form.message}
                     onChange={(e) => update("message")(e.target.value)}
-                    placeholder="Tell us how we can help…"
+                    placeholder={ui.ctMessagePh}
                     required
                     minLength={5}
                     maxLength={2000}
@@ -215,8 +217,7 @@ export function Contact({
 
               <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
                 <p className="max-w-xs text-[11px] leading-relaxed text-muted-foreground">
-                  By submitting, you consent to {general.shortName} contacting you about this
-                  enquiry. We never share your details with third parties.
+                  {ui.ctConsentBefore} {general.shortName} {ui.ctConsentAfter}
                 </p>
                 <Button
                   type="submit"
@@ -226,11 +227,11 @@ export function Contact({
                   {submitting ? (
                     <>
                       <Loader2 className="size-4 animate-spin" aria-hidden="true" />
-                      Sending…
+                      {ui.ctSending}
                     </>
                   ) : (
                     <>
-                      Send message
+                      {ui.formSend}
                       <Send className="size-4" aria-hidden="true" />
                     </>
                   )}
@@ -246,7 +247,7 @@ export function Contact({
             <div className="overflow-hidden rounded-3xl border border-border">
               <iframe
                 src={general.mapEmbedUrl}
-                title={`${general.bankName} location map`}
+                title={`${general.bankName} ${ui.mapTitle}`}
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
                 className="h-[360px] w-full"
@@ -261,7 +262,7 @@ export function Contact({
                   rel="noopener noreferrer"
                   className="font-semibold text-brand-700 hover:text-gold-600"
                 >
-                  Open in Google Maps →
+                  {ui.ctMaps}
                 </a>
               </p>
             )}

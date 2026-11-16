@@ -16,7 +16,7 @@ import {
   Wifi,
 } from "lucide-react";
 import { FloatingCard, PhoneFrame } from "@/components/site/phone-frame";
-import type { HomeSettings } from "@/lib/site-settings";
+import type { HomeSettings, MockSettings } from "@/lib/site-settings";
 
 const container = {
   hidden: {},
@@ -32,18 +32,20 @@ const item = {
   },
 };
 
-function AppScreen() {
+const ACTION_ICONS = [Send, Smartphone, CreditCard, PiggyBank];
+
+function AppScreen({ m }: { m: MockSettings }) {
   return (
     <div className="flex h-full flex-col px-4 pb-3 pt-10">
       {/* App header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2.5">
           <div className="flex size-9 items-center justify-center rounded-full bg-brand-800 font-serif text-sm font-bold text-gold-300">
-            A
+            {(m.heroUser || "A").charAt(0).toUpperCase()}
           </div>
           <div>
-            <p className="text-[10px] font-medium text-muted-foreground">Good morning</p>
-            <p className="text-sm font-bold text-brand-900">Aisha Mohammed</p>
+            <p className="text-[10px] font-medium text-muted-foreground">{m.heroGreeting}</p>
+            <p className="text-sm font-bold text-brand-900">{m.heroUser}</p>
           </div>
         </div>
         <div className="relative flex size-8 items-center justify-center rounded-full bg-white shadow-sm">
@@ -58,24 +60,19 @@ function AppScreen() {
         <div className="relative">
           <div className="flex items-center justify-between">
             <p className="text-[10px] font-medium uppercase tracking-widest text-brand-200">
-              Total balance
+              {m.heroBalanceLabel}
             </p>
             <Wifi className="size-3.5 text-gold-400" aria-hidden="true" />
           </div>
-          <p className="mt-1.5 font-serif text-[26px] font-bold tracking-tight">₦486,250.00</p>
-          <p className="mt-0.5 text-[10px] text-brand-200">Muamala Savings ···· 7149</p>
+          <p className="mt-1.5 font-serif text-[26px] font-bold tracking-tight">{m.heroBalance}</p>
+          <p className="mt-0.5 text-[10px] text-brand-200">{m.heroAccount}</p>
           <div className="mt-3.5 grid grid-cols-4 gap-1.5">
-            {[
-              { icon: Send, label: "Send" },
-              { icon: Smartphone, label: "Airtime" },
-              { icon: CreditCard, label: "Bills" },
-              { icon: PiggyBank, label: "Save" },
-            ].map(({ icon: Icon, label }) => (
-              <div key={label} className="flex flex-col items-center gap-1">
+            {ACTION_ICONS.map((Icon, i) => (
+              <div key={i} className="flex flex-col items-center gap-1">
                 <div className="flex size-8 w-full items-center justify-center rounded-xl bg-gold-500/90">
                   <Icon className="size-3.5 text-brand-950" aria-hidden="true" />
                 </div>
-                <span className="text-[8px] font-semibold text-brand-100">{label}</span>
+                <span className="text-[8px] font-semibold text-brand-100">{m.heroActions[i] ?? ""}</span>
               </div>
             ))}
           </div>
@@ -85,15 +82,14 @@ function AppScreen() {
       {/* Transactions */}
       <div className="mt-4 rounded-2xl bg-white p-3.5 shadow-sm">
         <div className="flex items-center justify-between">
-          <p className="text-xs font-bold text-brand-900">Recent transactions</p>
-          <p className="text-[10px] font-semibold text-gold-600">View all</p>
+          <p className="text-xs font-bold text-brand-900">{m.heroTxnTitle}</p>
+          <p className="text-[10px] font-semibold text-gold-600">{m.heroViewAll}</p>
         </div>
         <div className="mt-2.5 space-y-2.5">
-          {[
-            { icon: ArrowUpRight, label: "Transfer to Ola Cosmetics", sub: "Today, 9:24am", amount: "-₦15,000", credit: false },
-            { icon: ArrowDownLeft, label: "POS settlement, Agent 231", sub: "Yesterday, 4:02pm", amount: "+₦62,400", credit: true },
-            { icon: PiggyBank, label: "Ajo target savings", sub: "Yesterday, 8:00am", amount: "+₦25,000", credit: true },
-          ].map(({ icon: Icon, label, sub, amount, credit }) => (
+          {m.heroTxns.map(({ label, sub, amount, type }, index) => {
+            const credit = type === "credit";
+            const Icon = credit ? (index % 2 ? PiggyBank : ArrowDownLeft) : ArrowUpRight;
+            return (
             <div key={label} className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <div
@@ -114,7 +110,8 @@ function AppScreen() {
                 {amount}
               </p>
             </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 
@@ -129,7 +126,7 @@ function AppScreen() {
   );
 }
 
-export function Hero({ settings }: { settings: HomeSettings }) {
+export function Hero({ settings, mock }: { settings: HomeSettings; mock: MockSettings }) {
   const reduce = useReducedMotion();
 
   const { heroTitle, heroTitleAccent } = settings;
@@ -159,9 +156,9 @@ export function Hero({ settings }: { settings: HomeSettings }) {
 
       <motion.div
         variants={container}
-        initial={reduce ? undefined : "hidden"}
-        animate={reduce ? undefined : "show"}
-        className="relative mx-auto grid max-w-7xl gap-14 px-4 pb-16 pt-32 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:pb-24 lg:pt-44"
+        initial={reduce ? "show" : "hidden"}
+        animate="show"
+        className="relative mx-auto grid max-w-7xl gap-14 px-4 pb-28 pt-36 sm:px-6 sm:pt-40 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:pb-24 lg:pt-44"
       >
         {/* Copy */}
         <div>
@@ -190,7 +187,7 @@ export function Hero({ settings }: { settings: HomeSettings }) {
 
           <motion.div variants={item} className="mt-8 flex flex-wrap items-center gap-4">
             <a
-              href="/apply"
+              href={settings.heroCtaPrimaryHref || "/apply"}
               className="group inline-flex items-center gap-2 rounded-full bg-gold-500 px-7 py-3.5 text-sm font-bold text-brand-950 shadow-xl shadow-gold-500/25 transition-all hover:-translate-y-0.5 hover:bg-gold-400"
             >
               {settings.heroCtaPrimary}
@@ -200,7 +197,7 @@ export function Hero({ settings }: { settings: HomeSettings }) {
               />
             </a>
             <a
-              href="/#products"
+              href={settings.heroCtaSecondaryHref || "/#products"}
               className="inline-flex items-center gap-2 rounded-full border border-white/25 px-7 py-3.5 text-sm font-bold text-white transition-colors hover:border-gold-400 hover:text-gold-300"
             >
               {settings.heroCtaSecondary}
@@ -224,11 +221,23 @@ export function Hero({ settings }: { settings: HomeSettings }) {
           </motion.dl>
         </div>
 
-        {/* Phone mockup */}
+        {/* Hero photo (optional, replaces the phone illustration, shown on all screens) */}
+        {settings.heroImage ? (
+          <motion.div variants={item} className="relative">
+            <div className="absolute -inset-3 rounded-[2rem] border border-gold-500/30" aria-hidden="true" />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={settings.heroImage}
+              alt={settings.heroImageAlt}
+              className="relative aspect-[4/3] w-full rounded-3xl object-cover shadow-2xl lg:aspect-[4/5]"
+            />
+          </motion.div>
+        ) : (
+        /* Phone mockup */
         <motion.div variants={item} className="relative hidden lg:block">
           <div className="relative">
             <PhoneFrame>
-              <AppScreen />
+              <AppScreen m={mock} />
             </PhoneFrame>
 
             <FloatingCard
@@ -240,10 +249,8 @@ export function Hero({ settings }: { settings: HomeSettings }) {
                   <CheckCircle2 className="size-5 text-brand-700" aria-hidden="true" />
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-brand-900">Loan approved 🎉</p>
-                  <p className="mt-0.5 text-[11px] text-muted-foreground">
-                    ₦150,000 disbursed to your Muamala wallet
-                  </p>
+                  <p className="text-xs font-bold text-brand-900">{settings.heroCard1Title}</p>
+                  <p className="mt-0.5 text-[11px] text-muted-foreground">{settings.heroCard1Body}</p>
                 </div>
               </div>
             </FloatingCard>
@@ -257,15 +264,14 @@ export function Hero({ settings }: { settings: HomeSettings }) {
                   <PiggyBank className="size-5 text-gold-700" aria-hidden="true" />
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-brand-900">Target savings</p>
-                  <p className="mt-0.5 text-[11px] text-muted-foreground">
-                    ₦25,000 saved this month
-                  </p>
+                  <p className="text-xs font-bold text-brand-900">{settings.heroCard2Title}</p>
+                  <p className="mt-0.5 text-[11px] text-muted-foreground">{settings.heroCard2Body}</p>
                 </div>
               </div>
             </FloatingCard>
           </div>
         </motion.div>
+        )}
       </motion.div>
     </section>
   );

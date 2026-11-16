@@ -39,6 +39,15 @@ export async function getSettingsGroup<K extends SettingsGroupKey>(
   return all[key];
 }
 
+/** Per-page <title>/<description>, editable under Page titles & search. */
+export async function pageMeta(key: string) {
+  const all = await getSiteSettings();
+  const fill = (t: string) =>
+    (t ?? "").replaceAll("{bank}", all.general.bankName).replaceAll("{short}", all.general.shortName);
+  const title = fill(all.seo[`${key}Title`] ?? "");
+  return { title: title ? { absolute: title } : undefined, description: fill(all.seo[`${key}Description`] ?? "") };
+}
+
 /* ---------------- theme ---------------- */
 
 export async function getActiveTheme(): Promise<{
@@ -167,6 +176,7 @@ export type TeamRecord = {
   role: string;
   type: string;
   bio: string | null;
+  photo: string | null;
 };
 
 export async function getTeam(): Promise<{ board: TeamRecord[]; management: TeamRecord[] }> {

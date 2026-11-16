@@ -11,7 +11,8 @@ export type ResourceFieldType =
   | "select"
   | "list"
   | "icon"
-  | "date";
+  | "date"
+  | "image";
 
 export type ResourceField = {
   name: string;
@@ -125,7 +126,7 @@ export const RESOURCES: Record<string, ResourceDef> = {
       { name: "date", label: "Date", type: "date", required: true },
       { name: "excerpt", label: "Excerpt", type: "textarea", required: true, maxLength: 400 },
       { name: "body", label: "Body (markdown)", type: "textarea", required: true, help: "Supports ## headings, **bold**, - lists and 1. numbered lists." },
-      { name: "image", label: "Cover image", type: "text", help: "Optional image path, e.g. /images/photo.jpg", maxLength: 300 },
+      { name: "image", label: "Cover image", type: "image", help: "Optional. Upload a photo (landscape works best) or paste an image address." },
       { name: "visible", label: "Visible on site", type: "boolean" },
     ],
   },
@@ -142,6 +143,7 @@ export const RESOURCES: Record<string, ResourceDef> = {
       { name: "role", label: "Role / title", type: "text", required: true, maxLength: 120 },
       { name: "type", label: "Group", type: "select", required: true, options: TEAM_TYPES },
       { name: "bio", label: "Short bio (optional)", type: "textarea", maxLength: 500 },
+      { name: "photo", label: "Photo (optional)", type: "image", help: "Square or portrait headshot. Shown instead of initials." },
       { name: "order", label: "Sort order", type: "number" },
       { name: "visible", label: "Visible on site", type: "boolean" },
     ],
@@ -297,6 +299,13 @@ export function coerceResourceValues(
       case "date": {
         const d = new Date(String(raw));
         out[field.name] = Number.isNaN(d.getTime()) ? new Date() : d;
+        break;
+      }
+      case "image": {
+        const v = String(raw ?? "").trim();
+        // data-URL uploads (capped), site paths or http(s) addresses only
+        const ok = /^data:image\/(png|jpe?g|webp|gif|svg\+xml);base64,/i.test(v) || v.startsWith("/") || /^https?:\/\//i.test(v);
+        out[field.name] = ok && v.length <= 2_500_000 ? v : "";
         break;
       }
       case "icon": {
