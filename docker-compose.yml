@@ -1,6 +1,6 @@
 # This VPS already runs a Caddy container (booklet-caddy-1) on ports 80/443,
 # so this stack does NOT start its own proxy. The app joins Caddy's Docker network
-# and Caddy proxies muamala.rogan.live -> muamala-web:3000 (see Caddyfile).
+# and Caddy proxies muamalamfbltd.com -> muamala-web:3000 (see Caddyfile).
 services:
   app:
     build: .

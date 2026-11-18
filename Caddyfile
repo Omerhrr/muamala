@@ -1,6 +1,10 @@
-# Add this block to the Caddyfile used by the existing Caddy container
-# (booklet-caddy-1), then reload Caddy. See DEPLOY.md.
-muamala.rogan.live {
+# Block for the existing Caddy container (booklet-caddy-1). See DEPLOY.md.
+muamalamfbltd.com, www.muamalamfbltd.com {
 	encode zstd gzip
 	reverse_proxy muamala-web:3000
+}
+
+# Temporary test address: redirect to the real domain (remove once no longer needed)
+muamala.rogan.live {
+	redir https://muamalamfbltd.com{uri} permanent
 }

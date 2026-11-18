@@ -1,12 +1,12 @@
 # Deploying Muamala on the shared VPS (Docker)
 
-Domain: **muamala.rogan.live**. This VPS already runs a Caddy container
+Domain: **muamalamfbltd.com**. This VPS already runs a Caddy container
 (`booklet-caddy-1`) on ports 80/443 with other apps, so Muamala plugs into it
 instead of starting its own proxy. Nothing existing is touched except one new
 block in Caddy's config.
 
 ## 1. DNS
-A record: `muamala.rogan.live` → the VPS public IP. Check with `nslookup muamala.rogan.live`.
+A record: `muamalamfbltd.com` → the VPS public IP. Check with `nslookup muamalamfbltd.com`.
 
 ## 2. Upload the project
 Put the folder at `/opt/muamala` (git, scp or rsync; skip `node_modules` and `.next`).
@@ -35,7 +35,7 @@ Append the block from `Caddyfile` in this folder to the host Caddyfile found in 
 ```bash
 docker exec booklet-caddy-1 caddy reload --config /etc/caddy/Caddyfile
 ```
-Caddy requests the HTTPS certificate automatically. Open https://muamala.rogan.live
+Caddy requests the HTTPS certificate automatically. Open https://muamalamfbltd.com
 (admin: /admin). Check `docker logs booklet-caddy-1` if the certificate doesn't issue
 (usually DNS not propagated yet).
 
